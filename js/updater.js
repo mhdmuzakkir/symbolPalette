@@ -35,7 +35,7 @@
 
     var REPO_OWNER = 'mhdmuzakkir';
     var REPO_NAME = 'symbolPalette';
-    var CURRENT_VERSION = '1.1.0';
+    var CURRENT_VERSION = '1.2.0';
 
     var UPDATE_STATUS = {
         idle: 'idle',
@@ -273,7 +273,8 @@
             runBatch('update.bat', [extensionPath], function(progress) {
                 if (onProgress) {
                     var percent = 0;
-                    if (progress.stage === 'download') percent = 25;
+                    if (progress.stage === 'git') percent = 30;
+                    else if (progress.stage === 'download') percent = 25;
                     else if (progress.stage === 'extract') percent = 60;
                     else if (progress.stage === 'copy') percent = 85;
                     else if (progress.status === 'done') percent = 100;
