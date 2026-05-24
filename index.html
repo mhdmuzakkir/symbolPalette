@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symbol Palette</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2 class="title">Symbol Palette</h2>
+            <div class="header-actions">
+                <button class="btn-icon" id="settingsBtn" title="Settings">⚙</button>
+                <button class="btn-icon" id="refreshBtn" title="Refresh">↻</button>
+                <button class="btn-edit-mode" id="editModeBtn">Edit</button>
+            </div>
+        </div>
+
+        <!-- Page Info Bar -->
+        <div class="page-info-bar hidden" id="pageInfoBar">
+            <div class="page-info-left">
+                <span class="page-badge" id="pageBadge">Page 000</span>
+                <span class="riwayah-badge" id="riwayahBadge">hafs</span>
+                <span class="system-badge" id="systemBadge">al_kufi</span>
+            </div>
+            <div class="page-info-right">
+                <span class="ayah-count" id="ayahCount">0 ayahs</span>
+            </div>
+        </div>
+
+        <!-- Import All Numbers Button -->
+        <div class="import-all-bar hidden" id="importAllBar">
+            <button class="btn-import-all" id="importAllBtn">
+                <span class="icon">⬇</span> Import All Numbers
+            </button>
+        </div>
+
+        <!-- Dynamic Number Grid -->
+        <div class="number-section hidden" id="numberSection">
+            <div class="section-header">
+                <span class="section-title">Ayah Numbers for this Page</span>
+            </div>
+            <div class="number-grid" id="numberGrid">
+                <!-- Number SVGs rendered here -->
+            </div>
+        </div>
+
+        <!-- Ayah Number Button -->
+        <div class="ayah-number-bar" id="ayahNumberBar">
+            <button class="btn-ayah-number" id="ayahNumberBtn">
+                <span class="icon">+</span> Ayah Number
+            </button>
+        </div>
+
+        <!-- Category Selector -->
+        <div class="category-bar" id="categoryBar">
+            <span class="path-label">Type:</span>
+            <select class="category-select" id="categorySelect">
+                <option value="">Select category...</option>
+            </select>
+        </div>
+
+        <!-- Folder Info Bar -->
+        <div class="folder-info-bar" id="folderInfoBar">
+            <span class="path-label">Path:</span>
+            <span class="folder-path" id="folderPath">No folder selected</span>
+        </div>
+
+        <!-- Grid Container: 4 columns -->
+        <div class="symbol-grid" id="symbolGrid">
+            <!-- Symbols rendered here -->
+        </div>
+
+        <div class="footer">
+            <button class="btn-select-folder" id="selectFolderBtn">
+                <span class="icon">📁</span> Select Root Folder
+            </button>
+            <button class="btn-rename-numbers" id="renameNumbersBtn" style="display:none;" title="One-time: ungroup all nesting, bring to Layer 1, and rename each number SVG object to match filename">
+                <span class="icon">✏</span> Flatten & Rename Number SVGs
+            </button>
+        </div>
+
+        <div class="update-bar" style="padding: 8px 12px; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px;">
+            <button class="btn-secondary" id="btnCheckUpdates" style="font-size: 10px; padding: 4px 8px;">Check for Updates</button>
+            <button class="btn-primary hidden" id="btnInstallUpdate" style="font-size: 10px; padding: 4px 8px;">Install Update</button>
+            <span id="updateStatus" style="font-size: 10px; color: var(--text-secondary); flex: 1;"></span>
+            <span style="font-size: 9px; color: var(--text-muted);">v1.1.0</span>
+        </div>
+    </div>
+
+    <!-- Select Folder Modal -->
+    <div class="modal" id="folderModal">
+        <div class="modal-content">
+            <h3>Select Root Folder</h3>
+            <p class="modal-description">
+                Choose the folder containing your symbol categories and number SVGs.<br>
+                <b>Flat:</b> <code>symbols/</code> + <code>numbers/</code><br>
+                <b>Nested:</b> <code>symbols/symbols/</code> + <code>symbols/numbers/</code>
+            </p>
+
+            <div class="form-group">
+                <label>Root Folder</label>
+                <div class="path-input-group">
+                    <input type="text" id="folderPathInput" placeholder="Select root folder..." readonly>
+                    <button class="btn-browse" id="browseFolderBtn">Browse...</button>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 8px;">
+                <button class="btn-auto-detect" id="autoDetectBtn">
+                    <span class="icon"></span> Auto-Detect from Google Drive
+                </button>
+                <p class="hint-text" id="autoDetectStatus" style="margin-top:4px;font-size:10px;color:var(--text-muted);min-height:14px;"></p>
+            </div>
+
+            <div class="form-group" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+                <label style="font-size: 11px; color: var(--text-muted);">Or paste exact path to test:</label>
+                <div class="path-input-group">
+                    <input type="text" id="testPathInput" placeholder="e.g. G:/My Drive/mushafproject" style="font-size: 11px;">
+                    <button class="btn-browse" id="testPathBtn" style="font-size: 11px; padding: 6px 10px;">Test &amp; Use</button>
+                </div>
+                <p class="hint-text" id="testPathStatus" style="margin-top:4px;font-size:10px;color:var(--text-muted);min-height:14px;"></p>
+            </div>
+
+            <div class="folder-preview" id="folderPreview">
+                <div class="preview-header">Preview:</div>
+                <div class="preview-content" id="previewContent">
+                    <span class="preview-empty">No folder selected</span>
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="folderCancelBtn">Cancel</button>
+                <button class="btn-confirm" id="folderConfirmBtn" disabled>Load Symbols</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Symbol Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h3>Edit Symbol</h3>
+            <div class="form-group">
+                <label>Symbol Name</label>
+                <input type="text" id="editSymbolName" placeholder="Symbol Name">
+            </div>
+
+            <div class="form-group">
+                <label>SVG File</label>
+                <div class="path-input-group">
+                    <input type="text" id="editSymbolPath" placeholder="Select SVG file..." readonly>
+                    <button class="btn-browse" id="editBrowseBtn">Browse...</button>
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn-delete" id="editDeleteBtn">Delete</button>
+                <button class="btn-cancel" id="editCancelBtn">Cancel</button>
+                <button class="btn-confirm" id="editConfirmBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <h3>Riwayah Settings</h3>
+            <p class="modal-description">
+                Map each riwayah name (from your filename like <code>001-hafs.ai</code>) to a counting system.
+            </p>
+
+            <div class="form-group">
+                <label>Default System (fallback)</label>
+                <select class="category-select" id="defaultSystemSelect">
+                    <option value="al_kufi">Kufi (الكوفي)</option>
+                    <option value="al_madani_al_awwal">Madani Al-Awwal (المدني الأول)</option>
+                    <option value="al_madani_al_akhir">Madani Al-Akhir (المدني الأخير)</option>
+                    <option value="al_makki">Makki (المكي)</option>
+                    <option value="al_basri">Basri (البصري)</option>
+                    <option value="al_dimashqi">Dimashqi (الدمشقي)</option>
+                </select>
+            </div>
+
+            <div class="riwayah-mappings" id="riwayahMappings">
+                <!-- Mappings rendered here -->
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="settingsCancelBtn">Cancel</button>
+                <button class="btn-confirm" id="settingsConfirmBtn">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Number Input Modal -->
+    <div class="modal" id="numberModal">
+        <div class="modal-content modal-small">
+            <h3>Insert Ayah Number</h3>
+            <div class="form-group">
+                <label>Number</label>
+                <input type="text" id="numberInput" placeholder="e.g. 1, 5, 286" inputmode="numeric">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="numberCancelBtn">Cancel</button>
+                <button class="btn-confirm" id="numberConfirmBtn">Insert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>Loading symbols...</p>
+    </div>
+
+    <script src="js/CSInterface.js"></script>
+    <script src="js/drive-scanner.js"></script>
+    <script src="js/updater.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

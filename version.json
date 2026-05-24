@@ -1,0 +1,8 @@
+{
+  "version": "1.1.0",
+  "manifestVersion": "1.1.0",
+  "minCEPVersion": "7.0",
+  "downloadUrl": "https://github.com/mhdmuzakkir/symbolPalette/archive/refs/heads/main.zip",
+  "releaseNotes": "https://github.com/mhdmuzakkir/symbolPalette/releases",
+  "checkUrl": "https://raw.githubusercontent.com/mhdmuzakkir/symbolPalette/main/version.json"
+}
