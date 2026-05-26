@@ -251,7 +251,17 @@ function pasteAllNumbersAligned(filePaths) {
             ayaLayer.name = "Aya No.";
         }
 
-        // --- 3. Collect ornaments named "ayah" or "آية" recursively ---
+        // --- 3. Clear existing items in Aya No. layer ---
+        ayaLayer.locked = false;
+        ayaLayer.visible = true;
+        while (ayaLayer.pageItems.length > 0) {
+            ayaLayer.pageItems[0].remove();
+        }
+        while (ayaLayer.groupItems.length > 0) {
+            ayaLayer.groupItems[0].remove();
+        }
+
+        // --- 4. Collect ornaments named "ayah" or "آية" recursively ---
         var ORNAMENT_NAMES = ["ayah", "آية"];
         var ornaments = [];
 
