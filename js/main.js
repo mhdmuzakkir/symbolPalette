@@ -835,13 +835,15 @@ function importAllNumbers() {
     var pathsStr = filePaths.map(function(p) {
         return '"' + p.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
     }).join(',');
-    var script = 'pasteAllNumbers([' + pathsStr + '], 50, "horizontal");';
+    var script = 'pasteAllNumbersAligned([' + pathsStr + ']);';
 
     csInterface.evalScript(script, function(result) {
         btn.classList.remove('processing');
         btn.disabled = false;
         if (result && result.toString().indexOf('Error:') === 0) {
             alert(result);
+        } else if (result === 'success') {
+            console.log('Ayah numbers imported and aligned successfully');
         }
     });
 }

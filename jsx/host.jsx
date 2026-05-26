@@ -203,6 +203,215 @@ function pasteAllNumbers(filePaths, spacing, direction) {
 }
 
 /**
+ * Paste ayah numbers aligned to existing ornament markers on the page.
+ * Counts ornaments named "ayah"/"آية" in the Ornaments layer, validates count,
+ * sorts ornaments top-to-bottom / right-to-left, pastes each number at the
+ * corresponding ornament position, then aligns using ayah-align logic.
+ * @param {Array} filePaths - Array of SVG file path strings
+ * @returns {string} - 'success' or error message
+ */
+function pasteAllNumbersAligned(filePaths) {
+    try {
+        if (app.documents.length === 0) {
+            return "Error: No active document.";
+        }
+
+        var targetDoc = app.activeDocument;
+        if (!filePaths || filePaths.length === 0) {
+            return "Error: No files to paste.";
+        }
+
+        // --- 1. Find Ornaments layer ---
+        var ornamentLayer = null;
+        var ornamentLayerNames = ["Ornaments", "Ornament"];
+        for (var i = 0; i < ornamentLayerNames.length; i++) {
+            for (var j = 0; j < targetDoc.layers.length; j++) {
+                if (targetDoc.layers[j].name === ornamentLayerNames[i]) {
+                    ornamentLayer = targetDoc.layers[j];
+                    break;
+                }
+            }
+            if (ornamentLayer) break;
+        }
+        if (!ornamentLayer) {
+            return "Error: Layer 'Ornament' or 'Ornaments' not found.";
+        }
+
+        // --- 2. Find or create Aya No. layer ---
+        var ayaLayer = null;
+        var ayaLayerRegex = /^(Aya|Ayah)\s*No\.?$/i;
+        for (var i = 0; i < targetDoc.layers.length; i++) {
+            if (ayaLayerRegex.test(targetDoc.layers[i].name)) {
+                ayaLayer = targetDoc.layers[i];
+                break;
+            }
+        }
+        if (!ayaLayer) {
+            ayaLayer = targetDoc.layers.add();
+            ayaLayer.name = "Aya No.";
+        }
+
+        // --- 3. Collect ornaments named "ayah" or "آية" recursively ---
+        var ORNAMENT_NAMES = ["ayah", "آية"];
+        var ornaments = [];
+
+        function collectOrnaments(container) {
+            var items = container.pageItems;
+            for (var i = 0; i < items.length; i++) {
+                var it = items[i];
+                if (ORNAMENT_NAMES.indexOf(it.name) !== -1) {
+                    ornaments.push(it);
+                }
+            }
+            if (container.groupItems) {
+                for (var g = 0; g < container.groupItems.length; g++) {
+                    collectOrnaments(container.groupItems[g]);
+                }
+            }
+        }
+        collectOrnaments(ornamentLayer);
+
+        // --- 4. Validate count ---
+        if (ornaments.length < filePaths.length) {
+            var needed = filePaths.length - ornaments.length;
+            return "Error: Add " + needed + " ayah";
+        }
+
+        // --- 5. Sort ornaments: top-to-bottom rows, right-to-left within each row ---
+        var MM_TO_PT = 2.83464567;
+        var ROW_TOLERANCE = 3 * MM_TO_PT;
+
+        function getCenter(item) {
+            var b = item.visibleBounds || item.geometricBounds;
+            return {
+                cx: (b[0] + b[2]) / 2,
+                cy: (b[1] + b[3]) / 2
+            };
+        }
+
+        // Calculate centers
+        var ornamentData = [];
+        for (var i = 0; i < ornaments.length; i++) {
+            var c = getCenter(ornaments[i]);
+            ornamentData.push({
+                item: ornaments[i],
+                cx: c.cx,
+                cy: c.cy
+            });
+        }
+
+        // Sort by cy descending (top to bottom) — higher cy = higher up on page
+        ornamentData.sort(function(a, b) {
+            return b.cy - a.cy;
+        });
+
+        // Group into rows using tolerance
+        var rows = [];
+        for (var i = 0; i < ornamentData.length; i++) {
+            var od = ornamentData[i];
+            var placed = false;
+            for (var r = 0; r < rows.length; r++) {
+                var rowCy = rows[r][0].cy;
+                if (Math.abs(rowCy - od.cy) <= ROW_TOLERANCE) {
+                    rows[r].push(od);
+                    placed = true;
+                    break;
+                }
+            }
+            if (!placed) {
+                rows.push([od]);
+            }
+        }
+
+        // Sort each row by cx descending (right to left)
+        for (var r = 0; r < rows.length; r++) {
+            rows[r].sort(function(a, b) {
+                return b.cx - a.cx;
+            });
+        }
+
+        // Flatten sorted ornaments
+        var sortedOrnaments = [];
+        for (var r = 0; r < rows.length; r++) {
+            for (var c = 0; c < rows[r].length; c++) {
+                sortedOrnaments.push(rows[r][c].item);
+            }
+        }
+
+        // --- 6. Paste numbers at ornament positions with alignment ---
+        var OFFSET_DOWN_MM = 0.1;
+        var offsetDownPt = OFFSET_DOWN_MM * MM_TO_PT;
+
+        for (var j = 0; j < filePaths.length; j++) {
+            var filePath = filePaths[j];
+            var sourceFile = new File(filePath);
+
+            if (!sourceFile.exists) {
+                continue;
+            }
+
+            var sourceDoc = app.open(sourceFile);
+            if (!sourceDoc || sourceDoc.pageItems.length === 0) {
+                if (sourceDoc) sourceDoc.close(SaveOptions.DONOTSAVECHANGES);
+                continue;
+            }
+
+            sourceDoc.selection = null;
+            app.executeMenuCommand('selectall');
+            app.copy();
+            sourceDoc.close(SaveOptions.DONOTSAVECHANGES);
+
+            app.activeDocument = targetDoc;
+            app.paste();
+
+            // Move pasted items to Aya No. layer
+            var pastedItems = [];
+            for (var k = 0; k < targetDoc.selection.length; k++) {
+                var item = targetDoc.selection[k];
+                item.move(ayaLayer, ElementPlacement.PLACEATEND);
+                pastedItems.push(item);
+            }
+
+            // Group if multiple items were pasted
+            var targetItem;
+            if (pastedItems.length > 1) {
+                targetItem = ayaLayer.groupItems.add();
+                for (var m = pastedItems.length - 1; m >= 0; m--) {
+                    pastedItems[m].move(targetItem, ElementPlacement.PLACEATEND);
+                }
+            } else if (pastedItems.length === 1) {
+                targetItem = pastedItems[0];
+            } else {
+                continue;
+            }
+
+            // Get ornament bounds and center
+            var orn = sortedOrnaments[j];
+            var ornBounds = orn.visibleBounds || orn.geometricBounds;
+            var ornCx = (ornBounds[0] + ornBounds[2]) / 2;
+            var ornCy = (ornBounds[1] + ornBounds[3]) / 2;
+
+            // Get pasted item bounds and center
+            var itemBounds = targetItem.visibleBounds || targetItem.geometricBounds;
+            var itemCx = (itemBounds[0] + itemBounds[2]) / 2;
+            var itemCy = (itemBounds[1] + itemBounds[3]) / 2;
+
+            // Center ayah number on ornament
+            targetItem.translate(ornCx - itemCx, ornCy - itemCy);
+
+            // Move 0.1 mm DOWN (same as ayahalign.jsx)
+            targetItem.translate(0, -offsetDownPt);
+
+            targetDoc.selection = null;
+        }
+
+        return "success";
+    } catch (e) {
+        return "Error: " + e.toString();
+    }
+}
+
+/**
  * One-time batch: opens each SVG in the numbers folder,
  * ungroups all nested groups, renames the first path/compound-path
  * to the filename, then saves and closes.
