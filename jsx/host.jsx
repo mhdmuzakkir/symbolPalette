@@ -269,7 +269,14 @@ function pasteAllNumbersAligned(filePaths) {
             var items = container.pageItems;
             for (var i = 0; i < items.length; i++) {
                 var it = items[i];
-                if (ORNAMENT_NAMES.indexOf(it.name) !== -1) {
+                var isMatch = false;
+                for (var n = 0; n < ORNAMENT_NAMES.length; n++) {
+                    if (it.name === ORNAMENT_NAMES[n]) {
+                        isMatch = true;
+                        break;
+                    }
+                }
+                if (isMatch) {
                     ornaments.push(it);
                 }
             }
