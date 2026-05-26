@@ -74,6 +74,7 @@ body {
     justify-content: space-between;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .title {
@@ -82,6 +83,11 @@ body {
     color: var(--text-primary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
 }
 
 .header-actions {
@@ -196,6 +202,7 @@ body {
     border: 1px solid rgba(155, 89, 182, 0.3);
     position: relative;
     overflow: hidden;
+    flex-wrap: wrap;
 }
 
 .page-info-bar.hidden {
@@ -429,10 +436,12 @@ body {
     background: var(--bg-primary);
     border-radius: var(--radius);
     border: 1px solid var(--border-color);
+    flex-wrap: wrap;
 }
 
 .mapping-row label {
-    flex: 0 0 80px;
+    flex: 0 0 auto;
+    min-width: 60px;
     font-size: 11px;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -441,6 +450,7 @@ body {
 
 .mapping-row select {
     flex: 1;
+    min-width: 0;
     background-color: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
@@ -469,6 +479,7 @@ body {
     border: 1px solid var(--card-border);
     position: relative;
     overflow: hidden;
+    flex-wrap: wrap;
 }
 
 .category-bar::before {
@@ -516,6 +527,7 @@ body {
     border: 1px solid var(--card-border);
     position: relative;
     overflow: hidden;
+    flex-wrap: wrap;
 }
 
 .folder-info-bar::before {
@@ -938,6 +950,7 @@ body {
     padding: 20px;
     width: 100%;
     max-width: 400px;
+    min-width: 0;
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: var(--shadow);
@@ -952,6 +965,7 @@ body {
     font-weight: 600;
     margin-bottom: 12px;
     color: var(--text-primary);
+    word-wrap: break-word;
 }
 
 .modal-description {
@@ -1010,10 +1024,12 @@ body {
 .path-input-group {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .path-input-group input {
     flex: 1;
+    min-width: 0;
 }
 
 .btn-browse {
@@ -1237,23 +1253,50 @@ body {
 }
 
 /* ==================== RESPONSIVE ==================== */
-@media (max-width: 240px) {
-    .symbol-grid {
-        grid-template-columns: repeat(2, 1fr);
+@media (max-width: 280px) {
+    .modal {
+        padding: 8px;
     }
-
+    .modal-content {
+        padding: 12px;
+    }
+    .mapping-row label {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+    .path-input-group .btn-browse {
+        width: 100%;
+    }
     .header {
         flex-direction: column;
-        gap: 8px;
+        align-items: stretch;
     }
+    .header-actions {
+        justify-content: flex-end;
+    }
+    .page-info-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
 
+@media (max-width: 240px) {
     .modal-content {
-        padding: 16px;
+        padding: 10px;
+    }
+    .modal-buttons {
+        flex-wrap: wrap;
+    }
+    .modal-buttons button {
+        flex: 1;
+        min-width: 0;
     }
 }
 
 @media (max-width: 180px) {
-    .symbol-grid {
-        grid-template-columns: 1fr;
+    .symbol-cell,
+    .number-cell {
+        height: 38px;
+        width: 38px;
     }
 }

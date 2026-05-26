@@ -63,10 +63,26 @@ function getMushafTaskManagerDir() {
 }
 
 function getSymbolPaletteSettingsPath() {
+    var sharedPath = getSharedSettingsPath();
+    if (sharedPath) return sharedPath;
+    
     if (!SYMBOLPALETTE_SETTINGS_FILE) {
         SYMBOLPALETTE_SETTINGS_FILE = getMushafTaskManagerDir() + '/symbolPalette_settings.json';
     }
     return SYMBOLPALETTE_SETTINGS_FILE;
+}
+
+function getSharedSettingsPath() {
+    if (!rootFolder) return null;
+    var rf = rootFolder.replace(/\\/g, '/');
+    var projectRoot = null;
+    if (rf.toLowerCase().endsWith('/symbols')) {
+        projectRoot = rf.replace(/\/symbols$/i, '');
+    } else {
+        projectRoot = rf;
+    }
+    if (!projectRoot) return null;
+    return projectRoot + '/mushaftasks/symbolPalette_settings.json';
 }
 
 function detectRiwayahFromFilename(filename) {
@@ -137,18 +153,36 @@ function saveState() {
 // ==================== SETTINGS ====================
 
 function loadSettings() {
+    // Try shared path first (cross-device sync via mushaftasks)
     try {
-        var settingsPath = getSymbolPaletteSettingsPath();
-        var result = window.cep.fs.readFile(settingsPath, 'utf-8');
+        var sharedPath = getSharedSettingsPath();
+        if (sharedPath) {
+            var result = window.cep.fs.readFile(sharedPath, 'utf-8');
+            if (result.err === 0 && result.data) {
+                var data = JSON.parse(result.data);
+                riwayahSettings.defaultSystem = data.defaultSystem || 'al_kufi';
+                riwayahSettings.mappings = data.mappings || {};
+                console.log('Settings loaded from shared path:', sharedPath);
+                return;
+            }
+        }
+    } catch (e) {
+        console.log('Could not load settings from shared path:', e);
+    }
+
+    // Fallback: old local file path (for migration)
+    try {
+        var localPath = getMushafTaskManagerDir() + '/symbolPalette_settings.json';
+        var result = window.cep.fs.readFile(localPath, 'utf-8');
         if (result.err === 0 && result.data) {
             var data = JSON.parse(result.data);
             riwayahSettings.defaultSystem = data.defaultSystem || 'al_kufi';
             riwayahSettings.mappings = data.mappings || {};
-            console.log('Settings loaded from', settingsPath);
+            console.log('Settings loaded from local path:', localPath);
             return;
         }
     } catch (e) {
-        console.log('Could not load settings from file, falling back to localStorage:', e);
+        console.log('Could not load settings from local file:', e);
     }
 
     // Fallback to localStorage
@@ -167,12 +201,16 @@ function loadSettings() {
 function saveSettings() {
     try {
         var settingsPath = getSymbolPaletteSettingsPath();
-        var dir = getMushafTaskManagerDir();
+        var dir = settingsPath.replace(/\\/g, '/').replace(/\/[^\/]+$/, '');
 
         // Ensure directory exists
         var dirStat = window.cep.fs.readdir(dir);
         if (dirStat.err !== 0) {
-            window.cep.fs.makedir(dir);
+            var makeResult = window.cep.fs.makedir(dir);
+            if (makeResult.err !== 0) {
+                console.log('Could not create directory:', dir, 'error:', makeResult.err);
+                throw new Error('Could not create directory');
+            }
         }
 
         var result = window.cep.fs.writeFile(settingsPath, JSON.stringify(riwayahSettings, null, 2), 'utf-8');
