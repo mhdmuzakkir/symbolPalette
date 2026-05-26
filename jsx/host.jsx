@@ -288,17 +288,17 @@ function pasteAllNumbersAligned(filePaths) {
         }
         collectOrnaments(ornamentLayer);
 
-        // --- 4. Validate count ---
+        // --- 5. Validate count ---
         if (ornaments.length < filePaths.length) {
             var needed = filePaths.length - ornaments.length;
             return "Error: Add " + needed + " ayah";
         }
 
-        // --- 5. Sort ornaments: top-to-bottom rows, right-to-left within each row ---
+        // --- 6. Sort ornaments: top-to-bottom rows, right-to-left within each row ---
         var MM_TO_PT = 2.83464567;
         var ROW_TOLERANCE = 3 * MM_TO_PT;
 
-        function getCenter(item) {
+        function getBoundsCenter(item) {
             var b = item.visibleBounds || item.geometricBounds;
             return {
                 cx: (b[0] + b[2]) / 2,
@@ -309,7 +309,7 @@ function pasteAllNumbersAligned(filePaths) {
         // Calculate centers
         var ornamentData = [];
         for (var i = 0; i < ornaments.length; i++) {
-            var c = getCenter(ornaments[i]);
+            var c = getBoundsCenter(ornaments[i]);
             ornamentData.push({
                 item: ornaments[i],
                 cx: c.cx,
@@ -355,9 +355,8 @@ function pasteAllNumbersAligned(filePaths) {
             }
         }
 
-        // --- 6. Paste numbers at ornament positions with alignment ---
-        var OFFSET_DOWN_MM = 0.1;
-        var offsetDownPt = OFFSET_DOWN_MM * MM_TO_PT;
+        // --- 7. Paste all numbers into Aya No. layer ---
+        var pastedGroups = [];
 
         for (var j = 0; j < filePaths.length; j++) {
             var filePath = filePaths[j];
@@ -402,24 +401,70 @@ function pasteAllNumbersAligned(filePaths) {
                 continue;
             }
 
-            // Get ornament bounds and center
+            // Rough initial placement at corresponding ornament (so nearest-neighbor works well)
             var orn = sortedOrnaments[j];
             var ornBounds = orn.visibleBounds || orn.geometricBounds;
             var ornCx = (ornBounds[0] + ornBounds[2]) / 2;
             var ornCy = (ornBounds[1] + ornBounds[3]) / 2;
 
-            // Get pasted item bounds and center
             var itemBounds = targetItem.visibleBounds || targetItem.geometricBounds;
             var itemCx = (itemBounds[0] + itemBounds[2]) / 2;
             var itemCy = (itemBounds[1] + itemBounds[3]) / 2;
 
-            // Center ayah number on ornament
             targetItem.translate(ornCx - itemCx, ornCy - itemCy);
 
-            // Move 0.1 mm DOWN (same as ayahalign.jsx)
-            targetItem.translate(0, -offsetDownPt);
-
+            pastedGroups.push(targetItem);
             targetDoc.selection = null;
+        }
+
+        // --- 8. Run nearest-neighbor ayah align (same logic as ornament replacer) ---
+        var OFFSET_DOWN_MM = 0.1;
+        var offsetDownPt = OFFSET_DOWN_MM * MM_TO_PT;
+        var AYAH_SHIFT_DY_PT = -0.6644; // extra shift from ornament replacer
+
+        function getItemCenter(item) {
+            return {
+                cx: item.left + item.width / 2,
+                cy: item.top - item.height / 2
+            };
+        }
+
+        function distanceSquared(a, b) {
+            var dx = a.cx - b.cx;
+            var dy = a.cy - b.cy;
+            return dx * dx + dy * dy;
+        }
+
+        for (var i = 0; i < pastedGroups.length; i++) {
+            var ayahItem = pastedGroups[i];
+            var ayahCenter = getItemCenter(ayahItem);
+            var bestOrn = null;
+            var bestDist2 = Number.MAX_VALUE;
+
+            for (var j = 0; j < ornaments.length; j++) {
+                var orn = ornaments[j];
+                var ornCenter = getItemCenter(orn);
+                var d2 = distanceSquared(ayahCenter, ornCenter);
+                if (d2 < bestDist2) {
+                    bestDist2 = d2;
+                    bestOrn = orn;
+                }
+            }
+
+            if (!bestOrn) continue;
+
+            var targetC = getItemCenter(bestOrn);
+
+            // 1) center ayah number on ornament
+            var dx = targetC.cx - ayahCenter.cx;
+            var dy = targetC.cy - ayahCenter.cy;
+            ayahItem.translate(dx, dy);
+
+            // 2) move ayah number 0.1 mm DOWN
+            ayahItem.translate(0, -offsetDownPt);
+
+            // 3) extra 0.6644 pt DOWN (same as ornament replacer)
+            ayahItem.translate(0, AYAH_SHIFT_DY_PT);
         }
 
         return "success";
