@@ -417,7 +417,10 @@ function pasteAllNumbersAligned(filePaths) {
             targetDoc.selection = null;
         }
 
-        // --- 8. Run nearest-neighbor ayah align (same logic as ornament replacer) ---
+        // --- 8. Fine-tune alignment on the mapped ornament ---
+        // Use the same mapping as initial placement (sortedOrnaments[i] ↔ pastedGroups[i])
+        // instead of nearest-neighbor, which can reassign numbers to wrong ornaments
+        // when ornaments are close together.
         var OFFSET_DOWN_MM = 0.1;
         var offsetDownPt = OFFSET_DOWN_MM * MM_TO_PT;
         var AYAH_SHIFT_DY_PT = -0.6644; // extra shift from ornament replacer
@@ -429,30 +432,12 @@ function pasteAllNumbersAligned(filePaths) {
             };
         }
 
-        function distanceSquared(a, b) {
-            var dx = a.cx - b.cx;
-            var dy = a.cy - b.cy;
-            return dx * dx + dy * dy;
-        }
-
         for (var i = 0; i < pastedGroups.length; i++) {
             var ayahItem = pastedGroups[i];
-            var ayahCenter = getItemCenter(ayahItem);
-            var bestOrn = null;
-            var bestDist2 = Number.MAX_VALUE;
-
-            for (var j = 0; j < ornaments.length; j++) {
-                var orn = ornaments[j];
-                var ornCenter = getItemCenter(orn);
-                var d2 = distanceSquared(ayahCenter, ornCenter);
-                if (d2 < bestDist2) {
-                    bestDist2 = d2;
-                    bestOrn = orn;
-                }
-            }
-
+            var bestOrn = sortedOrnaments[i];
             if (!bestOrn) continue;
 
+            var ayahCenter = getItemCenter(ayahItem);
             var targetC = getItemCenter(bestOrn);
 
             // 1) center ayah number on ornament
