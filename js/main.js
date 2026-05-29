@@ -772,44 +772,83 @@ function renderNumberGrid() {
  * Snaps the panel width to fit the content grids exactly.
  * Calculates optimal columns using a square-root heuristic for a roughly
  * square grid, then resizes the panel to eliminate empty space.
+ * Note: Only works when the panel is floating (undocked). Docked panels
+ * cannot be resized programmatically — CSS centering handles that case.
  */
+var _isSnapping = false;
 function snapPanelWidth() {
-    try {
-        var currentWidth = window.innerWidth;
-        var currentHeight = window.innerHeight;
+    if (_isSnapping) return;
+    _isSnapping = true;
 
-        // Symbol grid metrics
-        // cell=44px, gap=10px, container padding=12px, grid padding=4px
-        var symbolCount = symbols.length;
-        var symbolWidth = 0;
-        if (symbolCount > 0) {
-            var symbolCols = Math.min(Math.ceil(Math.sqrt(symbolCount)), 6);
-            symbolWidth = 32 + (symbolCols * 44) + ((symbolCols - 1) * 10) + 20; // +20 scrollbar buffer
+    // Delay slightly to let DOM settle
+    setTimeout(function() {
+        try {
+            var currentWidth = window.innerWidth;
+            var currentHeight = window.innerHeight;
+
+            // Symbol grid metrics
+            // cell=44px, gap=10px, container padding=12px, grid padding=4px
+            var symbolCount = symbols.length;
+            var symbolWidth = 0;
+            if (symbolCount > 0) {
+                var symbolCols = Math.min(Math.ceil(Math.sqrt(symbolCount)), 6);
+                symbolWidth = 32 + (symbolCols * 44) + ((symbolCols - 1) * 10) + 20; // +20 scrollbar buffer
+            }
+
+            // Number grid metrics
+            // cell=44px, gap=8px, grid padding=4px
+            var numberCount = (currentPageInfo.ayahNumbers || []).length;
+            var numberWidth = 0;
+            if (numberCount > 0) {
+                var numberCols = Math.min(Math.ceil(Math.sqrt(numberCount)), 6);
+                numberWidth = 8 + (numberCols * 44) + ((numberCols - 1) * 8) + 20;
+            }
+
+            // Use the wider of the two, with a sensible minimum
+            var targetWidth = Math.max(symbolWidth, numberWidth, 200);
+
+            // Clamp to manifest limits (160 - 600)
+            targetWidth = Math.max(160, Math.min(600, targetWidth));
+
+            // Only resize if change is significant (avoids jitter)
+            if (Math.abs(targetWidth - currentWidth) > 15) {
+                console.log('SymbolPalette: snapping width from', currentWidth, 'to', targetWidth);
+                var resized = false;
+                try {
+                    // Try CSInterface method first
+                    if (csInterface && csInterface.resizeContent) {
+                        csInterface.resizeContent(targetWidth, currentHeight);
+                        resized = true;
+                    }
+                } catch (e1) {}
+                if (!resized) {
+                    try {
+                        // Fallback to direct CEP bridge
+                        if (window.__adobe_cep__ && window.__adobe_cep__.resizeContent) {
+                            window.__adobe_cep__.resizeContent(targetWidth, currentHeight);
+                            resized = true;
+                        }
+                    } catch (e2) {}
+                }
+                if (!resized) {
+                    console.log('SymbolPalette: resizeContent unavailable — panel may be docked');
+                }
+            }
+        } catch (e) {
+            console.log('SymbolPalette: snapPanelWidth error', e);
         }
-
-        // Number grid metrics
-        // cell=44px, gap=8px, grid padding=4px
-        var numberCount = (currentPageInfo.ayahNumbers || []).length;
-        var numberWidth = 0;
-        if (numberCount > 0) {
-            var numberCols = Math.min(Math.ceil(Math.sqrt(numberCount)), 6);
-            numberWidth = 8 + (numberCols * 44) + ((numberCols - 1) * 8) + 20;
-        }
-
-        // Use the wider of the two, with a sensible minimum
-        var targetWidth = Math.max(symbolWidth, numberWidth, 200);
-
-        // Clamp to manifest limits (160 - 600)
-        targetWidth = Math.max(160, Math.min(600, targetWidth));
-
-        // Only resize if change is significant (avoids jitter)
-        if (Math.abs(targetWidth - currentWidth) > 15) {
-            csInterface.resizeContent(targetWidth, currentHeight);
-        }
-    } catch (e) {
-        // Silently fail if resize isn't available in this CEP context
-    }
+        _isSnapping = false;
+    }, 100);
 }
+
+// Also snap when the user manually resizes a floating panel
+var _resizeTimeout;
+window.addEventListener('resize', function() {
+    clearTimeout(_resizeTimeout);
+    _resizeTimeout = setTimeout(function() {
+        snapPanelWidth();
+    }, 300);
+});
 
 function showNumberPlaceholder(container, num) {
     var placeholder = document.createElement('div');
