@@ -1,34 +1,53 @@
-# Symbol Palette - Illustrator CEP Extension
+# Symbol Palette — Illustrator CEP Extension
 
-A CEP panel extension for Adobe Illustrator that provides a quick-access palette for inserting symbols from external AI files.
+A CEP panel extension for Adobe Illustrator designed for **Mushaf (Qur'an typesetting)** workflows. It provides a quick-access palette for inserting symbols and ayah numbers from external SVG files, with automatic page detection and ornament alignment.
+
+---
 
 ## Features
 
-- **Three Default Buttons**: Damma, Imala, Mufrada
-- **File Browser**: Browse and select AI files instead of typing paths
-- **Edit Symbols**: Modify name and file path for any existing symbol
-- **Delete Symbols**: Remove symbols you no longer need
-- **Persistent Storage**: Your symbols are saved between sessions
-- **Dark Theme**: Easy on the eyes
+### Symbol Palette
+- **Dynamic Category Scanning**: Automatically discovers symbol categories from `symbols/{category}/` subfolders
+- **Click-to-Paste**: Click any symbol thumbnail to paste its SVG directly into your active Illustrator document
+- **Edit Mode**: Reorder symbols (drag), rename, or delete entries via the edit modal
+- **Dark Theme**: Easy on the eyes for long sessions
+
+### Ayah Number Management
+- **Auto Page Detection**: Detects the current Mushaf page from the filename (e.g., `001-hafs.ai` → Page 1, riwayah "hafs")
+- **Ayah Count Lookup**: Automatically shows how many ayahs belong on the detected page using built-in statistics for 6 counting systems
+- **Number Grid**: One-click grid of all ayah numbers for the current page
+- **Import All Numbers**: Bulk-import all ayah number SVGs for a page in one click, automatically aligned to pre-placed ornament markers
+- **Manual Insert**: Type any number to paste its SVG directly
+
+### Multi-Riwayah Support
+- Supports multiple Qur'anic readings (Hafs, Warsh, Qaloon, etc.)
+- **6 Counting Systems**: Kufi, Madani Al-Awwal, Madani Al-Akhir, Makki, Basri, Dimashqi
+- Per-riwayah system mapping via Settings
+
+### Self-Updater
+- Built-in update checker that downloads from GitHub
+- Supports `git pull` for cloned repositories
+
+---
 
 ## Installation
 
-### Method 1: Standard CEP Installation
+### Standard CEP Installation
 
 1. Copy the entire `symbolPalette` folder to your CEP extensions directory:
    ```
-   C:\Program Files (x86)\Common Files\Adobe\CEP\extensions\symbolPalette
+   C:\Users\[YourUsername]\AppData\Roaming\Adobe\CEP\extensions\symbolPalette
    ```
 
 2. **Enable Debug Mode** (required for unsigned extensions):
-   
+
    Create or edit the registry key:
    ```
    HKEY_CURRENT_USER\Software\Adobe\CSXS.11
    ```
-   
+
    Add a String value named `PlayerDebugMode` with value `1`
-   
+
    For different Illustrator versions:
    - Illustrator 2023 (v27): CSXS.11
    - Illustrator 2024 (v28): CSXS.12
@@ -38,92 +57,89 @@ A CEP panel extension for Adobe Illustrator that provides a quick-access palette
 
 4. Open the panel via: **Window > Extensions > Symbol Palette**
 
-### Method 2: Development Installation (Recommended for testing)
+---
 
-1. Copy the `symbolPalette` folder to:
-   ```
-   C:\Users\[YourUsername]\AppData\Roaming\Adobe\CEP\extensions\symbolPalette
-   ```
+## Required Folder Structure
 
-2. Enable debug mode as described above
-
-3. Restart Illustrator
-
-## File Structure
+The extension needs a root folder containing:
 
 ```
-symbolPalette/
-├── CSXS/
-│   └── manifest.xml          # Extension manifest
-├── css/
-│   └── style.css             # Panel styling
-├── js/
-│   ├── CSInterface.js        # Adobe CEP interface
-│   └── main.js               # Panel logic
-├── jsx/
-│   └── host.jsx              # Illustrator ExtendScript
-├── index.html                # Panel UI
-└── README.md                 # This file
+mushafproject/
+├── symbols/
+│   ├── damma/              # Symbol category
+│   │   ├── symbol1.svg
+│   │   └── symbol2.svg
+│   ├── imala/
+│   └── mufrada/
+├── numbers/
+│   ├── 1.svg               # Ayah number SVGs
+│   ├── 2.svg
+│   └── ...
+└── mushaftasks/
+    └── riwayah-tasks/      # Auto-detected for riwayah settings
 ```
+
+Select the root folder (e.g., `mushafproject`) via the **📁 Select Root Folder** button.
+
+---
 
 ## How to Use
 
 ### Pasting Symbols
+1. Select a category from the **Type** dropdown
+2. Click any symbol thumbnail to paste it into your active document
+3. The pasted item appears at the center of your current view
 
-Click any symbol button to paste its contents into your active document:
-- **Damma**: Pastes from `C:/Users/Admin/Desktop/symbols/damma.ai`
-- **Imala**: Pastes from `C:/Users/Admin/Desktop/symbols/imala.ai`
-- **Mufrada**: Pastes from `C:/Users/Admin/Desktop/symbols/mufrada.ai`
+### Pasting Ayah Numbers (Single)
+1. Open a Mushaf page file (e.g., `001-hafs.ai`)
+2. The panel auto-detects the page and shows ayah numbers in the grid
+3. Click any number cell to paste that ayah number
 
-### Adding New Symbols
+### Import All Numbers (Bulk)
+1. Ensure your document has an **"Ornaments"** layer containing ornament markers named exactly `"ayah"` or `"آية"`
+2. Click **⬇ Import All Numbers**
+3. The extension pastes all ayah numbers for the page, aligned to the detected ornaments
 
-1. Click the **+ Add Symbol** button
-2. Enter a name for your symbol (e.g., "Fatha")
-3. Click **Browse...** to open the file picker and select an AI file
-4. Click **Add**
+### Manual Number Insert
+1. Click **+ Ayah Number**
+2. Type the number (e.g., `5` or `286`)
+3. Click **Insert**
 
-The new button will appear in the palette and persist between sessions.
+### Settings (Riwayah → System Mapping)
+1. Click **⚙ Settings**
+2. Map each riwayah name to its counting system
+3. Choose a **Default System** for unmapped riwayahs
+4. Save — settings sync across extensions via `mushaftasks/symbolPalette_settings.json`
 
-### Editing Symbols
+---
 
-1. Hover over any symbol button
-2. Click the **✎** (edit) icon that appears on the right
-3. Change the name and/or click **Browse...** to select a different file
-4. Click **Save** to apply changes
+## Source File Requirements
 
-### Deleting Symbols
+### Symbols
+- SVG files in `symbols/{category}/`
+- No specific layer naming required
+- Artwork is copied as-is from the SVG
 
-1. Hover over the symbol and click the **✎** edit icon
-2. Click the **Delete** button in the edit modal
-3. Confirm the deletion
+### Ayah Numbers
+- SVG files in `numbers/` named `{number}.svg` (e.g., `1.svg`, `2.svg`, ... `286.svg`)
+- Each file should contain the ayah number artwork
 
-### Source File Requirements
+### Ornaments (for Import All)
+- Layer named exactly **"Ornaments"** or **"Ornament"**
+- Ornament markers named exactly **"ayah"** or **"آية"**
+- One ornament per ayah on the page
 
-Each AI file must have:
-- A layer named exactly **"Layer"** (case-sensitive)
-- Artwork placed on that layer
+---
 
-The extension will:
-1. Open the source AI file
-2. Select all objects on the "Layer" layer
-3. Copy them
-4. Paste into your active document
-5. Close the source file without saving
+## Auto-Detection
 
-## Customizing Default Symbols
+The extension automatically tries to find your project folder by scanning:
+1. Google Drive (`G:/My Drive/`, etc.)
+2. All available drives (`C:/`, `D:/`, etc.)
+3. `.lnk` shortcut files in common locations
+4. Settings shared with Mushaf Task Manager
 
-To change the default symbols, edit `js/main.js`:
-
-```javascript
-var defaultSymbols = [
-    { name: "Damma", path: "C:/Users/Admin/Desktop/symbols/damma.ai" },
-    { name: "Imala", path: "C:/Users/Admin/Desktop/symbols/imala.ai" },
-    { name: "Mufrada", path: "C:/Users/Admin/Desktop/symbols/mufrada.ai" }
-    // Add more defaults here
-];
-```
-
-After modifying, clear the extension's storage or reset to defaults by removing and re-adding the extension.
+---
 
 ## Troubleshooting
 
@@ -132,27 +148,34 @@ After modifying, clear the extension's storage or reset to defaults by removing 
 - Check that the manifest.xml is valid
 - Verify the folder path is correct
 
-### "File not found" error
-- Verify the file exists at the specified path
-- Use the Browse button to ensure the correct path is selected
-- Check file permissions
-
-### "Could not find layer named 'Layer'"
-- Open the AI file and ensure there's a layer named exactly "Layer"
-- The layer name is case-sensitive
-
-### "No active document" error
+### "No document open" error
 - Open or create a document in Illustrator before using the panel
+
+### "Ornaments layer not found"
+- Create a layer named exactly **"Ornaments"** (case-sensitive)
+- Ensure ornament markers are named **"ayah"** or **"آية"**
+
+### "Error: Add X ayah"
+- The number of ornament markers is less than the number of ayahs on this page
+- Add more ornaments or check that all are named correctly
+
+### Number SVGs not found
+- Ensure the `numbers/` folder exists under your selected root
+- Files must be named exactly `{number}.svg` (e.g., `7.svg`, `12.svg`)
 
 ### Browse button doesn't work
 - Make sure you're using a compatible Illustrator version (2020+)
 - The file browser uses CEP's native file dialog which requires proper CEP support
+
+---
 
 ## Uninstallation
 
 1. Close Illustrator
 2. Delete the `symbolPalette` folder from the extensions directory
 3. (Optional) Remove the registry key if you no longer need debug mode
+
+---
 
 ## License
 

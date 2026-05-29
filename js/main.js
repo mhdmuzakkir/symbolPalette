@@ -1374,9 +1374,6 @@ function setupEventListeners() {
     // Select Folder button
     document.getElementById('selectFolderBtn').addEventListener('click', showFolderModal);
 
-    // TEMPORARY: Rename Number SVGs button
-    document.getElementById('renameNumbersBtn').addEventListener('click', renameNumberSvgsBatch);
-
     // Folder Modal
     document.getElementById('folderCancelBtn').addEventListener('click', hideFolderModal);
     document.getElementById('folderConfirmBtn').addEventListener('click', loadSymbolsFromRootFolder);
@@ -1746,37 +1743,6 @@ function insertNumber() {
 }
 
 // ==================== TEMPORARY: RENAME NUMBER SVGs ====================
-
-function renameNumberSvgsBatch() {
-    if (!rootFolder) {
-        alert('Please select a root folder first.');
-        return;
-    }
-
-    var numbersPath = rootFolder + '/numbers';
-    var stat = window.cep.fs.readdir(numbersPath);
-    if (stat.err !== 0) {
-        alert('Numbers folder not found: ' + numbersPath);
-        return;
-    }
-
-    if (!confirm('This will open every .svg in the numbers folder, fully ungroup all nested groups/clipping masks, bring everything to Layer 1, rename the final object to match the filename, then save and close.\n\nContinue?')) {
-        return;
-    }
-
-    var btn = document.getElementById('renameNumbersBtn');
-    btn.classList.add('processing');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="icon">⏳</span> Processing...';
-
-    var script = 'renameNumberSvgs("' + escapePath(numbersPath) + '");';
-    csInterface.evalScript(script, function(result) {
-        btn.classList.remove('processing');
-        btn.disabled = false;
-        btn.innerHTML = '<span class="icon">✏</span> Flatten & Rename Number SVGs';
-        alert(result);
-    });
-}
 
 // ==================== UTILITIES ====================
 
