@@ -261,32 +261,22 @@ function pasteAllNumbersAligned(filePaths) {
             ayaLayer.groupItems[0].remove();
         }
 
-        // --- 4. Collect ornaments named "ayah" or "آية" recursively ---
+        // --- 4. Collect ornaments named "ayah" or "آية" ---
+        // NOTE: layer.pageItems in Illustrator is already recursive (includes nested items),
+        // so we do NOT recurse into groupItems — that would double-count every ornament.
         var ORNAMENT_NAMES = ["ayah", "آية"];
         var ornaments = [];
 
-        function collectOrnaments(container) {
-            var items = container.pageItems;
-            for (var i = 0; i < items.length; i++) {
-                var it = items[i];
-                var isMatch = false;
-                for (var n = 0; n < ORNAMENT_NAMES.length; n++) {
-                    if (it.name === ORNAMENT_NAMES[n]) {
-                        isMatch = true;
-                        break;
-                    }
-                }
-                if (isMatch) {
+        var items = ornamentLayer.pageItems;
+        for (var i = 0; i < items.length; i++) {
+            var it = items[i];
+            for (var n = 0; n < ORNAMENT_NAMES.length; n++) {
+                if (it.name === ORNAMENT_NAMES[n]) {
                     ornaments.push(it);
-                }
-            }
-            if (container.groupItems) {
-                for (var g = 0; g < container.groupItems.length; g++) {
-                    collectOrnaments(container.groupItems[g]);
+                    break;
                 }
             }
         }
-        collectOrnaments(ornamentLayer);
 
         // --- 5. Validate count ---
         if (ornaments.length < filePaths.length) {
