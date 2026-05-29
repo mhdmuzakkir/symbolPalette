@@ -696,6 +696,7 @@ function hidePageInfo() {
     document.getElementById('pageInfoBar').classList.add('hidden');
     document.getElementById('importAllBar').classList.add('hidden');
     document.getElementById('numberSection').classList.add('hidden');
+    snapPanelWidth();
 }
 
 function showPageInfo(pageNum, riwayah, systemKey, count) {
@@ -720,6 +721,7 @@ function renderNumberGrid() {
         emptyMsg.className = 'empty-message';
         emptyMsg.textContent = 'No ayah numbers for this page';
         container.appendChild(emptyMsg);
+        snapPanelWidth();
         return;
     }
 
@@ -760,6 +762,53 @@ function renderNumberGrid() {
         cell.appendChild(imgContainer);
         container.appendChild(cell);
     });
+
+    snapPanelWidth();
+}
+
+// ==================== PANEL WIDTH SNAPPING ====================
+
+/**
+ * Snaps the panel width to fit the content grids exactly.
+ * Calculates optimal columns using a square-root heuristic for a roughly
+ * square grid, then resizes the panel to eliminate empty space.
+ */
+function snapPanelWidth() {
+    try {
+        var currentWidth = window.innerWidth;
+        var currentHeight = window.innerHeight;
+
+        // Symbol grid metrics
+        // cell=44px, gap=10px, container padding=12px, grid padding=4px
+        var symbolCount = symbols.length;
+        var symbolWidth = 0;
+        if (symbolCount > 0) {
+            var symbolCols = Math.min(Math.ceil(Math.sqrt(symbolCount)), 6);
+            symbolWidth = 32 + (symbolCols * 44) + ((symbolCols - 1) * 10) + 20; // +20 scrollbar buffer
+        }
+
+        // Number grid metrics
+        // cell=44px, gap=8px, grid padding=4px
+        var numberCount = (currentPageInfo.ayahNumbers || []).length;
+        var numberWidth = 0;
+        if (numberCount > 0) {
+            var numberCols = Math.min(Math.ceil(Math.sqrt(numberCount)), 6);
+            numberWidth = 8 + (numberCols * 44) + ((numberCols - 1) * 8) + 20;
+        }
+
+        // Use the wider of the two, with a sensible minimum
+        var targetWidth = Math.max(symbolWidth, numberWidth, 200);
+
+        // Clamp to manifest limits (160 - 600)
+        targetWidth = Math.max(160, Math.min(600, targetWidth));
+
+        // Only resize if change is significant (avoids jitter)
+        if (Math.abs(targetWidth - currentWidth) > 15) {
+            csInterface.resizeContent(targetWidth, currentHeight);
+        }
+    } catch (e) {
+        // Silently fail if resize isn't available in this CEP context
+    }
 }
 
 function showNumberPlaceholder(container, num) {
@@ -1195,6 +1244,7 @@ function renderGrid() {
             : 'Click "Select Root Folder" to get started';
         emptyMsg.innerHTML = 'No symbols loaded<br><span class="hint">' + hint + '</span>';
         container.appendChild(emptyMsg);
+        snapPanelWidth();
         return;
     }
 
@@ -1253,6 +1303,8 @@ function renderGrid() {
         cell.appendChild(imgContainer);
         container.appendChild(cell);
     });
+
+    snapPanelWidth();
 }
 
 function showPlaceholder(container, name) {

@@ -26,7 +26,7 @@
             installUpdate: function() { return Promise.reject(new Error('Node.js not available')); },
             getUpdateStatus: function() { return 'error'; },
             getLastCheckResult: function() { return null; },
-            CURRENT_VERSION: '1.2.2',
+            CURRENT_VERSION: '1.2.3',
             isUserInstall: function() { return false; },
             getExtensionPath: function() { return null; }
         };
@@ -35,7 +35,7 @@
 
     var REPO_OWNER = 'mhdmuzakkir';
     var REPO_NAME = 'symbolPalette';
-    var CURRENT_VERSION = '1.2.2';
+    var CURRENT_VERSION = '1.2.3';
 
     var UPDATE_STATUS = {
         idle: 'idle',
