@@ -535,8 +535,9 @@ function spMoveSelectionToLayer(layerName) {
         // 1. Cut the selected item(s) — this removes them from the compound path
         app.executeMenuCommand("cut");
 
-        // 2. Exit isolation mode (cutting may have already exited it)
-        try { app.executeMenuCommand("deselectall"); } catch (e) {}
+        // 2. Exit isolation mode by selecting the parent layer's artwork
+        // (forces Illustrator to leave isolation mode completely)
+        try { doc.activeLayer.hasSelectedArtwork = true; } catch (e) {}
 
         // 3. Paste in front — creates standalone item(s) on the active layer
         app.executeMenuCommand("pasteFront");

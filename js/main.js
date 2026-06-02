@@ -1959,23 +1959,37 @@ function renderLayerButtons() {
 }
 
 var _hostScriptLoaded = false;
+function getHostScriptPath() {
+    try {
+        var href = window.location.href;
+        href = href.replace(/^file:\/+/, '').replace(/^\//, '').replace(/\\/g, '/');
+        href = href.replace(/\/index\.html.*$/, '');
+        return href + '/jsx/host.jsx';
+    } catch (e) {
+        return '';
+    }
+}
 function ensureHostScript(callback) {
     if (_hostScriptLoaded) {
         if (callback) callback();
         return;
     }
-    try {
-        var extPath = csInterface.getSystemPath(csInterface.SystemPath.EXTENSION);
-        var jsxPath = extPath.replace(/\\/g, '/') + '/jsx/host.jsx';
-        var loadScript = '$.evalFile("' + jsxPath + '");';
-        csInterface.evalScript(loadScript, function(result) {
-            _hostScriptLoaded = true;
-            if (callback) callback();
-        });
-    } catch (e) {
-        console.error('Failed to load host.jsx:', e);
+    var scriptPath = getHostScriptPath();
+    if (!scriptPath) {
+        console.error('Cannot find host.jsx path');
         if (callback) callback();
+        return;
     }
+    var escapedPath = scriptPath.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    csInterface.evalScript('$.evalFile("' + escapedPath + '")', function(result) {
+        if (result && result.indexOf('Error') !== -1) {
+            console.error('Failed to load host.jsx:', result);
+            if (callback) callback();
+            return;
+        }
+        _hostScriptLoaded = true;
+        if (callback) callback();
+    });
 }
 
 function moveSelectionToLayer(layerName) {
