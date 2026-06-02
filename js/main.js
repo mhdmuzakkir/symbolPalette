@@ -1965,10 +1965,10 @@ function ensureHostScript(callback) {
         return;
     }
     try {
-        var extPath = csInterface.getSystemPath(SystemPath.EXTENSION);
+        var extPath = csInterface.getSystemPath(csInterface.SystemPath.EXTENSION);
         var jsxPath = extPath.replace(/\\/g, '/') + '/jsx/host.jsx';
         var loadScript = '$.evalFile("' + jsxPath + '");';
-        csInterface.evalScript(loadScript, function() {
+        csInterface.evalScript(loadScript, function(result) {
             _hostScriptLoaded = true;
             if (callback) callback();
         });

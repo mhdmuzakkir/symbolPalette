@@ -524,20 +524,24 @@ function spMoveSelectionToLayer(layerName) {
         var doc = app.activeDocument;
         if (doc.selection.length === 0) return "Error: Nothing selected.";
 
-        // Capture selected items BEFORE exiting isolation mode
-        // (references remain valid after exiting)
-        var selectedItems = [];
-        for (var i = 0; i < doc.selection.length; i++) {
-            selectedItems.push(doc.selection[i]);
+        var quranTextLayer = null;
+        for (var i = 0; i < doc.layers.length; i++) {
+            if (doc.layers[i].name === "Quran Text") {
+                quranTextLayer = doc.layers[i];
+                break;
+            }
         }
 
-        // Exit isolation mode — layer creation is blocked while inside a
-        // compound path / group isolation session.
-        try {
-            app.executeMenuCommand("exitIsolationMode");
-        } catch (e) {}
+        // 1. Cut the selected item(s) — this removes them from the compound path
+        app.executeMenuCommand("cut");
 
-        // Find or create target layer (now safe — isolation mode is off)
+        // 2. Exit isolation mode (cutting may have already exited it)
+        try { app.executeMenuCommand("deselectall"); } catch (e) {}
+
+        // 3. Paste in front — creates standalone item(s) on the active layer
+        app.executeMenuCommand("pasteFront");
+
+        // 4. Find or create target layer
         var targetLayer = null;
         for (var i = 0; i < doc.layers.length; i++) {
             if (doc.layers[i].name === layerName) {
@@ -552,51 +556,30 @@ function spMoveSelectionToLayer(layerName) {
         targetLayer.locked = false;
         targetLayer.visible = true;
 
-        var pathsToCompound = [];
-
-        for (var s = selectedItems.length - 1; s >= 0; s--) {
-            var item = selectedItems[s];
-            // Skip items that became invalid after exiting isolation mode
-            try { var _ = item.typename; } catch (e) { continue; }
-
-            if (item.typename === "PathItem") {
-                var parent = item.parent;
-                if (parent && parent.typename === "CompoundPathItem") {
-                    // Duplicate path, remove original from compound, move dup to target
-                    var dup = item.duplicate();
-                    dup.move(parent.parent, ElementPlacement.PLACEATEND);
-                    item.remove();
-                    dup.move(targetLayer, ElementPlacement.PLACEATEND);
-                    pathsToCompound.push(dup);
-                } else {
-                    item.move(targetLayer, ElementPlacement.PLACEATEND);
-                    pathsToCompound.push(item);
-                }
-            } else if (item.typename === "CompoundPathItem") {
-                // Extract all pathItems, then remove the empty compound path
-                for (var p = item.pathItems.length - 1; p >= 0; p--) {
-                    var path = item.pathItems[p];
-                    var dup = path.duplicate();
-                    dup.move(targetLayer, ElementPlacement.PLACEATEND);
-                    pathsToCompound.push(dup);
-                }
-                item.remove();
-            } else if (item.typename === "GroupItem") {
-                spCollectPaths(item, pathsToCompound);
-                item.remove();
-            }
+        // 5. Move pasted item(s) to target layer
+        var pastedItems = [];
+        for (var i = doc.selection.length - 1; i >= 0; i--) {
+            var item = doc.selection[i];
+            item.move(targetLayer, ElementPlacement.PLACEATEND);
+            pastedItems.push(item);
         }
 
-        // Make compound path from all collected paths
-        if (pathsToCompound.length > 0) {
-            for (var i = 0; i < pathsToCompound.length; i++) {
-                pathsToCompound[i].move(targetLayer, ElementPlacement.PLACEATEND);
-            }
+        // 6. Make compound path
+        if (pastedItems.length > 0) {
             doc.selection = null;
-            for (var i = 0; i < pathsToCompound.length; i++) {
-                pathsToCompound[i].selected = true;
+            for (var i = 0; i < pastedItems.length; i++) {
+                pastedItems[i].selected = true;
             }
             app.executeMenuCommand("compoundPath");
+        }
+
+        // 7. Reselect Quran Text compound path for re-isolation
+        if (quranTextLayer) {
+            doc.selection = null;
+            for (var i = 0; i < quranTextLayer.compoundPathItems.length; i++) {
+                quranTextLayer.compoundPathItems[i].selected = true;
+                break; // select first compound path
+            }
         }
 
         return "success";
