@@ -129,6 +129,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     updateFolderDisplay();
     startDocumentDetection();
+
+    // Populate version display from updater (single source of truth: version.json)
+    var footerVersion = document.getElementById('footerVersion');
+    if (footerVersion && window.SymbolUpdater) {
+        footerVersion.textContent = 'v' + window.SymbolUpdater.CURRENT_VERSION;
+    }
 });
 
 // ==================== STORAGE ====================
