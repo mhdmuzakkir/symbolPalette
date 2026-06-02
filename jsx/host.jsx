@@ -1,6 +1,33 @@
 // Symbol Palette - ExtendScript (JSX) Host Functions
 // These functions interact with Adobe Illustrator
 
+// Polyfill JSON.stringify for older Illustrator versions
+if (typeof JSON === 'undefined') {
+    JSON = {
+        stringify: function stringify(value) {
+            if (value === null) return 'null';
+            if (typeof value === 'undefined') return 'null';
+            if (typeof value === 'string') {
+                return '"' + value.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t') + '"';
+            }
+            if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+            if (value instanceof Array) {
+                var parts = [];
+                for (var i = 0; i < value.length; i++) {
+                    parts.push(stringify(value[i]));
+                }
+                return '[' + parts.join(',') + ']';
+            }
+            var props = [];
+            for (var key in value) {
+                if (!value.hasOwnProperty(key)) continue;
+                props.push(stringify(key) + ':' + stringify(value[key]));
+            }
+            return '{' + props.join(',') + '}';
+        }
+    };
+}
+
 /**
  * Main function to paste content from an SVG file into the active document
  * @param {string} filePath - Path to the SVG file (use forward slashes)
@@ -484,6 +511,60 @@ function spMatchLayerName(name) {
     return null;
 }
 
+function spDetectPotentialQuranText(layer) {
+    var TARGET_W_MM = 86.5;
+    var TARGET_H_MM = 141.6;
+    var TOLERANCE_MM = 12.0;
+    var MM_PER_PT = 0.352778;
+    var MAX_ITEMS = 20;
+    try {
+        var items = layer.pageItems;
+        var count = items.length > MAX_ITEMS ? MAX_ITEMS : items.length;
+        for (var i = 0; i < count; i++) {
+            var item = items[i];
+            if (item.typename === "PathItem" || item.typename === "CompoundPathItem") {
+                try {
+                    var bounds = item.geometricBounds;
+                    if (!bounds || bounds.length < 4) continue;
+                    var wPt = bounds[2] - bounds[0];
+                    var hPt = bounds[1] - bounds[3];
+                    var wMm = wPt * MM_PER_PT;
+                    var hMm = hPt * MM_PER_PT;
+                    if (wMm > 0 && hMm > 0 && wMm < hMm &&
+                        Math.abs(wMm - TARGET_W_MM) <= TOLERANCE_MM &&
+                        Math.abs(hMm - TARGET_H_MM) <= TOLERANCE_MM) {
+                        return true;
+                    }
+                } catch (e) {}
+            } else if (item.typename === "GroupItem") {
+                try {
+                    var gItems = item.pageItems;
+                    var gCount = gItems.length > MAX_ITEMS ? MAX_ITEMS : gItems.length;
+                    for (var j = 0; j < gCount; j++) {
+                        var child = gItems[j];
+                        if (child.typename === "PathItem" || child.typename === "CompoundPathItem") {
+                            try {
+                                var cb = child.geometricBounds;
+                                if (!cb || cb.length < 4) continue;
+                                var cwPt = cb[2] - cb[0];
+                                var chPt = cb[1] - cb[3];
+                                var cwMm = cwPt * MM_PER_PT;
+                                var chMm = chPt * MM_PER_PT;
+                                if (cwMm > 0 && chMm > 0 && cwMm < chMm &&
+                                    Math.abs(cwMm - TARGET_W_MM) <= TOLERANCE_MM &&
+                                    Math.abs(chMm - TARGET_H_MM) <= TOLERANCE_MM) {
+                                    return true;
+                                }
+                            } catch (e) {}
+                        }
+                    }
+                } catch (e) {}
+            }
+        }
+    } catch (e) {}
+    return false;
+}
+
 function spScanCurrentLayers() {
     var result = { success: false, layers: [], error: "" };
     try {
@@ -492,9 +573,34 @@ function spScanCurrentLayers() {
         for (var i = 0; i < doc.layers.length; i++) {
             var layer = doc.layers[i];
             var matched = spMatchLayerName(layer.name);
-            result.layers.push({ name: layer.name, matched: matched || null, standard: matched || "\u2014" });
+            var potential = null;
+            if (!matched) {
+                try {
+                    if (spDetectPotentialQuranText(layer)) {
+                        potential = "Quran Text";
+                    }
+                } catch (e) {}
+            }
+            result.layers.push({ name: layer.name, matched: matched || null, standard: matched || "\u2014", potential: potential });
         }
         result.success = true;
+    } catch (e) { result.error = e.toString(); }
+    return JSON.stringify(result);
+}
+
+function spRenameLayerByName(layerName, newName) {
+    var result = { success: false, error: "" };
+    try {
+        if (app.documents.length === 0) { result.error = "No document open"; return JSON.stringify(result); }
+        var doc = app.activeDocument;
+        for (var i = 0; i < doc.layers.length; i++) {
+            if (doc.layers[i].name === layerName) {
+                doc.layers[i].name = newName;
+                result.success = true;
+                return JSON.stringify(result);
+            }
+        }
+        result.error = "Layer '" + layerName + "' not found";
     } catch (e) { result.error = e.toString(); }
     return JSON.stringify(result);
 }
@@ -524,6 +630,12 @@ function spMoveSelectionToLayer(layerName) {
         var doc = app.activeDocument;
         if (doc.selection.length === 0) return "Error: Nothing selected.";
 
+        // Capture selected items immediately before any operation
+        var selectedItems = [];
+        for (var i = 0; i < doc.selection.length; i++) {
+            selectedItems.push(doc.selection[i]);
+        }
+
         var quranTextLayer = null;
         for (var i = 0; i < doc.layers.length; i++) {
             if (doc.layers[i].name === "Quran Text") {
@@ -532,17 +644,7 @@ function spMoveSelectionToLayer(layerName) {
             }
         }
 
-        // 1. Cut the selected item(s) — this removes them from the compound path
-        app.executeMenuCommand("cut");
-
-        // 2. Exit isolation mode by selecting the parent layer's artwork
-        // (forces Illustrator to leave isolation mode completely)
-        try { doc.activeLayer.hasSelectedArtwork = true; } catch (e) {}
-
-        // 3. Paste in front — creates standalone item(s) on the active layer
-        app.executeMenuCommand("pasteFront");
-
-        // 4. Find or create target layer
+        // Find target layer (caller must ensure it exists)
         var targetLayer = null;
         for (var i = 0; i < doc.layers.length; i++) {
             if (doc.layers[i].name === layerName) {
@@ -551,35 +653,45 @@ function spMoveSelectionToLayer(layerName) {
             }
         }
         if (!targetLayer) {
-            targetLayer = doc.layers.add();
-            targetLayer.name = layerName;
+            return "Error: Layer '" + layerName + "' not found. Deselect all and click the button to create it first.";
         }
         targetLayer.locked = false;
         targetLayer.visible = true;
 
-        // 5. Move pasted item(s) to target layer
-        var pastedItems = [];
-        for (var i = doc.selection.length - 1; i >= 0; i--) {
-            var item = doc.selection[i];
-            item.move(targetLayer, ElementPlacement.PLACEATEND);
-            pastedItems.push(item);
+        var itemsToCompound = [];
+
+        for (var s = 0; s < selectedItems.length; s++) {
+            var item = selectedItems[s];
+            // Skip items that became invalid
+            try { var _ = item.typename; } catch (e) { continue; }
+
+            if (item.typename === "PathItem") {
+                // Duplicate path, move dup to target, remove original
+                var dup = item.duplicate();
+                dup.move(targetLayer, ElementPlacement.PLACEATEND);
+                itemsToCompound.push(dup);
+                item.remove();
+            } else if (item.typename === "CompoundPathItem" || item.typename === "GroupItem") {
+                item.move(targetLayer, ElementPlacement.PLACEATEND);
+                itemsToCompound.push(item);
+            }
         }
 
-        // 6. Make compound path
-        if (pastedItems.length > 0) {
+        // Make compound path from all moved items
+        if (itemsToCompound.length > 0) {
             doc.selection = null;
-            for (var i = 0; i < pastedItems.length; i++) {
-                pastedItems[i].selected = true;
+            for (var i = 0; i < itemsToCompound.length; i++) {
+                itemsToCompound[i].selected = true;
             }
             app.executeMenuCommand("compoundPath");
         }
 
-        // 7. Reselect Quran Text compound path for re-isolation
+        // Reselect Quran Text compound path for re-isolation
         if (quranTextLayer) {
             doc.selection = null;
             for (var i = 0; i < quranTextLayer.compoundPathItems.length; i++) {
                 quranTextLayer.compoundPathItems[i].selected = true;
-                break; // select first compound path
+                break;
             }
         }
 

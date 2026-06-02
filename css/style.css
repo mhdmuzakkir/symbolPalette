@@ -504,33 +504,87 @@ body {
     padding: 8px;
 }
 
-.layer-row {
+.layer-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 5px 8px;
+    padding: 6px 8px;
+    background: var(--bg-tertiary);
     border-radius: var(--radius);
     font-size: 11px;
     margin-bottom: 2px;
+    transition: background 0.2s ease;
+    border-left: 3px solid transparent;
 }
 
-.layer-row:last-child {
+.layer-item:last-child {
     margin-bottom: 0;
 }
 
-.layer-row.matched {
-    background: rgba(155, 89, 182, 0.1);
+.layer-item:hover {
+    background: var(--bg-hover);
+}
+
+.layer-item.matched {
+    border-left-color: var(--accent-green);
+}
+
+.layer-item.potential {
+    border-left-color: #f1c40f;
+}
+
+.layer-item.unmatched {
+    border-left-color: var(--accent-orange);
+    opacity: 0.85;
 }
 
 .layer-name {
     color: var(--text-primary);
     font-weight: 500;
+    font-size: 11px;
 }
 
-.layer-standard {
-    color: var(--accent-purple);
+.layer-badge {
     font-size: 10px;
-    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.layer-badge.matched {
+    background: rgba(46, 204, 113, 0.2);
+    color: var(--accent-green);
+}
+
+.layer-badge.potential {
+    background: rgba(241, 196, 15, 0.2);
+    color: #f1c40f;
+}
+
+.layer-badge.unmatched {
+    background: rgba(243, 156, 18, 0.2);
+    color: var(--accent-orange);
+}
+
+.layer-rename-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: var(--radius);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, background 0.2s;
+}
+
+.layer-rename-btn:hover {
+    color: var(--accent-blue);
+    background: rgba(74, 158, 255, 0.1);
 }
 
 .number-cell {

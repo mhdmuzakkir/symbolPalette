@@ -1994,34 +1994,30 @@ function ensureHostScript(callback) {
 
 function moveSelectionToLayer(layerName) {
     if (!layerName) return;
-    // Inline the full cut-exit-paste workflow so it works immediately
-    var script = '(function(layerName){' +
-        'try{' +
-            'if(app.documents.length===0)return"Error: No active document.";' +
-            'var doc=app.activeDocument;' +
-            'if(doc.selection.length===0)return"Error: Nothing selected.";' +
-            'var qLayer=null;' +
-            'for(var i=0;i<doc.layers.length;i++)if(doc.layers[i].name==="Quran Text")qLayer=doc.layers[i];' +
-            'app.executeMenuCommand("cut");' +
-            'try{doc.activeLayer.hasSelectedArtwork=true;}catch(e){}' +
-            'app.executeMenuCommand("pasteFront");' +
-            'var tl=null;' +
-            'for(var i=0;i<doc.layers.length;i++)if(doc.layers[i].name===layerName)tl=doc.layers[i];' +
-            'if(!tl){tl=doc.layers.add();tl.name=layerName;}' +
-            'tl.locked=false;tl.visible=true;' +
-            'var pasted=[];' +
-            'for(var i=doc.selection.length-1;i>=0;i--){var it=doc.selection[i];it.move(tl,ElementPlacement.PLACEATEND);pasted.push(it);}' +
-            'if(pasted.length>0){doc.selection=null;for(var i=0;i<pasted.length;i++)pasted[i].selected=true;app.executeMenuCommand("compoundPath");}' +
-            'if(qLayer){doc.selection=null;for(var i=0;i<qLayer.compoundPathItems.length;i++){qLayer.compoundPathItems[i].selected=true;break;}}' +
-            'return"success";' +
-        '}catch(e){return"Error: "+e.toString();}' +
-    '})(' + JSON.stringify(layerName) + ')';
-    csInterface.evalScript(script, function(result) {
-        if (result && result.toString().indexOf('Error:') === 0) {
-            showErrorModal(result);
-        } else if (result === 'success') {
-            scanDocumentLayers();
+    var layerNameEscaped = layerName.replace(/"/g, '\\"');
+
+    csInterface.evalScript('app.activeDocument.selection.length > 0 ? "HAS_SELECTION" : "NO_SELECTION"', function(selResult) {
+        if (selResult === 'NO_SELECTION') {
+            // No selection — create the layer (user should be outside isolation mode)
+            var createScript = '(function(){try{var doc=app.activeDocument;var tl=doc.layers.add();tl.name="' + layerNameEscaped + '";tl.locked=false;tl.visible=true;return "CREATED";}catch(e){return "Error: "+e.toString();}})()';
+            csInterface.evalScript(createScript, function(createResult) {
+                if (createResult && createResult.toString().indexOf('Error:') === 0) {
+                    showErrorModal(createResult);
+                } else {
+                    scanDocumentLayers();
+                }
+            });
+            return;
         }
+
+        // Has selection — just try to move. If layer doesn't exist, spMoveSelectionToLayer will say so.
+        csInterface.evalScript('spMoveSelectionToLayer("' + layerNameEscaped + '")', function(result) {
+            if (result && result.toString().indexOf('Error:') === 0) {
+                showErrorModal(result);
+            } else if (result === 'success') {
+                scanDocumentLayers();
+            }
+        });
     });
 }
 
@@ -2029,27 +2025,47 @@ function scanDocumentLayers() {
     var container = document.getElementById('layerList');
     if (!container) return;
 
-    // Inline the entire layer scanner so it works regardless of JSX file loading issues
-    var script = '(function(){' +
-        'var defs={quranText:{s:"Quran Text",p:["qurantext","quran"]},ayaNo:{s:"Aya No.",p:["ayano","ayahno","ayano.","ayahno.","aya.no","ayah.no","aya no","ayah no"]},ornaments:{s:"Ornaments",p:["ornament","zakhrafah","zakhrafa","decoration","decorations"]},header:{s:"Header & Marks & Page No.",p:["header","marks","pageno"]}};' +
-        'function nm(n){if(!n)return"";return n.toString().replace(/^\\s+|\\s+$/g,"").toLowerCase().replace(/[_\\-\\.]/g,"").replace(/\\s+/g,"");}' +
-        'function mt(n){var nd=nm(n);if(!nd)return null;for(var k in defs){if(!defs.hasOwnProperty(k))continue;var d=defs[k];var sn=nm(d.s);if(nd===sn)return d.s;for(var p=0;p<d.p.length;p++){if(nd.indexOf(d.p[p])!==-1)return d.s;}}return null;}' +
-        'var r={success:false,layers:[],error:""};' +
-        'try{if(app.documents.length===0){r.error="No document open";return JSON.stringify(r);}var doc=app.activeDocument;for(var i=0;i<doc.layers.length;i++){var ly=doc.layers[i];var m=mt(ly.name);r.layers.push({name:ly.name,matched:m||null,standard:m||"\u2014"});}r.success=true;}catch(e){r.error=e.toString();}' +
-        'return JSON.stringify(r);' +
-    '})()';
-
-    csInterface.evalScript(script, function(result) {
-        try {
-            var data = JSON.parse(result);
-            if (data.success && data.layers) {
-                renderLayerList(data.layers);
-            } else {
-                container.innerHTML = '<div class="empty-message">' + (data.error || 'No layers found') + '</div>';
-            }
-        } catch (e) {
+    // Step 1: verify evalScript works and a document is actually open
+    csInterface.evalScript('app.documents.length > 0 ? app.activeDocument.name : "NO_DOC"', function(docResult) {
+        console.log('scanDocumentLayers doc check:', docResult);
+        if (!docResult || docResult === 'NO_DOC' || docResult === 'null' || docResult === 'undefined') {
             container.innerHTML = '<div class="empty-message">No document open</div>';
+            return;
         }
+
+        // Step 2: scan layers (manual JSON — no JSON.stringify needed)
+        var script = '(function(){' +
+            'var defs={quranText:{s:"Quran Text",p:["qurantext","quran"]},ayaNo:{s:"Aya No.",p:["ayano","ayahno","ayano.","ayahno.","aya.no","ayah.no","aya no","ayah no"]},ornaments:{s:"Ornaments",p:["ornament","zakhrafah","zakhrafa","decoration","decorations"]},header:{s:"Header & Marks & Page No.",p:["header","marks","pageno"]}};' +
+            'function nm(n){if(!n)return"";return n.toString().replace(/^\\s+|\\s+$/g,"").toLowerCase().replace(/[_\\-\\.]/g,"").replace(/\\s+/g,"");}' +
+            'function mt(n){var nd=nm(n);if(!nd)return null;for(var k in defs){if(!defs.hasOwnProperty(k))continue;var d=defs[k];var sn=nm(d.s);if(nd===sn)return d.s;for(var p=0;p<d.p.length;p++){if(nd.indexOf(d.p[p])!==-1)return d.s;}}return null;}' +
+            'function esc(s){if(!s)return"";return s.replace(/\\\\/g,"\\\\\\\\").replace(/"/g,\'\\\\"\').replace(/\\n/g,"\\\\n").replace(/\\r/g,"\\\\r");}' +
+            'var layers=[];' +
+            'try{' +
+                'var doc=app.activeDocument;' +
+                'for(var i=0;i<doc.layers.length;i++){' +
+                    'var ly=doc.layers[i];' +
+                    'var m=mt(ly.name);' +
+                    'layers.push("{\\"name\\":\\""+esc(ly.name)+"\\",\\"matched\\":"+(m?"\\""+esc(m)+"\\"":"null")+",\\"standard\\":\\""+esc(m||"\u2014")+"\\"}");' +
+                '}' +
+                'return "{\\"success\\":true,\\"layers\\":["+layers.join(",")+"],\\"error\\":\\"\\"}";' +
+            '}catch(e){' +
+                'return "{\\"success\\":false,\\"layers\\":[],\\"error\\":\\""+esc(e.toString())+"\\"}";' +
+            '}' +
+        '})()';
+
+        csInterface.evalScript(script, function(result) {
+            console.log('scanDocumentLayers raw result:', result);
+            try {
+                var data = JSON.parse(result);
+                if (data.success && data.layers) {
+                    renderLayerList(data.layers);
+                } else {
+                    container.innerHTML = '<div class="empty-message">' + (data.error || 'No layers found') + '</div>';
+                }
+            } catch (e) {
+                container.innerHTML = '<div class="empty-message" style="font-size:10px;word-break:break-all;">Debug: ' + escapeHtml(e.message) + '<br>Raw: ' + escapeHtml(String(result).slice(0,300)) + '</div>';
+            }
+        });
     });
 }
 
@@ -2057,16 +2073,58 @@ function renderLayerList(layers) {
     var container = document.getElementById('layerList');
     if (!container) return;
     container.innerHTML = '';
-    if (layers.length === 0) {
+    if (!layers || layers.length === 0) {
         container.innerHTML = '<div class="empty-message">No layers</div>';
         return;
     }
     layers.forEach(function(layer) {
+        var isMatched = !!layer.matched;
+        var isPotential = !!layer.potential;
+        var itemClass = isMatched ? 'layer-item matched' : (isPotential ? 'layer-item potential' : 'layer-item unmatched');
+        var badgeClass = isMatched ? 'layer-badge matched' : (isPotential ? 'layer-badge potential' : 'layer-badge unmatched');
+        var badgeText = isMatched ? layer.standard : (isPotential ? 'Potential ' + layer.potential : 'Unmatched');
+        var renameBtn = '';
+        if (isPotential) {
+            renameBtn = '<button class="layer-rename-btn" data-layer-name="' + escapeHtml(layer.name) + '" data-target-name="' + escapeHtml(layer.potential) + '" title="Rename to ' + escapeHtml(layer.potential) + '">' +
+                        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>' +
+                        '</button>';
+        }
+
         var row = document.createElement('div');
-        row.className = 'layer-row' + (layer.matched ? ' matched' : '');
+        row.className = itemClass;
         row.innerHTML = '<span class="layer-name">' + escapeHtml(layer.name) + '</span>' +
-                        '<span class="layer-standard">' + escapeHtml(layer.standard) + '</span>';
+                        '<span style="display:flex;align-items:center;gap:6px;">' +
+                        '<span class="layer-badge ' + badgeClass + '">' + badgeText + '</span>' +
+                        renameBtn +
+                        '</span>';
         container.appendChild(row);
+    });
+
+    // Attach rename handlers via event delegation
+    container.querySelectorAll('.layer-rename-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var layerName = btn.getAttribute('data-layer-name');
+            var targetName = btn.getAttribute('data-target-name');
+            if (layerName && targetName) {
+                renamePotentialLayer(layerName, targetName);
+            }
+        });
+    });
+}
+
+function renamePotentialLayer(layerName, newName) {
+    csInterface.evalScript('spRenameLayerByName("' + layerName.replace(/"/g, '\\"') + '","' + newName.replace(/"/g, '\\"') + '")', function(result) {
+        try {
+            var data = JSON.parse(result);
+            if (data.success) {
+                scanDocumentLayers();
+            } else {
+                showErrorModal(data.error || 'Rename failed');
+            }
+        } catch (e) {
+            showErrorModal('Error renaming layer');
+        }
     });
 }
 
