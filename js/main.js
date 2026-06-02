@@ -1106,6 +1106,7 @@ function loadSymbolsFromStorage() {
 
 function updateFolderDisplay() {
     var folderPathEl = document.getElementById('folderPath');
+    if (!folderPathEl) return; // Element removed from UI
     if (rootFolder) {
         var display = rootFolder;
         if (symbolCategory) {
