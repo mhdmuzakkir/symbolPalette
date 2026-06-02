@@ -524,7 +524,20 @@ function spMoveSelectionToLayer(layerName) {
         var doc = app.activeDocument;
         if (doc.selection.length === 0) return "Error: Nothing selected.";
 
-        // Find or create target layer
+        // Capture selected items BEFORE exiting isolation mode
+        // (references remain valid after exiting)
+        var selectedItems = [];
+        for (var i = 0; i < doc.selection.length; i++) {
+            selectedItems.push(doc.selection[i]);
+        }
+
+        // Exit isolation mode — layer creation is blocked while inside a
+        // compound path / group isolation session.
+        try {
+            app.executeMenuCommand("exitIsolationMode");
+        } catch (e) {}
+
+        // Find or create target layer (now safe — isolation mode is off)
         var targetLayer = null;
         for (var i = 0; i < doc.layers.length; i++) {
             if (doc.layers[i].name === layerName) {
@@ -541,8 +554,10 @@ function spMoveSelectionToLayer(layerName) {
 
         var pathsToCompound = [];
 
-        for (var s = doc.selection.length - 1; s >= 0; s--) {
-            var item = doc.selection[s];
+        for (var s = selectedItems.length - 1; s >= 0; s--) {
+            var item = selectedItems[s];
+            // Skip items that became invalid after exiting isolation mode
+            try { var _ = item.typename; } catch (e) { continue; }
 
             if (item.typename === "PathItem") {
                 var parent = item.parent;
