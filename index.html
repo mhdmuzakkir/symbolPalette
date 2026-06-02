@@ -21,6 +21,26 @@
             </div>
         </div>
 
+        <!-- Symbol Section -->
+        <div class="symbol-section" id="symbolSection">
+            <div class="section-header">
+                <span class="section-title" id="symbolSectionTitle">0 SYMBOLS</span>
+            </div>
+            <div class="symbol-grid" id="symbolGrid">
+                <!-- Symbols rendered here -->
+            </div>
+            <!-- Layer Tools -->
+            <div class="layer-tools-bar" id="layerToolsBar">
+                <div class="layer-tools-header">
+                    <span class="section-title">Move Selection To</span>
+                    <button class="btn-icon btn-layer-add" id="addLayerBtn" title="Add layer button">+</button>
+                </div>
+                <div class="layer-tools-buttons" id="layerToolsButtons">
+                    <!-- Buttons rendered here -->
+                </div>
+            </div>
+        </div>
+
         <!-- Page Info Bar -->
         <div class="page-info-bar hidden" id="pageInfoBar">
             <div class="page-info-left">
@@ -53,13 +73,14 @@
             </button>
         </div>
 
-        <!-- Symbol Section -->
-        <div class="symbol-section" id="symbolSection">
+        <!-- Document Layers Scanner -->
+        <div class="layer-scanner-section" id="layerScannerSection">
             <div class="section-header">
-                <span class="section-title" id="symbolSectionTitle">0 SYMBOLS</span>
+                <span class="section-title">Document Layers</span>
+                <button class="btn-icon" id="refreshLayersBtn" title="Refresh layers">↻</button>
             </div>
-            <div class="symbol-grid" id="symbolGrid">
-                <!-- Symbols rendered here -->
+            <div class="layer-list" id="layerList">
+                <div class="empty-message">No document open</div>
             </div>
         </div>
 
@@ -267,6 +288,21 @@
             </div>
             <div class="modal-buttons" style="justify-content: center;">
                 <button id="infoModalOk" class="btn-confirm">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Layer Button Modal -->
+    <div class="modal" id="layerButtonModal">
+        <div class="modal-content modal-small">
+            <h3>Add Layer Button</h3>
+            <div class="form-group">
+                <label>Layer Name</label>
+                <input type="text" id="layerButtonInput" placeholder="e.g. Iskaan Ha">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="layerButtonCancelBtn">Cancel</button>
+                <button class="btn-confirm" id="layerButtonConfirmBtn">Add</button>
             </div>
         </div>
     </div>

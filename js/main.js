@@ -135,6 +135,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (footerVersion && window.SymbolUpdater) {
         footerVersion.textContent = 'v' + window.SymbolUpdater.CURRENT_VERSION;
     }
+
+    // Initialize layer tools
+    renderLayerButtons();
+    scanDocumentLayers();
 });
 
 // ==================== STORAGE ====================
@@ -597,6 +601,7 @@ function checkActiveDocument() {
         if (newDocName === lastDocName) return;
         lastDocName = newDocName;
         parseDocumentInfo(docInfo);
+        scanDocumentLayers();
     });
 }
 
@@ -1528,6 +1533,19 @@ function setupEventListeners() {
     document.getElementById('settingsCancelBtn').addEventListener('click', hideSettingsModal);
     document.getElementById('settingsConfirmBtn').addEventListener('click', saveSettingsFromModal);
 
+    // Layer Button Modal
+    document.getElementById('layerButtonCancelBtn').addEventListener('click', hideLayerButtonModal);
+    document.getElementById('layerButtonConfirmBtn').addEventListener('click', addLayerButton);
+    document.getElementById('layerButtonInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') addLayerButton();
+    });
+
+    // Add Layer Button opener
+    document.getElementById('addLayerBtn').addEventListener('click', showLayerButtonModal);
+
+    // Refresh Layers button
+    document.getElementById('refreshLayersBtn').addEventListener('click', scanDocumentLayers);
+
     // Close modals on background click
     document.querySelectorAll('.modal').forEach(function(modal) {
         modal.addEventListener('click', function(e) {
@@ -1536,6 +1554,7 @@ function setupEventListeners() {
                 if (this.id === 'editModal') hideEditModal();
                 if (this.id === 'numberModal') hideNumberModal();
                 if (this.id === 'settingsModal') hideSettingsModal();
+                if (this.id === 'layerButtonModal') hideLayerButtonModal();
             }
         });
     });
@@ -1900,4 +1919,121 @@ function browseForFile(inputId, fileType) {
 
 function escapePath(path) {
     return path.replace(/\\/g, '\\\\');
+}
+
+
+// ==================== LAYER TOOLS ====================
+
+var LAYER_BUTTONS_KEY = 'symbolPalette_layerButtons_v1';
+var DEFAULT_LAYER_BUTTONS = ['Iskaan Ha', 'Sukoon', 'Shadda'];
+
+function getLayerButtons() {
+    try {
+        var stored = localStorage.getItem(LAYER_BUTTONS_KEY);
+        if (stored) return JSON.parse(stored);
+    } catch (e) {}
+    return DEFAULT_LAYER_BUTTONS.slice();
+}
+
+function saveLayerButtons(buttons) {
+    try {
+        localStorage.setItem(LAYER_BUTTONS_KEY, JSON.stringify(buttons));
+    } catch (e) {}
+}
+
+function renderLayerButtons() {
+    var container = document.getElementById('layerToolsButtons');
+    if (!container) return;
+    container.innerHTML = '';
+    var buttons = getLayerButtons();
+    buttons.forEach(function(name) {
+        var btn = document.createElement('button');
+        btn.className = 'btn-layer-tool';
+        btn.textContent = name;
+        btn.title = 'Move selection to "' + name + '" layer';
+        btn.addEventListener('click', function() {
+            moveSelectionToLayer(name);
+        });
+        container.appendChild(btn);
+    });
+}
+
+function moveSelectionToLayer(layerName) {
+    if (!layerName) return;
+    var script = 'spMoveSelectionToLayer("' + escapePath(layerName) + '");';
+    csInterface.evalScript(script, function(result) {
+        if (result && result.toString().indexOf('Error:') === 0) {
+            showErrorModal(result);
+        } else if (result === 'success') {
+            scanDocumentLayers();
+        }
+    });
+}
+
+function scanDocumentLayers() {
+    csInterface.evalScript('spScanCurrentLayers()', function(result) {
+        var container = document.getElementById('layerList');
+        if (!container) return;
+        try {
+            var data = JSON.parse(result);
+            if (data.success && data.layers) {
+                renderLayerList(data.layers);
+            } else {
+                container.innerHTML = '<div class="empty-message">' + (data.error || 'No layers found') + '</div>';
+            }
+        } catch (e) {
+            container.innerHTML = '<div class="empty-message">No document open</div>';
+        }
+    });
+}
+
+function renderLayerList(layers) {
+    var container = document.getElementById('layerList');
+    if (!container) return;
+    container.innerHTML = '';
+    if (layers.length === 0) {
+        container.innerHTML = '<div class="empty-message">No layers</div>';
+        return;
+    }
+    layers.forEach(function(layer) {
+        var row = document.createElement('div');
+        row.className = 'layer-row' + (layer.matched ? ' matched' : '');
+        row.innerHTML = '<span class="layer-name">' + escapeHtml(layer.name) + '</span>' +
+                        '<span class="layer-standard">' + escapeHtml(layer.standard) + '</span>';
+        container.appendChild(row);
+    });
+}
+
+function showLayerButtonModal() {
+    document.getElementById('layerButtonModal').classList.add('active');
+    document.getElementById('layerButtonInput').value = '';
+    document.getElementById('layerButtonInput').focus();
+}
+
+function hideLayerButtonModal() {
+    document.getElementById('layerButtonModal').classList.remove('active');
+}
+
+function addLayerButton() {
+    var input = document.getElementById('layerButtonInput');
+    var name = input.value.trim();
+    if (!name) {
+        showErrorModal('Please enter a layer name.');
+        return;
+    }
+    var buttons = getLayerButtons();
+    if (buttons.indexOf(name) !== -1) {
+        showErrorModal('Button "' + name + '" already exists.');
+        return;
+    }
+    buttons.push(name);
+    saveLayerButtons(buttons);
+    renderLayerButtons();
+    hideLayerButtonModal();
+}
+
+function escapeHtml(text) {
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }

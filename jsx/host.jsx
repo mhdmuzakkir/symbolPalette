@@ -453,3 +453,139 @@ function pasteAllNumbersAligned(filePaths) {
 function testConnection() {
     return "CEP Panel Connected! Illustrator version: " + app.version;
 }
+
+
+// ==================== LAYER DETECTION (from ornamentReplacer) ====================
+
+var SP_LAYER_DEFS = {
+    quranText: { standard: "Quran Text", patterns: ["qurantext", "quran"] },
+    ayaNo:     { standard: "Aya No.",    patterns: ["ayano", "ayahno", "ayano.", "ayahno.", "aya.no", "ayah.no", "aya no", "ayah no"] },
+    ornaments: { standard: "Ornaments",  patterns: ["ornament", "zakhrafah", "zakhrafa", "decoration", "decorations"] },
+    header:    { standard: "Header & Marks & Page No.", patterns: ["header", "marks", "pageno"] }
+};
+
+function spNormalizeLayerName(name) {
+    if (!name) return "";
+    return name.toString().replace(/^\s+|\s+$/g, '').toLowerCase().replace(/[_\-\.]/g, '').replace(/\s+/g, '');
+}
+
+function spMatchLayerName(name) {
+    var normalized = spNormalizeLayerName(name);
+    if (!normalized) return null;
+    for (var key in SP_LAYER_DEFS) {
+        if (!SP_LAYER_DEFS.hasOwnProperty(key)) continue;
+        var def = SP_LAYER_DEFS[key];
+        var stdNorm = spNormalizeLayerName(def.standard);
+        if (normalized === stdNorm) return def.standard;
+        for (var p = 0; p < def.patterns.length; p++) {
+            if (normalized.indexOf(def.patterns[p]) !== -1) return def.standard;
+        }
+    }
+    return null;
+}
+
+function spScanCurrentLayers() {
+    var result = { success: false, layers: [], error: "" };
+    try {
+        if (app.documents.length === 0) { result.error = "No document open"; return JSON.stringify(result); }
+        var doc = app.activeDocument;
+        for (var i = 0; i < doc.layers.length; i++) {
+            var layer = doc.layers[i];
+            var matched = spMatchLayerName(layer.name);
+            result.layers.push({ name: layer.name, matched: matched || null, standard: matched || "\u2014" });
+        }
+        result.success = true;
+    } catch (e) { result.error = e.toString(); }
+    return JSON.stringify(result);
+}
+
+// ==================== MOVE SELECTION TO LAYER ====================
+
+function spCollectPaths(container, outPaths) {
+    var items = container.pageItems;
+    for (var i = items.length - 1; i >= 0; i--) {
+        var item = items[i];
+        if (item.typename === "PathItem") {
+            outPaths.push(item);
+        } else if (item.typename === "GroupItem") {
+            spCollectPaths(item, outPaths);
+        } else if (item.typename === "CompoundPathItem") {
+            var cpPaths = item.pathItems;
+            for (var p = cpPaths.length - 1; p >= 0; p--) {
+                outPaths.push(cpPaths[p]);
+            }
+        }
+    }
+}
+
+function spMoveSelectionToLayer(layerName) {
+    try {
+        if (app.documents.length === 0) return "Error: No active document.";
+        var doc = app.activeDocument;
+        if (doc.selection.length === 0) return "Error: Nothing selected.";
+
+        // Find or create target layer
+        var targetLayer = null;
+        for (var i = 0; i < doc.layers.length; i++) {
+            if (doc.layers[i].name === layerName) {
+                targetLayer = doc.layers[i];
+                break;
+            }
+        }
+        if (!targetLayer) {
+            targetLayer = doc.layers.add();
+            targetLayer.name = layerName;
+        }
+        targetLayer.locked = false;
+        targetLayer.visible = true;
+
+        var pathsToCompound = [];
+
+        for (var s = doc.selection.length - 1; s >= 0; s--) {
+            var item = doc.selection[s];
+
+            if (item.typename === "PathItem") {
+                var parent = item.parent;
+                if (parent && parent.typename === "CompoundPathItem") {
+                    // Duplicate path, remove original from compound, move dup to target
+                    var dup = item.duplicate();
+                    dup.move(parent.parent, ElementPlacement.PLACEATEND);
+                    item.remove();
+                    dup.move(targetLayer, ElementPlacement.PLACEATEND);
+                    pathsToCompound.push(dup);
+                } else {
+                    item.move(targetLayer, ElementPlacement.PLACEATEND);
+                    pathsToCompound.push(item);
+                }
+            } else if (item.typename === "CompoundPathItem") {
+                // Extract all pathItems, then remove the empty compound path
+                for (var p = item.pathItems.length - 1; p >= 0; p--) {
+                    var path = item.pathItems[p];
+                    var dup = path.duplicate();
+                    dup.move(targetLayer, ElementPlacement.PLACEATEND);
+                    pathsToCompound.push(dup);
+                }
+                item.remove();
+            } else if (item.typename === "GroupItem") {
+                spCollectPaths(item, pathsToCompound);
+                item.remove();
+            }
+        }
+
+        // Make compound path from all collected paths
+        if (pathsToCompound.length > 0) {
+            for (var i = 0; i < pathsToCompound.length; i++) {
+                pathsToCompound[i].move(targetLayer, ElementPlacement.PLACEATEND);
+            }
+            doc.selection = null;
+            for (var i = 0; i < pathsToCompound.length; i++) {
+                pathsToCompound[i].selected = true;
+            }
+            app.executeMenuCommand("compoundPath");
+        }
+
+        return "success";
+    } catch (e) {
+        return "Error: " + e.toString();
+    }
+}
