@@ -28,6 +28,8 @@ if (typeof JSON === 'undefined') {
     };
 }
 
+
+
 /**
  * Main function to paste content from an SVG file into the active document
  * @param {string} filePath - Path to the SVG file (use forward slashes)
@@ -607,6 +609,97 @@ function spRenameLayerByName(layerName, newName) {
 
 // ==================== MOVE SELECTION TO LAYER ====================
 
+function spLoadSymbolActions() {
+    try {
+        var hostFile = new File($.fileName);
+        var extFolder = hostFile.parent.parent;
+        var actionFile = new File(extFolder + "/Symbol.aia");
+        if (actionFile.exists) {
+            try {
+                app.unloadAction("Symbol", "");
+            } catch (e) {}
+            app.loadAction(actionFile);
+        }
+    } catch (e) {
+        // Path resolution failed — ignore
+    }
+}
+
+function spGetLayerColor(layerName, layerColorsPath) {
+    try {
+        if (layerColorsPath) {
+            var configFile = new File(layerColorsPath);
+            if (configFile.exists) {
+                configFile.open('r');
+                var jsonStr = configFile.read();
+                configFile.close();
+                var config = JSON.parse(jsonStr);
+                if (config[layerName]) {
+                    return config[layerName];
+                }
+                if (config.default) {
+                    return config.default;
+                }
+            }
+        }
+    } catch (e) {}
+
+    // Fallback rotating palette
+    var palette = [
+        [255, 128, 0],
+        [0, 128, 255],
+        [128, 255, 0],
+        [255, 0, 128],
+        [128, 0, 255],
+        [0, 255, 128],
+        [255, 200, 0],
+        [0, 200, 255],
+        [200, 0, 255],
+        [100, 255, 100]
+    ];
+    var idx = 0;
+    for (var i = 0; i < layerName.length; i++) {
+        idx += layerName.charCodeAt(i);
+    }
+    return palette[idx % palette.length];
+}
+
+function spApplyLayerColor(layer, layerName, layerColorsPath) {
+    try {
+        var rgb = spGetLayerColor(layerName, layerColorsPath);
+        if (rgb && rgb.length >= 3) {
+            var color = new RGBColor();
+            color.red = rgb[0];
+            color.green = rgb[1];
+            color.blue = rgb[2];
+            layer.color = color;
+        }
+    } catch (e) {}
+}
+
+function spCreateLayer(layerName, extPath, layerColorsPath) {
+    try {
+        var doc = app.activeDocument;
+        var targetLayer = null;
+        for (var i = 0; i < doc.layers.length; i++) {
+            if (doc.layers[i].name === layerName) {
+                targetLayer = doc.layers[i];
+                break;
+            }
+        }
+        if (!targetLayer) {
+            targetLayer = doc.layers.add();
+            targetLayer.name = layerName;
+        }
+        targetLayer.locked = false;
+        targetLayer.visible = true;
+        spApplyLayerColor(targetLayer, layerName, layerColorsPath);
+        return "CREATED";
+    } catch (e) {
+        return "Error: " + e.toString();
+    }
+}
+
 function spCollectPaths(container, outPaths) {
     var items = container.pageItems;
     for (var i = items.length - 1; i >= 0; i--) {
@@ -624,27 +717,30 @@ function spCollectPaths(container, outPaths) {
     }
 }
 
-function spMoveSelectionToLayer(layerName) {
+function spMoveSelectionToLayer(layerName, extPath, layerColorsPath) {
     try {
         if (app.documents.length === 0) return "Error: No active document.";
         var doc = app.activeDocument;
         if (doc.selection.length === 0) return "Error: Nothing selected.";
 
-        // Capture selected items immediately before any operation
-        var selectedItems = [];
-        for (var i = 0; i < doc.selection.length; i++) {
-            selectedItems.push(doc.selection[i]);
-        }
+        var actionFile = new File(extPath + "/Symbol.aia");
 
-        var quranTextLayer = null;
-        for (var i = 0; i < doc.layers.length; i++) {
-            if (doc.layers[i].name === "Quran Text") {
-                quranTextLayer = doc.layers[i];
-                break;
+        // Helper: load .aia, run action, then unload
+        function runAction(actionName) {
+            if (actionFile.exists) {
+                app.loadAction(actionFile);
+                app.doScript(actionName, "Symbol");
+                app.unloadAction("Symbol", "");
             }
         }
 
-        // Find target layer (caller must ensure it exists)
+        // 1. Cut the selection while inside isolation
+        app.executeMenuCommand("cut");
+
+        // 2. Exit isolation
+        runAction("Exit");
+
+        // 3. Find the target layer now that doc.layers is reliable
         var targetLayer = null;
         for (var i = 0; i < doc.layers.length; i++) {
             if (doc.layers[i].name === layerName) {
@@ -653,47 +749,46 @@ function spMoveSelectionToLayer(layerName) {
             }
         }
         if (!targetLayer) {
-            return "Error: Layer '" + layerName + "' not found. Deselect all and click the button to create it first.";
+            targetLayer = doc.layers.add();
+            targetLayer.name = layerName;
         }
         targetLayer.locked = false;
         targetLayer.visible = true;
+        spApplyLayerColor(targetLayer, layerName, layerColorsPath);
 
-        var itemsToCompound = [];
+        // 4. Paste on target layer and compound
+        doc.activeLayer = targetLayer;
+        app.executeMenuCommand("pasteFront");
 
-        for (var s = 0; s < selectedItems.length; s++) {
-            var item = selectedItems[s];
-            // Skip items that became invalid
-            try { var _ = item.typename; } catch (e) { continue; }
-
-            if (item.typename === "PathItem") {
-                // Duplicate path, move dup to target, remove original
-                var dup = item.duplicate();
-                dup.move(targetLayer, ElementPlacement.PLACEATEND);
-                itemsToCompound.push(dup);
-                item.remove();
-            } else if (item.typename === "CompoundPathItem" || item.typename === "GroupItem") {
-                item.move(targetLayer, ElementPlacement.PLACEATEND);
-                itemsToCompound.push(item);
-            }
-        }
-
-        // Make compound path from all moved items
-        if (itemsToCompound.length > 0) {
-            doc.selection = null;
-            for (var i = 0; i < itemsToCompound.length; i++) {
-                itemsToCompound[i].selected = true;
-            }
+        if (doc.selection.length > 0) {
             app.executeMenuCommand("compoundPath");
         }
 
-        // Reselect Quran Text compound path for re-isolation
-        if (quranTextLayer) {
-            doc.selection = null;
-            for (var i = 0; i < quranTextLayer.compoundPathItems.length; i++) {
-                quranTextLayer.compoundPathItems[i].selected = true;
+        // 5. Reselect the compound path inside Quran Text layer
+        var quranTextLayer = null;
+        for (var i = 0; i < doc.layers.length; i++) {
+            if (doc.layers[i].name === "Quran Text") {
+                quranTextLayer = doc.layers[i];
                 break;
             }
         }
+        if (quranTextLayer) {
+            doc.selection = null;
+            doc.activeLayer = quranTextLayer;
+            // Explicitly select the compound path
+            if (quranTextLayer.compoundPathItems.length > 0) {
+                quranTextLayer.compoundPathItems[0].selected = true;
+            } else if (quranTextLayer.groupItems.length > 0) {
+                quranTextLayer.groupItems[0].selected = true;
+            } else if (quranTextLayer.pathItems.length > 0) {
+                quranTextLayer.pathItems[0].selected = true;
+            } else if (quranTextLayer.pageItems.length > 0) {
+                quranTextLayer.pageItems[0].selected = true;
+            }
+        }
+
+        // 6. Re-enter isolation on the selected compound path
+        runAction("Enter");
 
         return "success";
     } catch (e) {

@@ -137,6 +137,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize layer tools
+    // Clear old localStorage layer button cache so defaults/shared file take over
+    try { localStorage.removeItem(LAYER_BUTTONS_KEY); } catch (e) {}
     renderLayerButtons();
     scanDocumentLayers();
 });
@@ -1925,17 +1927,129 @@ function escapePath(path) {
 // ==================== LAYER TOOLS ====================
 
 var LAYER_BUTTONS_KEY = 'symbolPalette_layerButtons_v1';
-var DEFAULT_LAYER_BUTTONS = ['Iskaan Ha', 'Sukoon', 'Shadda'];
+var DEFAULT_LAYER_BUTTONS = ['Iskan Haa', 'Meem Sila'];
+
+function getSharedLayerButtonsPath() {
+    if (!rootFolder) return null;
+    var rf = rootFolder.replace(/\\/g, '/');
+    var projectRoot = null;
+    if (rf.toLowerCase().endsWith('/symbols')) {
+        projectRoot = rf.replace(/\/symbols$/i, '');
+    } else {
+        projectRoot = rf;
+    }
+    if (!projectRoot) return null;
+    return projectRoot + '/mushaftasks/symbolPalette_layerButtons.json';
+}
+
+function getLayerColorsPath() {
+    if (!rootFolder) return '';
+    var rf = rootFolder.replace(/\\/g, '/');
+    var projectRoot = null;
+    if (rf.toLowerCase().endsWith('/symbols')) {
+        projectRoot = rf.replace(/\/symbols$/i, '');
+    } else {
+        projectRoot = rf;
+    }
+    if (!projectRoot) return '';
+    return projectRoot + '/mushaftasks/layers/layerColors.json';
+}
 
 function getLayerButtons() {
+    var buttons = null;
+    var source = 'default';
+
+    // Try shared path first (cross-device sync via mushaftasks)
     try {
-        var stored = localStorage.getItem(LAYER_BUTTONS_KEY);
-        if (stored) return JSON.parse(stored);
-    } catch (e) {}
-    return DEFAULT_LAYER_BUTTONS.slice();
+        var sharedPath = getSharedLayerButtonsPath();
+        if (sharedPath) {
+            var result = window.cep.fs.readFile(sharedPath, 'utf-8');
+            if (result.err === 0 && result.data) {
+                var data = JSON.parse(result.data);
+                if (Array.isArray(data.buttons)) {
+                    buttons = data.buttons;
+                    source = 'shared';
+                }
+            }
+        }
+    } catch (e) {
+        console.log('Could not load layer buttons from shared path:', e);
+    }
+
+    // Fallback: localStorage
+    if (!buttons) {
+        try {
+            var stored = localStorage.getItem(LAYER_BUTTONS_KEY);
+            if (stored) {
+                buttons = JSON.parse(stored);
+                source = 'localStorage';
+            }
+        } catch (e) {}
+    }
+
+    if (!buttons) {
+        // No saved data anywhere — create shared file with defaults
+        var defaults = DEFAULT_LAYER_BUTTONS.slice();
+        saveLayerButtons(defaults);
+        return defaults;
+    }
+
+    // Correct known typos / old names
+    var corrected = [];
+    var changed = false;
+    for (var i = 0; i < buttons.length; i++) {
+        var name = buttons[i];
+        if (name === 'Iskan Ha' || name === 'Iskaan Ha' || name === 'Iskaan Haa') {
+            name = 'Iskan Haa';
+            changed = true;
+        }
+        corrected.push(name);
+    }
+
+    // Filter out deprecated buttons
+    var cleaned = [];
+    var removed = false;
+    var deprecated = ['Sukoon', 'Shadda'];
+    for (var i = 0; i < corrected.length; i++) {
+        if (deprecated.indexOf(corrected[i]) === -1) {
+            cleaned.push(corrected[i]);
+        } else {
+            removed = true;
+        }
+    }
+
+    // Save back if corrected or cleaned
+    if ((changed || removed) && cleaned.length > 0) {
+        saveLayerButtons(cleaned);
+    }
+
+    return cleaned.length > 0 ? cleaned : DEFAULT_LAYER_BUTTONS.slice();
 }
 
 function saveLayerButtons(buttons) {
+    // Try shared path first
+    try {
+        var sharedPath = getSharedLayerButtonsPath();
+        if (sharedPath) {
+            var dir = sharedPath.replace(/\\/g, '/').replace(/\/[^\/]+$/, '');
+            var dirStat = window.cep.fs.readdir(dir);
+            if (dirStat.err !== 0) {
+                var makeResult = window.cep.fs.makedir(dir);
+                if (makeResult.err !== 0) {
+                    throw new Error('Could not create directory');
+                }
+            }
+            var result = window.cep.fs.writeFile(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
+            if (result.err === 0) {
+                console.log('Layer buttons saved to', sharedPath);
+                return;
+            }
+        }
+    } catch (e) {
+        console.log('Could not save layer buttons to shared path, falling back to localStorage:', e);
+    }
+
+    // Fallback: localStorage
     try {
         localStorage.setItem(LAYER_BUTTONS_KEY, JSON.stringify(buttons));
     } catch (e) {}
@@ -1996,11 +2110,21 @@ function moveSelectionToLayer(layerName) {
     if (!layerName) return;
     var layerNameEscaped = layerName.replace(/"/g, '\\"');
 
+    // Get extension path once for both create and move paths
+    var extPath = '';
+    try {
+        var systemPathType = (csInterface.SystemPath && csInterface.SystemPath.EXTENSION) ? csInterface.SystemPath.EXTENSION : "extension";
+        extPath = csInterface.getSystemPath(systemPathType).replace(/\\/g, '/');
+    } catch (e) {
+        console.log('Could not get extension path:', e);
+    }
+    var extPathEscaped = extPath.replace(/"/g, '\\"');
+    var layerColorsPath = getLayerColorsPath().replace(/"/g, '\\"');
+
     csInterface.evalScript('app.activeDocument.selection.length > 0 ? "HAS_SELECTION" : "NO_SELECTION"', function(selResult) {
         if (selResult === 'NO_SELECTION') {
-            // No selection — create the layer (user should be outside isolation mode)
-            var createScript = '(function(){try{var doc=app.activeDocument;var tl=doc.layers.add();tl.name="' + layerNameEscaped + '";tl.locked=false;tl.visible=true;return "CREATED";}catch(e){return "Error: "+e.toString();}})()';
-            csInterface.evalScript(createScript, function(createResult) {
+            // No selection — create the layer with color
+            csInterface.evalScript('spCreateLayer("' + layerNameEscaped + '", "' + extPathEscaped + '", "' + layerColorsPath + '")', function(createResult) {
                 if (createResult && createResult.toString().indexOf('Error:') === 0) {
                     showErrorModal(createResult);
                 } else {
@@ -2010,8 +2134,8 @@ function moveSelectionToLayer(layerName) {
             return;
         }
 
-        // Has selection — just try to move. If layer doesn't exist, spMoveSelectionToLayer will say so.
-        csInterface.evalScript('spMoveSelectionToLayer("' + layerNameEscaped + '")', function(result) {
+        // Has selection — move it
+        csInterface.evalScript('spMoveSelectionToLayer("' + layerNameEscaped + '", "' + extPathEscaped + '", "' + layerColorsPath + '")', function(result) {
             if (result && result.toString().indexOf('Error:') === 0) {
                 showErrorModal(result);
             } else if (result === 'success') {
