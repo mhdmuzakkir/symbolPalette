@@ -1958,15 +1958,37 @@ function renderLayerButtons() {
     });
 }
 
+var _hostScriptLoaded = false;
+function ensureHostScript(callback) {
+    if (_hostScriptLoaded) {
+        if (callback) callback();
+        return;
+    }
+    try {
+        var extPath = csInterface.getSystemPath(SystemPath.EXTENSION);
+        var jsxPath = extPath.replace(/\\/g, '/') + '/jsx/host.jsx';
+        var loadScript = '$.evalFile("' + jsxPath + '");';
+        csInterface.evalScript(loadScript, function() {
+            _hostScriptLoaded = true;
+            if (callback) callback();
+        });
+    } catch (e) {
+        console.error('Failed to load host.jsx:', e);
+        if (callback) callback();
+    }
+}
+
 function moveSelectionToLayer(layerName) {
     if (!layerName) return;
-    var script = 'spMoveSelectionToLayer("' + escapePath(layerName) + '");';
-    csInterface.evalScript(script, function(result) {
-        if (result && result.toString().indexOf('Error:') === 0) {
-            showErrorModal(result);
-        } else if (result === 'success') {
-            scanDocumentLayers();
-        }
+    ensureHostScript(function() {
+        var script = 'spMoveSelectionToLayer("' + escapePath(layerName) + '");';
+        csInterface.evalScript(script, function(result) {
+            if (result && result.toString().indexOf('Error:') === 0) {
+                showErrorModal(result);
+            } else if (result === 'success') {
+                scanDocumentLayers();
+            }
+        });
     });
 }
 
@@ -1974,33 +1996,27 @@ function scanDocumentLayers() {
     var container = document.getElementById('layerList');
     if (!container) return;
 
-    // First verify a document is actually open using the known-working function
-    csInterface.evalScript('getActiveDocumentName()', function(docName) {
-        if (!docName || docName === 'null' || docName === 'undefined') {
-            container.innerHTML = '<div class="empty-message">No document open</div>';
-            return;
-        }
-
-        // Document is open — try to scan layers
-        csInterface.evalScript('spScanCurrentLayers()', function(result) {
-            try {
-                var data = JSON.parse(result);
-                if (data.success && data.layers) {
-                    renderLayerList(data.layers);
-                } else {
-                    var err = data.error || 'No layers found';
-                    // If the JSX function is not loaded (e.g. after update without restart),
-                    // it may return the function body as a string or an error
-                    if (err.indexOf('spScanCurrentLayers') !== -1 || result.indexOf('function') === 0) {
-                        container.innerHTML = '<div class="empty-message">Please restart Illustrator to enable layer scanning</div>';
-                    } else {
-                        container.innerHTML = '<div class="empty-message">' + err + '</div>';
-                    }
-                }
-            } catch (e) {
-                // If spScanCurrentLayers is not defined, evalScript returns undefined or the error
-                container.innerHTML = '<div class="empty-message">Please restart Illustrator to enable layer scanning</div>';
+    ensureHostScript(function() {
+        // First verify a document is actually open using the known-working function
+        csInterface.evalScript('getActiveDocumentName()', function(docName) {
+            if (!docName || docName === 'null' || docName === 'undefined') {
+                container.innerHTML = '<div class="empty-message">No document open</div>';
+                return;
             }
+
+            // Document is open — scan layers
+            csInterface.evalScript('spScanCurrentLayers()', function(result) {
+                try {
+                    var data = JSON.parse(result);
+                    if (data.success && data.layers) {
+                        renderLayerList(data.layers);
+                    } else {
+                        container.innerHTML = '<div class="empty-message">' + (data.error || 'No layers found') + '</div>';
+                    }
+                } catch (e) {
+                    container.innerHTML = '<div class="empty-message">No document open</div>';
+                }
+            });
         });
     });
 }
