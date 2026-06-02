@@ -103,8 +103,16 @@ document.addEventListener('DOMContentLoaded', function() {
     loadPageStatistics();
     setupEventListeners();
 
-    // Auto-detect on startup if no folder configured
-    if (!rootFolder) {
+    // Check accessibility and auto-detect on startup
+    if (rootFolder && !pathExists(rootFolder)) {
+        console.log('symbolPalette: saved rootFolder not accessible, attempting auto-detect...');
+        var result = autoDetectFromDrive();
+        if (result) {
+            applyAutoDetectResult(result, false);
+        } else {
+            showDriveMissingModal(rootFolder);
+        }
+    } else if (!rootFolder) {
         console.log('symbolPalette: no rootFolder configured, attempting auto-detect...');
         var result = autoDetectFromDrive();
         if (result) {
@@ -504,7 +512,7 @@ function applyAutoDetectResult(result, showAlert) {
 
     console.log('symbolPalette: ' + msg);
     if (showAlert) {
-        alert(msg);
+        showErrorModal(msg, 'Auto-Detected');
     }
     return true;
 }
@@ -703,7 +711,11 @@ function showPageInfo(pageNum, riwayah, systemKey, count) {
     document.getElementById('pageBadge').textContent = 'Page ' + String(pageNum).padStart(3, '0');
     document.getElementById('riwayahBadge').textContent = riwayah;
     document.getElementById('systemBadge').textContent = SYSTEM_NAMES[systemKey] || systemKey;
-    document.getElementById('ayahCount').textContent = count + ' ayah' + (count !== 1 ? 's' : '');
+
+    var titleEl = document.getElementById('numberSectionTitle');
+    if (titleEl) {
+        titleEl.textContent = count + ' AYAHS ON THIS PAGE';
+    }
 
     document.getElementById('pageInfoBar').classList.remove('hidden');
     document.getElementById('importAllBar').classList.remove('hidden');
@@ -791,7 +803,7 @@ function snapPanelWidth() {
             var symbolCount = symbols.length;
             var symbolWidth = 0;
             if (symbolCount > 0) {
-                var symbolCols = Math.min(Math.ceil(Math.sqrt(symbolCount)), 6);
+                var symbolCols = 4; // Fixed 4 columns
                 symbolWidth = 32 + (symbolCols * 44) + ((symbolCols - 1) * 10) + 20; // +20 scrollbar buffer
             }
 
@@ -859,14 +871,14 @@ function showNumberPlaceholder(container, num) {
 
 function pasteNumber(num, cell) {
     if (!rootFolder) {
-        alert('Please select a root folder first.');
+        showErrorModal('Please select a root folder first.');
         return;
     }
 
     var filePath = rootFolder + '/numbers/' + num + '.svg';
     var stat = window.cep.fs.stat(filePath);
     if (stat.err !== 0) {
-        alert('Number file not found: ' + num + '.svg');
+        showErrorModal('Number file not found: ' + num + '.svg');
         return;
     }
 
@@ -876,21 +888,21 @@ function pasteNumber(num, cell) {
     csInterface.evalScript(script, function(result) {
         if (cell) cell.classList.remove('processing');
         if (result && result.toString().indexOf('Error:') === 0) {
-            alert(result);
+            showErrorModal(result);
         } else if (result === 'false' || result === false) {
-            alert('Failed to paste number.');
+            showErrorModal('Failed to paste number.');
         }
     });
 }
 
 function importAllNumbers() {
     if (!currentPageInfo.detected || currentPageInfo.ayahNumbers.length === 0) {
-        alert('No ayah numbers to import for this page.');
+        showErrorModal('No ayah numbers to import for this page.');
         return;
     }
 
     if (!rootFolder) {
-        alert('Please select a root folder first.');
+        showErrorModal('Please select a root folder first.');
         return;
     }
 
@@ -907,7 +919,7 @@ function importAllNumbers() {
     });
 
     if (filePaths.length === 0) {
-        alert('No number SVG files found for this page.');
+        showErrorModal('No number SVG files found for this page.');
         return;
     }
 
@@ -929,7 +941,7 @@ function importAllNumbers() {
         btn.classList.remove('processing');
         btn.disabled = false;
         if (result && result.toString().indexOf('Error:') === 0) {
-            alert(result);
+            showErrorModal(result);
         } else if (result === 'success') {
             console.log('Ayah numbers imported and aligned successfully');
         }
@@ -1111,7 +1123,7 @@ function updateFolderDisplay() {
 
 function refreshSymbols() {
     if (!rootFolder) {
-        alert('Please select a root folder first.');
+        showErrorModal('Please select a root folder first.');
         return;
     }
 
@@ -1274,6 +1286,12 @@ function renderGrid() {
     var container = document.getElementById('symbolGrid');
     container.innerHTML = '';
 
+    var titleEl = document.getElementById('symbolSectionTitle');
+    if (titleEl) {
+        var categoryName = symbolCategory || 'ALL';
+        titleEl.textContent = symbols.length + ' SYMBOLS IN ' + categoryName.toUpperCase();
+    }
+
     if (symbols.length === 0) {
         container.classList.add('empty');
         var emptyMsg = document.createElement('div');
@@ -1406,9 +1424,9 @@ function pasteSymbol(index) {
     csInterface.evalScript(script, function(result) {
         cell.classList.remove('processing');
         if (result && result.toString().indexOf('Error:') === 0) {
-            alert(result);
+            showErrorModal(result);
         } else if (result === 'false' || result === false) {
-            alert('Failed to paste symbol. Check that the SVG file exists and is valid.');
+            showErrorModal('Failed to paste symbol. Check that the SVG file exists and is valid.');
         }
     });
 }
@@ -1459,8 +1477,8 @@ function setupEventListeners() {
         loadSymbolsForCurrentView();
     });
 
-    // Edit mode
-    document.getElementById('editModeBtn').addEventListener('click', toggleEditMode);
+    // Info button
+    document.getElementById('infoBtn').addEventListener('click', showInfoModal);
 
     // Select Folder button
     document.getElementById('selectFolderBtn').addEventListener('click', showFolderModal);
@@ -1474,6 +1492,8 @@ function setupEventListeners() {
     document.getElementById('autoDetectBtn').addEventListener('click', function() {
         var btn = document.getElementById('autoDetectBtn');
         var statusEl = document.getElementById('autoDetectStatus');
+        var iconEl = document.getElementById('driveStatusIcon');
+        if (iconEl) iconEl.style.display = 'none';
         btn.disabled = true;
         statusEl.textContent = 'Scanning drives...';
         statusEl.style.color = 'var(--text-muted)';
@@ -1492,6 +1512,7 @@ function setupEventListeners() {
             } else {
                 statusEl.textContent = 'Could not auto-detect. Try Test & Use below, or Browse manually.';
                 statusEl.style.color = 'var(--accent-orange)';
+                if (iconEl) iconEl.style.display = 'flex';
                 btn.disabled = false;
             }
         }, 100);
@@ -1707,12 +1728,12 @@ function loadSymbolsFromRootFolder() {
     var folderPath = document.getElementById('folderPathInput').value.trim();
 
     if (!folderPath) {
-        alert('Please select a folder first.');
+        showErrorModal('Please select a folder first.');
         return;
     }
 
     if (previewData.symbols.length === 0 && previewData.numbers === 0) {
-        alert('No symbols or numbers found in the selected folder structure.');
+        showErrorModal('No symbols or numbers found in the selected folder structure.');
         return;
     }
 
@@ -1766,7 +1787,7 @@ function saveEditSymbol() {
     var svgPath = document.getElementById('editSymbolPath').value.trim();
 
     if (!name || !svgPath) {
-        alert('Please fill in all required fields.');
+        showErrorModal('Please fill in all required fields.');
         return;
     }
 
@@ -1805,19 +1826,122 @@ function hideNumberModal() {
     document.getElementById('numberModal').classList.remove('active');
 }
 
+function showErrorModal(message, title) {
+    var modal = document.getElementById('errorModal');
+    var msgEl = document.getElementById('errorModalMessage');
+    var titleEl = document.getElementById('errorModalTitle');
+    var iconDefault = document.getElementById('errorIconDefault');
+    var iconAdd = document.getElementById('errorIconAdd');
+    var iconRemove = document.getElementById('errorIconRemove');
+
+    if (titleEl) titleEl.textContent = title || 'Error';
+    if (msgEl) msgEl.textContent = message || '';
+
+    // Show appropriate icon based on error message
+    var msgStr = (message || '').toString();
+    if (iconDefault) iconDefault.style.display = 'none';
+    if (iconAdd) iconAdd.style.display = 'none';
+    if (iconRemove) iconRemove.style.display = 'none';
+
+    if (msgStr.indexOf('Add') !== -1 && iconAdd) {
+        iconAdd.style.display = 'flex';
+    } else if (msgStr.indexOf('Remove') !== -1 && iconRemove) {
+        iconRemove.style.display = 'flex';
+    } else if (iconDefault) {
+        iconDefault.style.display = 'flex';
+    }
+
+    if (modal) modal.classList.add('active');
+
+    var okBtn = document.getElementById('errorModalOk');
+    if (okBtn) {
+        var newOk = okBtn.cloneNode(true);
+        okBtn.parentNode.replaceChild(newOk, okBtn);
+        newOk.addEventListener('click', function() {
+            if (modal) modal.classList.remove('active');
+        });
+    }
+}
+
+function hideErrorModal() {
+    document.getElementById('errorModal').classList.remove('active');
+}
+
+function showInfoModal() {
+    var modal = document.getElementById('infoModal');
+    if (modal) modal.classList.add('active');
+
+    var okBtn = document.getElementById('infoModalOk');
+    if (okBtn) {
+        var newOk = okBtn.cloneNode(true);
+        okBtn.parentNode.replaceChild(newOk, okBtn);
+        newOk.addEventListener('click', function() {
+            if (modal) modal.classList.remove('active');
+        });
+    }
+}
+
+function hideInfoModal() {
+    document.getElementById('infoModal').classList.remove('active');
+}
+
+function showDriveMissingModal(missingPath) {
+    var modal = document.getElementById('driveMissingModal');
+    var pathEl = document.getElementById('driveMissingPath');
+    if (pathEl) pathEl.textContent = missingPath || '';
+    if (modal) modal.classList.add('active');
+
+    var retryBtn = document.getElementById('retryDriveBtn');
+    if (retryBtn) {
+        var newRetry = retryBtn.cloneNode(true);
+        retryBtn.parentNode.replaceChild(newRetry, retryBtn);
+        newRetry.addEventListener('click', function() {
+            location.reload();
+        });
+    }
+
+    var scanBtn = document.getElementById('scanDrivesBtn');
+    if (scanBtn) {
+        var newScan = scanBtn.cloneNode(true);
+        scanBtn.parentNode.replaceChild(newScan, scanBtn);
+        newScan.addEventListener('click', function() {
+            var result = autoDetectFromDrive();
+            if (result) {
+                location.reload();
+            } else {
+                var statusEl = document.getElementById('autoDetectStatus');
+                if (statusEl) {
+                    statusEl.textContent = 'Could not auto-detect. Try Test & Use below, or Browse manually.';
+                    statusEl.style.color = 'var(--accent-orange)';
+                }
+            }
+        });
+    }
+
+    var changeBtn = document.getElementById('changeDriveBtn');
+    if (changeBtn) {
+        var newChange = changeBtn.cloneNode(true);
+        changeBtn.parentNode.replaceChild(newChange, changeBtn);
+        newChange.addEventListener('click', function() {
+            if (modal) modal.classList.remove('active');
+            showFolderModal();
+        });
+    }
+}
+
 function insertNumber() {
     var num = document.getElementById('numberInput').value.trim();
     if (!num) return;
 
     if (!rootFolder) {
-        alert('Please select a root folder first.');
+        showErrorModal('Please select a root folder first.');
         return;
     }
 
     var filePath = rootFolder + '/numbers/' + num + '.svg';
     var stat = window.cep.fs.stat(filePath);
     if (stat.err !== 0) {
-        alert('Number file not found: ' + num + '.svg\n\nMake sure the file exists in the numbers folder.');
+        showErrorModal('Number file not found: ' + num + '.svg\n\nMake sure the file exists in the numbers folder.');
         return;
     }
 
@@ -1826,9 +1950,9 @@ function insertNumber() {
     var script = 'pasteFromFile("' + escapePath(filePath) + '");';
     csInterface.evalScript(script, function(result) {
         if (result && result.toString().indexOf('Error:') === 0) {
-            alert(result);
+            showErrorModal(result);
         } else if (result === 'false' || result === false) {
-            alert('Failed to paste number. Check that the SVG file is valid.');
+            showErrorModal('Failed to paste number. Check that the SVG file is valid.');
         }
     });
 }

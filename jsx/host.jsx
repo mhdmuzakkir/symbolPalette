@@ -10,8 +10,7 @@ function pasteFromFile(filePath) {
     try {
         // Check if there's an active document
         if (app.documents.length === 0) {
-            alert("Error: No active document. Please open or create a document first.");
-            return false;
+            return "Error: No active document. Please open or create a document first.";
         }
         
         var targetDoc = app.activeDocument;
@@ -19,22 +18,19 @@ function pasteFromFile(filePath) {
         
         // Check if source file exists
         if (!sourceFile.exists) {
-            alert("Error: File not found: " + filePath);
-            return false;
+            return "Error: File not found: " + filePath;
         }
         
         // Open the source document (Illustrator supports SVG natively)
         var sourceDoc = app.open(sourceFile);
         
         if (!sourceDoc) {
-            alert("Error: Could not open file: " + filePath);
-            return false;
+            return "Error: Could not open file: " + filePath;
         }
         
         if (sourceDoc.pageItems.length === 0) {
             sourceDoc.close(SaveOptions.DONOTSAVECHANGES);
-            alert("Error: No objects found in the SVG file.");
-            return false;
+            return "Error: No objects found in the SVG file.";
         }
         
         // Use Illustrator's native Select All to avoid duplicate selections.
@@ -59,8 +55,7 @@ function pasteFromFile(filePath) {
         return true;
         
     } catch (e) {
-        alert("Error: " + e.toString());
-        return false;
+        return "Error: " + e.toString();
     }
 }
 
@@ -251,17 +246,7 @@ function pasteAllNumbersAligned(filePaths) {
             ayaLayer.name = "Aya No.";
         }
 
-        // --- 3. Clear existing items in Aya No. layer ---
-        ayaLayer.locked = false;
-        ayaLayer.visible = true;
-        while (ayaLayer.pageItems.length > 0) {
-            ayaLayer.pageItems[0].remove();
-        }
-        while (ayaLayer.groupItems.length > 0) {
-            ayaLayer.groupItems[0].remove();
-        }
-
-        // --- 4. Collect ornaments named "ayah" or "آية" ---
+        // --- 3. Collect ornaments named "ayah" or "آية" ---
         // NOTE: layer.pageItems in Illustrator is already recursive (includes nested items),
         // so we do NOT recurse into groupItems — that would double-count every ornament.
         var ORNAMENT_NAMES = ["ayah", "آية"];
@@ -278,10 +263,24 @@ function pasteAllNumbersAligned(filePaths) {
             }
         }
 
-        // --- 5. Validate count ---
+        // --- 4. Validate count BEFORE clearing Aya No. layer ---
         if (ornaments.length < filePaths.length) {
             var needed = filePaths.length - ornaments.length;
             return "Error: Add " + needed + " ayah";
+        }
+        if (ornaments.length > filePaths.length) {
+            var excess = ornaments.length - filePaths.length;
+            return "Error: Remove " + excess + " ayah";
+        }
+
+        // --- 5. Clear existing items in Aya No. layer (only after validation passes) ---
+        ayaLayer.locked = false;
+        ayaLayer.visible = true;
+        while (ayaLayer.pageItems.length > 0) {
+            ayaLayer.pageItems[0].remove();
+        }
+        while (ayaLayer.groupItems.length > 0) {
+            ayaLayer.groupItems[0].remove();
         }
 
         // --- 6. Sort ornaments: top-to-bottom rows, right-to-left within each row ---

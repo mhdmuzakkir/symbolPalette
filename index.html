@@ -13,9 +13,11 @@
         <div class="header">
             <h2 class="title">Symbol Palette</h2>
             <div class="header-actions">
+                <select class="category-select header-category" id="categorySelect">
+                    <option value="">Select category...</option>
+                </select>
                 <button class="btn-icon" id="settingsBtn" title="Settings">⚙</button>
                 <button class="btn-icon" id="refreshBtn" title="Refresh">↻</button>
-                <button class="btn-edit-mode" id="editModeBtn">Edit</button>
             </div>
         </div>
 
@@ -27,65 +29,54 @@
                 <span class="system-badge" id="systemBadge">al_kufi</span>
             </div>
             <div class="page-info-right">
-                <span class="ayah-count" id="ayahCount">0 ayahs</span>
+                <!-- ayah count removed -->
             </div>
-        </div>
-
-        <!-- Import All Numbers Button -->
-        <div class="import-all-bar hidden" id="importAllBar">
-            <button class="btn-import-all" id="importAllBtn">
-                <span class="icon">⬇</span> Import All Numbers
-            </button>
         </div>
 
         <!-- Dynamic Number Grid -->
         <div class="number-section hidden" id="numberSection">
             <div class="section-header">
-                <span class="section-title">Ayah Numbers for this Page</span>
+                <span class="section-title" id="numberSectionTitle">Ayah Numbers for this Page</span>
             </div>
             <div class="number-grid" id="numberGrid">
                 <!-- Number SVGs rendered here -->
             </div>
         </div>
 
-        <!-- Ayah Number Button -->
-        <div class="ayah-number-bar" id="ayahNumberBar">
-            <button class="btn-ayah-number" id="ayahNumberBtn">
-                <span class="icon">+</span> Ayah Number
+        <!-- Import All Numbers + Ayah Number Button -->
+        <div class="import-all-bar hidden" id="importAllBar">
+            <button class="btn-import-all" id="importAllBtn">
+                <span class="icon">⬇</span> Import All Numbers
+            </button>
+            <button class="btn-ayah-number-small" id="ayahNumberBtn" title="Insert Ayah Number">
+                <span class="icon">+</span>
             </button>
         </div>
 
-        <!-- Category Selector -->
-        <div class="category-bar" id="categoryBar">
-            <span class="path-label">Type:</span>
-            <select class="category-select" id="categorySelect">
-                <option value="">Select category...</option>
-            </select>
-        </div>
-
-        <!-- Folder Info Bar -->
-        <div class="folder-info-bar" id="folderInfoBar">
-            <span class="path-label">Path:</span>
-            <span class="folder-path" id="folderPath">No folder selected</span>
-        </div>
-
-        <!-- Grid Container: 4 columns -->
-        <div class="symbol-grid" id="symbolGrid">
-            <!-- Symbols rendered here -->
+        <!-- Symbol Section -->
+        <div class="symbol-section" id="symbolSection">
+            <div class="section-header">
+                <span class="section-title" id="symbolSectionTitle">0 SYMBOLS</span>
+            </div>
+            <div class="symbol-grid" id="symbolGrid">
+                <!-- Symbols rendered here -->
+            </div>
         </div>
 
         <div class="footer">
-            <button class="btn-select-folder" id="selectFolderBtn">
-                <span class="icon">📁</span> Select Root Folder
-            </button>
+            <div class="footer-main">
+                <button class="btn-select-folder" id="selectFolderBtn">
+                    <span class="icon">📁</span> Select Root Folder
+                </button>
+                <button class="btn-icon footer-info" id="infoBtn" title="How to add symbols">ℹ</button>
+            </div>
 
-        </div>
-
-        <div class="update-bar" style="padding: 8px 12px; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px;">
-            <button class="btn-secondary" id="btnCheckUpdates" style="font-size: 10px; padding: 4px 8px;">Check for Updates</button>
-            <button class="btn-primary hidden" id="btnInstallUpdate" style="font-size: 10px; padding: 4px 8px;">Install Update</button>
-            <span id="updateStatus" style="font-size: 10px; color: var(--text-secondary); flex: 1;"></span>
-            <span style="font-size: 9px; color: var(--text-muted);">v1.2.3</span>
+            <div class="update-bar">
+                <button class="btn-secondary" id="btnCheckUpdates" style="font-size: 10px; padding: 4px 8px;">Check for Updates</button>
+                <button class="btn-primary hidden" id="btnInstallUpdate" style="font-size: 10px; padding: 4px 8px;">Install Update</button>
+                <span id="updateStatus" style="font-size: 10px; color: var(--text-secondary); flex: 1;"></span>
+                <span style="font-size: 9px; color: var(--text-muted);">v1.2.3</span>
+            </div>
         </div>
     </div>
 
@@ -111,6 +102,9 @@
                 <button class="btn-auto-detect" id="autoDetectBtn">
                     <span class="icon"></span> Auto-Detect from Google Drive
                 </button>
+                <div id="driveStatusIcon" style="display:none;justify-content:center;margin-top:6px;">
+                    <img src="assets/icons/drive.svg" alt="Google Drive" style="width:40px;height:auto;">
+                </div>
                 <p class="hint-text" id="autoDetectStatus" style="margin-top:4px;font-size:10px;color:var(--text-muted);min-height:14px;"></p>
             </div>
 
@@ -204,6 +198,75 @@
             <div class="modal-buttons">
                 <button class="btn-cancel" id="numberCancelBtn">Cancel</button>
                 <button class="btn-confirm" id="numberConfirmBtn">Insert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drive Missing Modal -->
+    <div id="driveMissingModal" class="modal">
+        <div class="modal-content" style="text-align: center; max-width: 380px;">
+            <div style="margin-bottom: 16px; display: flex; justify-content: center;">
+                <img src="assets/icons/drive.svg" alt="Google Drive" style="width:64px;height:auto;">
+            </div>
+            <h3>Google Drive Not Found</h3>
+            <p class="modal-description" style="text-align: center;">
+                The folder saved in settings is on a drive that is currently disconnected or unavailable.
+            </p>
+            <p id="driveMissingPath" style="font-size: 11px; color: var(--text-muted); word-break: break-all; margin-bottom: 16px; background: var(--bg-primary); padding: 10px; border-radius: var(--radius); text-align: left; font-family: Consolas, Monaco, monospace;"></p>
+            <div class="modal-buttons" style="justify-content: center; gap: 8px;">
+                <button id="retryDriveBtn" class="btn-primary">Retry</button>
+                <button id="scanDrivesBtn" class="btn-success">Scan Drives</button>
+                <button id="changeDriveBtn" class="btn-secondary">Change Folder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Alert Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content modal-small" style="text-align: center;">
+            <div id="errorIconDefault" style="margin-bottom: 12px; display: flex; justify-content: center;">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--accent-red);">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 7v6M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div id="errorIconAdd" style="margin-bottom: 12px; display: none; justify-content: center;">
+                <img src="assets/icons/add.svg" alt="Add" style="width:40px;height:auto; filter: brightness(0) invert(1);">
+            </div>
+            <div id="errorIconRemove" style="margin-bottom: 12px; display: none; justify-content: center;">
+                <img src="assets/icons/remove.svg" alt="Remove" style="width:40px;height:auto; filter: brightness(0) invert(1);">
+            </div>
+            <h3 id="errorModalTitle">Error</h3>
+            <p class="modal-description" id="errorModalMessage" style="text-align: center; margin-bottom: 16px;"></p>
+            <div class="modal-buttons" style="justify-content: center;">
+                <button id="errorModalOk" class="btn-confirm">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3>Adding Symbols</h3>
+            <div class="modal-description" style="text-align: left; line-height: 1.6;">
+                <p><b>To add new symbols:</b></p>
+                <ol style="padding-left: 16px; margin-bottom: 12px;">
+                    <li>Open your <b>root folder</b> (e.g. <code>G:/My Drive/mushafproject/symbols</code>)</li>
+                    <li>Create a <b>new folder</b> for the category (e.g. <code>lines</code>, <code>ornaments</code>, <code>accents</code>)</li>
+                    <li>Drop <b>SVG files</b> into that folder</li>
+                    <li>Click <b>↻ Refresh</b> in the panel</li>
+                </ol>
+                <p><b>File rules:</b></p>
+                <ul style="padding-left: 16px; margin-bottom: 12px;">
+                    <li>Only <code>.svg</code> files are loaded</li>
+                    <li>File name becomes the symbol name</li>
+                    <li>Sub-folders are treated as categories</li>
+                </ul>
+                <p><b>Numbers:</b></p>
+                <p style="margin-bottom: 0;">Put ayah number SVGs in a <code>numbers/</code> folder at the root level.</p>
+            </div>
+            <div class="modal-buttons" style="justify-content: center;">
+                <button id="infoModalOk" class="btn-confirm">Got it</button>
             </div>
         </div>
     </div>
