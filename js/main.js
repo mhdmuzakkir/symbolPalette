@@ -1994,15 +1994,34 @@ function ensureHostScript(callback) {
 
 function moveSelectionToLayer(layerName) {
     if (!layerName) return;
-    ensureHostScript(function() {
-        var script = 'spMoveSelectionToLayer("' + escapePath(layerName) + '");';
-        csInterface.evalScript(script, function(result) {
-            if (result && result.toString().indexOf('Error:') === 0) {
-                showErrorModal(result);
-            } else if (result === 'success') {
-                scanDocumentLayers();
-            }
-        });
+    // Inline the full cut-exit-paste workflow so it works immediately
+    var script = '(function(layerName){' +
+        'try{' +
+            'if(app.documents.length===0)return"Error: No active document.";' +
+            'var doc=app.activeDocument;' +
+            'if(doc.selection.length===0)return"Error: Nothing selected.";' +
+            'var qLayer=null;' +
+            'for(var i=0;i<doc.layers.length;i++)if(doc.layers[i].name==="Quran Text")qLayer=doc.layers[i];' +
+            'app.executeMenuCommand("cut");' +
+            'try{doc.activeLayer.hasSelectedArtwork=true;}catch(e){}' +
+            'app.executeMenuCommand("pasteFront");' +
+            'var tl=null;' +
+            'for(var i=0;i<doc.layers.length;i++)if(doc.layers[i].name===layerName)tl=doc.layers[i];' +
+            'if(!tl){tl=doc.layers.add();tl.name=layerName;}' +
+            'tl.locked=false;tl.visible=true;' +
+            'var pasted=[];' +
+            'for(var i=doc.selection.length-1;i>=0;i--){var it=doc.selection[i];it.move(tl,ElementPlacement.PLACEATEND);pasted.push(it);}' +
+            'if(pasted.length>0){doc.selection=null;for(var i=0;i<pasted.length;i++)pasted[i].selected=true;app.executeMenuCommand("compoundPath");}' +
+            'if(qLayer){doc.selection=null;for(var i=0;i<qLayer.compoundPathItems.length;i++){qLayer.compoundPathItems[i].selected=true;break;}}' +
+            'return"success";' +
+        '}catch(e){return"Error: "+e.toString();}' +
+    '})(' + JSON.stringify(layerName) + ')';
+    csInterface.evalScript(script, function(result) {
+        if (result && result.toString().indexOf('Error:') === 0) {
+            showErrorModal(result);
+        } else if (result === 'success') {
+            scanDocumentLayers();
+        }
     });
 }
 
@@ -2010,28 +2029,27 @@ function scanDocumentLayers() {
     var container = document.getElementById('layerList');
     if (!container) return;
 
-    ensureHostScript(function() {
-        // First verify a document is actually open using the known-working function
-        csInterface.evalScript('getActiveDocumentName()', function(docName) {
-            if (!docName || docName === 'null' || docName === 'undefined') {
-                container.innerHTML = '<div class="empty-message">No document open</div>';
-                return;
-            }
+    // Inline the entire layer scanner so it works regardless of JSX file loading issues
+    var script = '(function(){' +
+        'var defs={quranText:{s:"Quran Text",p:["qurantext","quran"]},ayaNo:{s:"Aya No.",p:["ayano","ayahno","ayano.","ayahno.","aya.no","ayah.no","aya no","ayah no"]},ornaments:{s:"Ornaments",p:["ornament","zakhrafah","zakhrafa","decoration","decorations"]},header:{s:"Header & Marks & Page No.",p:["header","marks","pageno"]}};' +
+        'function nm(n){if(!n)return"";return n.toString().replace(/^\\s+|\\s+$/g,"").toLowerCase().replace(/[_\\-\\.]/g,"").replace(/\\s+/g,"");}' +
+        'function mt(n){var nd=nm(n);if(!nd)return null;for(var k in defs){if(!defs.hasOwnProperty(k))continue;var d=defs[k];var sn=nm(d.s);if(nd===sn)return d.s;for(var p=0;p<d.p.length;p++){if(nd.indexOf(d.p[p])!==-1)return d.s;}}return null;}' +
+        'var r={success:false,layers:[],error:""};' +
+        'try{if(app.documents.length===0){r.error="No document open";return JSON.stringify(r);}var doc=app.activeDocument;for(var i=0;i<doc.layers.length;i++){var ly=doc.layers[i];var m=mt(ly.name);r.layers.push({name:ly.name,matched:m||null,standard:m||"\u2014"});}r.success=true;}catch(e){r.error=e.toString();}' +
+        'return JSON.stringify(r);' +
+    '})()';
 
-            // Document is open — scan layers
-            csInterface.evalScript('spScanCurrentLayers()', function(result) {
-                try {
-                    var data = JSON.parse(result);
-                    if (data.success && data.layers) {
-                        renderLayerList(data.layers);
-                    } else {
-                        container.innerHTML = '<div class="empty-message">' + (data.error || 'No layers found') + '</div>';
-                    }
-                } catch (e) {
-                    container.innerHTML = '<div class="empty-message">No document open</div>';
-                }
-            });
-        });
+    csInterface.evalScript(script, function(result) {
+        try {
+            var data = JSON.parse(result);
+            if (data.success && data.layers) {
+                renderLayerList(data.layers);
+            } else {
+                container.innerHTML = '<div class="empty-message">' + (data.error || 'No layers found') + '</div>';
+            }
+        } catch (e) {
+            container.innerHTML = '<div class="empty-message">No document open</div>';
+        }
     });
 }
 
