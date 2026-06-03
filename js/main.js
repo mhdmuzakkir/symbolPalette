@@ -625,9 +625,8 @@ function scanAndAddRiwayahs(tasksFolder) {
         var itemPath = riwayahPath + '/' + item;
         if (isDirectory(itemPath)) {
             var riwayahName = item.toLowerCase().trim();
-            // Only add if not already known (in qurra or mappings)
-            var known = getSystemForRiwayah(riwayahName);
-            if (known === riwayahSettings.defaultSystem) {
+            // Only add if not already known in qurra data
+            if (!isRawiInQurra(riwayahName) && !riwayahSettings.mappings[riwayahName]) {
                 // Unknown rawi — add mapping to default so it shows in settings
                 riwayahSettings.mappings[riwayahName] = riwayahSettings.defaultSystem;
                 added.push(riwayahName);
@@ -677,6 +676,23 @@ function applyAutoDetectResult(result, showAlert) {
     return true;
 }
 
+function isRawiInQurra(riwayah) {
+    var clean = riwayah.toLowerCase().trim();
+    if (!Array.isArray(riwayahSettings.qurra)) return false;
+    for (var i = 0; i < riwayahSettings.qurra.length; i++) {
+        var q = riwayahSettings.qurra[i];
+        if (Array.isArray(q.rawi)) {
+            for (var j = 0; j < q.rawi.length; j++) {
+                var rawiName = (typeof q.rawi[j] === 'string') ? q.rawi[j] : (q.rawi[j].name || '');
+                if (rawiName.toLowerCase().trim() === clean) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 function getSystemForRiwayah(riwayah) {
     var clean = riwayah.toLowerCase().trim();
     // 1. Check explicit mappings first (user overrides)
@@ -699,6 +715,23 @@ function getSystemForRiwayah(riwayah) {
     }
     // 3. Fallback to default
     return riwayahSettings.defaultSystem;
+}
+
+function getRawisWithFiles() {
+    var found = {};
+    var settingsFolder = deriveSettingsFolder();
+    if (!settingsFolder) return found;
+    var riwayahPath = settingsFolder.replace(/\\/g, '/') + '/riwayah-tasks';
+    try {
+        var result = window.cep.fs.readdir(riwayahPath);
+        if (result.err === 0 && result.data) {
+            result.data.forEach(function(item) {
+                if (item.startsWith('.') || item === 'desktop.ini' || item === 'Thumbs.db') return;
+                found[item.toLowerCase().trim()] = true;
+            });
+        }
+    } catch (e) {}
+    return found;
 }
 
 // ==================== PAGE STATISTICS ====================
@@ -1110,6 +1143,8 @@ function renderRiwayahMappings() {
     var container = document.getElementById('riwayahMappings');
     container.innerHTML = '';
 
+    var rawisWithFiles = getRawisWithFiles();
+
     // Render qurra data grouped by qari
     if (Array.isArray(riwayahSettings.qurra)) {
         riwayahSettings.qurra.forEach(function(q) {
@@ -1125,23 +1160,41 @@ function renderRiwayahMappings() {
             header.style.marginBottom = '6px';
             header.style.paddingBottom = '4px';
             header.style.borderBottom = '1px solid var(--border-color)';
-            var systemName = SYSTEM_NAMES[getSystemKeyFromCountingName(q.counting_system)] || q.counting_system;
-            header.textContent = q.name + ' (Qari ' + q.id + ') — ' + systemName;
+            header.textContent = q.name.toUpperCase();
             group.appendChild(header);
 
             if (Array.isArray(q.rawi)) {
                 q.rawi.forEach(function(r) {
                     var rawiName = (typeof r === 'string') ? r : (r.name || '');
-                    var rawiId = (typeof r === 'object' && r.id) ? r.id : '';
                     var clean = rawiName.toLowerCase().trim();
+                    var hasFile = rawisWithFiles[clean];
 
                     var row = document.createElement('div');
                     row.className = 'mapping-row';
                     row.style.paddingLeft = '12px';
+                    row.style.display = 'flex';
+                    row.style.alignItems = 'center';
+                    row.style.gap = '8px';
+
+                    var labelWrap = document.createElement('div');
+                    labelWrap.style.display = 'flex';
+                    labelWrap.style.alignItems = 'center';
+                    labelWrap.style.gap = '6px';
+                    labelWrap.style.flex = '1';
+
+                    if (hasFile) {
+                        var icon = document.createElement('span');
+                        icon.textContent = '📄';
+                        icon.style.fontSize = '10px';
+                        icon.title = 'Has files on disk';
+                        labelWrap.appendChild(icon);
+                    }
 
                     var label = document.createElement('label');
-                    label.textContent = rawiName + (rawiId ? ' (R' + rawiId + ')' : '');
-                    row.appendChild(label);
+                    label.textContent = rawiName;
+                    label.style.textTransform = 'capitalize';
+                    labelWrap.appendChild(label);
+                    row.appendChild(labelWrap);
 
                     var select = document.createElement('select');
                     select.dataset.riwayah = clean;
@@ -1167,10 +1220,10 @@ function renderRiwayahMappings() {
         });
     }
 
-    // Render any extra mappings not in qurra (user-added or scanned)
+    // Render any extra mappings not in qurra (truly custom rawis)
     var extras = [];
     for (var rawi in riwayahSettings.mappings) {
-        if (getSystemForRiwayah(rawi) === riwayahSettings.defaultSystem) {
+        if (!isRawiInQurra(rawi)) {
             extras.push(rawi);
         }
     }
@@ -1187,17 +1240,38 @@ function renderRiwayahMappings() {
         extraHeader.style.marginBottom = '6px';
         extraHeader.style.paddingBottom = '4px';
         extraHeader.style.borderBottom = '1px solid var(--border-color)';
-        extraHeader.textContent = 'Other / Custom';
+        extraHeader.textContent = 'OTHER / CUSTOM';
         extraGroup.appendChild(extraHeader);
 
         extras.forEach(function(riwayah) {
+            var hasFile = rawisWithFiles[riwayah];
+
             var row = document.createElement('div');
             row.className = 'mapping-row';
             row.style.paddingLeft = '12px';
+            row.style.display = 'flex';
+            row.style.alignItems = 'center';
+            row.style.gap = '8px';
+
+            var labelWrap = document.createElement('div');
+            labelWrap.style.display = 'flex';
+            labelWrap.style.alignItems = 'center';
+            labelWrap.style.gap = '6px';
+            labelWrap.style.flex = '1';
+
+            if (hasFile) {
+                var icon = document.createElement('span');
+                icon.textContent = '📄';
+                icon.style.fontSize = '10px';
+                icon.title = 'Has files on disk';
+                labelWrap.appendChild(icon);
+            }
 
             var label = document.createElement('label');
             label.textContent = riwayah;
-            row.appendChild(label);
+            label.style.textTransform = 'capitalize';
+            labelWrap.appendChild(label);
+            row.appendChild(labelWrap);
 
             var select = document.createElement('select');
             select.dataset.riwayah = riwayah;
