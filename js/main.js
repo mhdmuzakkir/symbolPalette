@@ -2604,7 +2604,7 @@ function renderLayerList(layers) {
         var row = document.createElement('div');
         row.className = itemClass;
         row.innerHTML = '<span class="layer-name" style="color:' + nameColor + ';">' + escapeHtml(layer.name) + '</span>' +
-                        '<span style="display:flex;align-items:center;gap:6px;">' +
+                        '<span style="display:flex;align-items:center;justify-content:flex-end;gap:6px;width:100%;">' +
                         '<span class="layer-badge ' + badgeClass + '">' + badgeText + '</span>' +
                         deleteBtn +
                         '</span>';

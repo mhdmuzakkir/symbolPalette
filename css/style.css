@@ -506,8 +506,7 @@ body {
 
 .layer-item {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     padding: 6px 8px;
     background: var(--bg-tertiary);
     border-radius: var(--radius);
@@ -515,6 +514,7 @@ body {
     margin-bottom: 2px;
     transition: background 0.2s ease;
     border-left: 3px solid transparent;
+    gap: 4px;
 }
 
 .layer-item:last-child {
