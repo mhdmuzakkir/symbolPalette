@@ -105,7 +105,7 @@
     <!-- Select Folder Modal -->
     <div class="modal" id="folderModal">
         <div class="modal-content">
-            <h3>Select Root Folder</h3>
+            <h3>Root Folder</h3>
             <p class="modal-description">
                 Choose the folder containing your symbol categories and number SVGs.<br>
                 <b>Flat:</b> <code>symbols/</code> + <code>numbers/</code><br>
@@ -263,6 +263,24 @@
             <p class="modal-description" id="errorModalMessage" style="text-align: center; margin-bottom: 16px;"></p>
             <div class="modal-buttons" style="justify-content: center;">
                 <button id="errorModalOk" class="btn-confirm">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content modal-small" style="text-align: center;">
+            <div style="margin-bottom: 12px; display: flex; justify-content: center;">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--accent-orange);">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <h3 id="confirmModalTitle">Confirm</h3>
+            <p class="modal-description" id="confirmModalMessage" style="text-align: center; margin-bottom: 16px;"></p>
+            <div class="modal-buttons" style="justify-content: center; gap: 8px;">
+                <button id="confirmModalCancel" class="btn-cancel">Cancel</button>
+                <button id="confirmModalOk" class="btn-confirm">OK</button>
             </div>
         </div>
     </div>

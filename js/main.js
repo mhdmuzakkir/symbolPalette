@@ -1263,15 +1263,18 @@ function renderRiwayahMappings() {
 }
 
 function resetSettingsToDefaults() {
-    if (!confirm('Reset all riwayah settings to defaults?\n\nThis will restore the built-in Qurra data and clear any custom mappings.')) {
-        return;
-    }
-    riwayahSettings.qurra = DEFAULT_QURRA.slice();
-    riwayahSettings.mappings = buildMappingsFromQurra(DEFAULT_QURRA);
-    riwayahSettings.defaultSystem = 'al_kufi';
-    saveSettings();
-    renderRiwayahMappings();
-    document.getElementById('defaultSystemSelect').value = riwayahSettings.defaultSystem;
+    showConfirmModal(
+        'This will restore the built-in Qurra data and clear any custom mappings.',
+        'Reset to Defaults?',
+        function() {
+            riwayahSettings.qurra = DEFAULT_QURRA.slice();
+            riwayahSettings.mappings = buildMappingsFromQurra(DEFAULT_QURRA);
+            riwayahSettings.defaultSystem = 'al_kufi';
+            saveSettings();
+            renderRiwayahMappings();
+            document.getElementById('defaultSystemSelect').value = riwayahSettings.defaultSystem;
+        }
+    );
 }
 
 function saveSettingsFromModal() {
@@ -1524,7 +1527,7 @@ function renderGrid() {
         emptyMsg.className = 'empty-message';
         var hint = rootFolder
             ? 'No SVG files found in this folder'
-            : 'Click "Select Root Folder" to get started';
+            : 'Click "Root Folder" to get started';
         emptyMsg.innerHTML = 'No symbols loaded<br><span class="hint">' + hint + '</span>';
         container.appendChild(emptyMsg);
         return;
@@ -2056,12 +2059,16 @@ function saveEditSymbol() {
 function deleteSymbol() {
     if (editingIndex < 0 || editingIndex >= symbols.length) return;
 
-    if (confirm('Are you sure you want to remove this symbol from the palette?')) {
-        symbols.splice(editingIndex, 1);
-        saveSymbolsForCurrentView();
-        renderGrid();
-        hideEditModal();
-    }
+    showConfirmModal(
+        'Are you sure you want to remove this symbol from the palette?',
+        'Remove Symbol?',
+        function() {
+            symbols.splice(editingIndex, 1);
+            saveSymbolsForCurrentView();
+            renderGrid();
+            hideEditModal();
+        }
+    );
 }
 
 // ==================== NUMBER INSERTION ====================
@@ -2117,6 +2124,38 @@ function showErrorModal(message, title) {
 
 function hideErrorModal() {
     document.getElementById('errorModal').classList.remove('active');
+}
+
+// Custom confirm modal (replaces native confirm() with themed UI)
+var _confirmCallback = null;
+function showConfirmModal(message, title, onOk, onCancel) {
+    var modal = document.getElementById('confirmModal');
+    var msgEl = document.getElementById('confirmModalMessage');
+    var titleEl = document.getElementById('confirmModalTitle');
+    if (titleEl) titleEl.textContent = title || 'Confirm';
+    if (msgEl) msgEl.textContent = message || '';
+
+    var okBtn = document.getElementById('confirmModalOk');
+    var cancelBtn = document.getElementById('confirmModalCancel');
+
+    if (okBtn) {
+        var newOk = okBtn.cloneNode(true);
+        okBtn.parentNode.replaceChild(newOk, okBtn);
+        newOk.addEventListener('click', function() {
+            if (modal) modal.classList.remove('active');
+            if (onOk) onOk();
+        });
+    }
+    if (cancelBtn) {
+        var newCancel = cancelBtn.cloneNode(true);
+        cancelBtn.parentNode.replaceChild(newCancel, cancelBtn);
+        newCancel.addEventListener('click', function() {
+            if (modal) modal.classList.remove('active');
+            if (onCancel) onCancel();
+        });
+    }
+
+    if (modal) modal.classList.add('active');
 }
 
 function showInfoModal() {
@@ -2558,23 +2597,37 @@ function renderLayerList(layers) {
         var isPotential = !!layer.potential;
         var itemClass = isMatched ? 'layer-item matched' : (isPotential ? 'layer-item potential' : 'layer-item unmatched');
         var badgeClass = isMatched ? 'layer-badge matched' : (isPotential ? 'layer-badge potential' : 'layer-badge unmatched');
-        var badgeText = isMatched ? layer.standard : (isPotential ? 'Potential ' + layer.potential : 'Unmatched');
-        var renameBtn = '';
-        if (isPotential) {
-            renameBtn = '<button class="layer-rename-btn" data-layer-name="' + escapeHtml(layer.name) + '" data-target-name="' + escapeHtml(layer.potential) + '" title="Rename to ' + escapeHtml(layer.potential) + '">' +
-                        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>' +
-                        '</button>';
-        }
+        var badgeText = isMatched ? layer.standard : (isPotential ? 'Similar' : 'Unmatched');
+        var nameColor = isMatched ? 'var(--accent-green)' : (isPotential ? 'var(--accent-purple)' : 'var(--accent-orange)');
 
         var row = document.createElement('div');
         row.className = itemClass;
-        row.innerHTML = '<span class="layer-name">' + escapeHtml(layer.name) + '</span>' +
+        row.innerHTML = '<span class="layer-name" style="color:' + nameColor + ';">' + escapeHtml(layer.name) + '</span>' +
                         '<span style="display:flex;align-items:center;gap:6px;">' +
                         '<span class="layer-badge ' + badgeClass + '">' + badgeText + '</span>' +
-                        renameBtn +
                         '<button class="layer-delete-btn" data-layer-name="' + escapeHtml(layer.name) + '" title="Delete layer">&times;</button>' +
                         '</span>';
         container.appendChild(row);
+
+        // For potential layers, add a second row with rename option
+        if (isPotential) {
+            var hintRow = document.createElement('div');
+            hintRow.className = 'layer-item potential-hint';
+            hintRow.style.padding = '2px 8px 6px 8px';
+            hintRow.style.background = 'transparent';
+            hintRow.style.borderLeft = '3px solid var(--accent-purple)';
+            hintRow.style.marginBottom = '2px';
+            hintRow.style.fontSize = '10px';
+            hintRow.style.color = 'var(--text-muted)';
+            hintRow.style.display = 'flex';
+            hintRow.style.alignItems = 'center';
+            hintRow.style.justifyContent = 'space-between';
+            hintRow.innerHTML = '<span>Should be "' + escapeHtml(layer.potential) + '"</span>' +
+                                '<button class="layer-rename-btn" data-layer-name="' + escapeHtml(layer.name) + '" data-target-name="' + escapeHtml(layer.potential) + '" title="Rename to ' + escapeHtml(layer.potential) + '">' +
+                                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Make Match' +
+                                '</button>';
+            container.appendChild(hintRow);
+        }
     });
 
     // Attach rename handlers via event delegation
@@ -2594,8 +2647,10 @@ function renderLayerList(layers) {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
             var layerName = btn.getAttribute('data-layer-name');
-            if (layerName && confirm('Delete layer "' + layerName + '"?')) {
-                deleteDocumentLayer(layerName);
+            if (layerName) {
+                showConfirmModal('Delete layer "' + layerName + '"?', 'Delete Layer?', function() {
+                    deleteDocumentLayer(layerName);
+                });
             }
         });
     });
