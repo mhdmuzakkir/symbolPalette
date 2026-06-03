@@ -587,6 +587,26 @@ body {
     background: rgba(74, 158, 255, 0.1);
 }
 
+.layer-delete-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, background 0.2s;
+}
+
+.layer-delete-btn:hover {
+    color: var(--accent-red);
+    background: rgba(231, 76, 60, 0.1);
+}
+
 .number-cell {
     flex-shrink: 0;
     height: 44px;

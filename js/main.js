@@ -2572,6 +2572,7 @@ function renderLayerList(layers) {
                         '<span style="display:flex;align-items:center;gap:6px;">' +
                         '<span class="layer-badge ' + badgeClass + '">' + badgeText + '</span>' +
                         renameBtn +
+                        '<button class="layer-delete-btn" data-layer-name="' + escapeHtml(layer.name) + '" title="Delete layer">&times;</button>' +
                         '</span>';
         container.appendChild(row);
     });
@@ -2584,6 +2585,17 @@ function renderLayerList(layers) {
             var targetName = btn.getAttribute('data-target-name');
             if (layerName && targetName) {
                 renamePotentialLayer(layerName, targetName);
+            }
+        });
+    });
+
+    // Attach delete handlers via event delegation
+    container.querySelectorAll('.layer-delete-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var layerName = btn.getAttribute('data-layer-name');
+            if (layerName && confirm('Delete layer "' + layerName + '"?')) {
+                deleteDocumentLayer(layerName);
             }
         });
     });
@@ -2600,6 +2612,21 @@ function renamePotentialLayer(layerName, newName) {
             }
         } catch (e) {
             showErrorModal('Error renaming layer');
+        }
+    });
+}
+
+function deleteDocumentLayer(layerName) {
+    csInterface.evalScript('spDeleteLayer("' + layerName.replace(/"/g, '\\"') + '")', function(result) {
+        try {
+            var data = JSON.parse(result);
+            if (data.success) {
+                scanDocumentLayers();
+            } else {
+                showErrorModal(data.error || 'Delete failed');
+            }
+        } catch (e) {
+            showErrorModal('Error deleting layer');
         }
     });
 }

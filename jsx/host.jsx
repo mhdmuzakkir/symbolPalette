@@ -607,6 +607,23 @@ function spRenameLayerByName(layerName, newName) {
     return JSON.stringify(result);
 }
 
+function spDeleteLayer(layerName) {
+    var result = { success: false, error: "" };
+    try {
+        if (app.documents.length === 0) { result.error = "No document open"; return JSON.stringify(result); }
+        var doc = app.activeDocument;
+        for (var i = 0; i < doc.layers.length; i++) {
+            if (doc.layers[i].name === layerName) {
+                doc.layers[i].remove();
+                result.success = true;
+                return JSON.stringify(result);
+            }
+        }
+        result.error = "Layer '" + layerName + "' not found";
+    } catch (e) { result.error = e.toString(); }
+    return JSON.stringify(result);
+}
+
 // ==================== MOVE SELECTION TO LAYER ====================
 
 function spLoadSymbolActions() {
