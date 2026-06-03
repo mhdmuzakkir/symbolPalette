@@ -35,18 +35,38 @@ var riwayahSettings = {
     mappings: {}  // { 'hafs': 'al_kufi', 'warsh': 'al_madani_al_awwal', ... }
 };
 
-// Default qurra data (qari → counting_system → rawi)
+// Default qurra data with qari id and rawi id
 var DEFAULT_QURRA = [
-    { id: "1", name: "nafi", counting_system: "madani akhir", rawi: ["qalun", "warsh"] },
-    { id: "2", name: "ibn kathir", counting_system: "makki", rawi: ["bazzi", "qunbul"] },
-    { id: "3", name: "abu amr", counting_system: "basri", rawi: ["duri", "susi"] },
-    { id: "4", name: "ibn amir", counting_system: "damashqi", rawi: ["hisham", "ibn zakwan"] },
-    { id: "5", name: "asim", counting_system: "kufi", rawi: ["shuba", "hafs"] },
-    { id: "6", name: "hamza", counting_system: "kufi", rawi: ["khalaf", "khallad"] },
-    { id: "7", name: "kisai", counting_system: "kufi", rawi: ["abu al-harith", "hafs ad-duri"] },
-    { id: "8", name: "abu jafar", counting_system: "madani awwal", rawi: ["ibn wardan", "ibn jammaz"] },
-    { id: "9", name: "yaqub", counting_system: "basri", rawi: ["ruwais", "rawh"] },
-    { id: "10", name: "khalaf al-bazzar", counting_system: "kufi", rawi: ["ishaq", "idris"] }
+    { id: "1", name: "nafi", counting_system: "madani akhir", rawi: [
+        { id: "1", name: "qalun" }, { id: "2", name: "warsh" }
+    ]},
+    { id: "2", name: "ibn kathir", counting_system: "makki", rawi: [
+        { id: "1", name: "bazzi" }, { id: "2", name: "qunbul" }
+    ]},
+    { id: "3", name: "abu amr", counting_system: "basri", rawi: [
+        { id: "1", name: "duri" }, { id: "2", name: "susi" }
+    ]},
+    { id: "4", name: "ibn amir", counting_system: "damashqi", rawi: [
+        { id: "1", name: "hisham" }, { id: "2", name: "ibn zakwan" }
+    ]},
+    { id: "5", name: "asim", counting_system: "kufi", rawi: [
+        { id: "1", name: "shuba" }, { id: "2", name: "hafs" }
+    ]},
+    { id: "6", name: "hamza", counting_system: "kufi", rawi: [
+        { id: "1", name: "khalaf" }, { id: "2", name: "khallad" }
+    ]},
+    { id: "7", name: "kisai", counting_system: "kufi", rawi: [
+        { id: "1", name: "abu al-harith" }, { id: "2", name: "hafs ad-duri" }
+    ]},
+    { id: "8", name: "abu jafar", counting_system: "madani awwal", rawi: [
+        { id: "1", name: "ibn wardan" }, { id: "2", name: "ibn jammaz" }
+    ]},
+    { id: "9", name: "yaqub", counting_system: "basri", rawi: [
+        { id: "1", name: "ruwais" }, { id: "2", name: "rawh" }
+    ]},
+    { id: "10", name: "khalaf al-bazzar", counting_system: "kufi", rawi: [
+        { id: "1", name: "ishaq" }, { id: "2", name: "idris" }
+    ]}
 ];
 
 function getSystemKeyFromCountingName(name) {
@@ -69,7 +89,8 @@ function buildMappingsFromQurra(qurra) {
         var systemKey = getSystemKeyFromCountingName(q.counting_system);
         if (Array.isArray(q.rawi)) {
             q.rawi.forEach(function(r) {
-                out[r.toLowerCase().trim()] = systemKey;
+                var rawiName = (typeof r === 'string') ? r : (r.name || '');
+                out[rawiName.toLowerCase().trim()] = systemKey;
             });
         }
     });
@@ -668,7 +689,8 @@ function getSystemForRiwayah(riwayah) {
             var q = riwayahSettings.qurra[i];
             if (Array.isArray(q.rawi)) {
                 for (var j = 0; j < q.rawi.length; j++) {
-                    if (q.rawi[j].toLowerCase().trim() === clean) {
+                    var rawiName = (typeof q.rawi[j] === 'string') ? q.rawi[j] : (q.rawi[j].name || '');
+                    if (rawiName.toLowerCase().trim() === clean) {
                         return getSystemKeyFromCountingName(q.counting_system);
                     }
                 }
@@ -1088,34 +1110,116 @@ function renderRiwayahMappings() {
     var container = document.getElementById('riwayahMappings');
     container.innerHTML = '';
 
-    var riwayahList = getAvailableRiwayahs();
+    // Render qurra data grouped by qari
+    if (Array.isArray(riwayahSettings.qurra)) {
+        riwayahSettings.qurra.forEach(function(q) {
+            var group = document.createElement('div');
+            group.className = 'riwayah-group';
+            group.style.marginBottom = '12px';
 
-    riwayahList.forEach(function(riwayah) {
-        var row = document.createElement('div');
-        row.className = 'mapping-row';
+            var header = document.createElement('div');
+            header.className = 'riwayah-group-header';
+            header.style.fontSize = '12px';
+            header.style.fontWeight = 'bold';
+            header.style.color = 'var(--text-secondary)';
+            header.style.marginBottom = '6px';
+            header.style.paddingBottom = '4px';
+            header.style.borderBottom = '1px solid var(--border-color)';
+            var systemName = SYSTEM_NAMES[getSystemKeyFromCountingName(q.counting_system)] || q.counting_system;
+            header.textContent = q.name + ' (Qari ' + q.id + ') — ' + systemName;
+            group.appendChild(header);
 
-        var label = document.createElement('label');
-        label.textContent = riwayah;
-        row.appendChild(label);
+            if (Array.isArray(q.rawi)) {
+                q.rawi.forEach(function(r) {
+                    var rawiName = (typeof r === 'string') ? r : (r.name || '');
+                    var rawiId = (typeof r === 'object' && r.id) ? r.id : '';
+                    var clean = rawiName.toLowerCase().trim();
 
-        var select = document.createElement('select');
-        select.dataset.riwayah = riwayah;
+                    var row = document.createElement('div');
+                    row.className = 'mapping-row';
+                    row.style.paddingLeft = '12px';
 
-        for (var key in SYSTEM_NAMES) {
-            var option = document.createElement('option');
-            option.value = key;
-            option.textContent = SYSTEM_NAMES[key];
-            if (riwayahSettings.mappings[riwayah] === key) {
-                option.selected = true;
-            } else if (!riwayahSettings.mappings[riwayah] && key === riwayahSettings.defaultSystem) {
-                option.selected = true;
+                    var label = document.createElement('label');
+                    label.textContent = rawiName + (rawiId ? ' (R' + rawiId + ')' : '');
+                    row.appendChild(label);
+
+                    var select = document.createElement('select');
+                    select.dataset.riwayah = clean;
+
+                    for (var key in SYSTEM_NAMES) {
+                        var option = document.createElement('option');
+                        option.value = key;
+                        option.textContent = SYSTEM_NAMES[key];
+                        if (riwayahSettings.mappings[clean] === key) {
+                            option.selected = true;
+                        } else if (!riwayahSettings.mappings[clean] && key === getSystemKeyFromCountingName(q.counting_system)) {
+                            option.selected = true;
+                        }
+                        select.appendChild(option);
+                    }
+
+                    row.appendChild(select);
+                    group.appendChild(row);
+                });
             }
-            select.appendChild(option);
-        }
 
-        row.appendChild(select);
-        container.appendChild(row);
-    });
+            container.appendChild(group);
+        });
+    }
+
+    // Render any extra mappings not in qurra (user-added or scanned)
+    var extras = [];
+    for (var rawi in riwayahSettings.mappings) {
+        if (getSystemForRiwayah(rawi) === riwayahSettings.defaultSystem) {
+            extras.push(rawi);
+        }
+    }
+    if (extras.length > 0) {
+        var extraGroup = document.createElement('div');
+        extraGroup.className = 'riwayah-group';
+        extraGroup.style.marginTop = '16px';
+
+        var extraHeader = document.createElement('div');
+        extraHeader.className = 'riwayah-group-header';
+        extraHeader.style.fontSize = '12px';
+        extraHeader.style.fontWeight = 'bold';
+        extraHeader.style.color = 'var(--text-secondary)';
+        extraHeader.style.marginBottom = '6px';
+        extraHeader.style.paddingBottom = '4px';
+        extraHeader.style.borderBottom = '1px solid var(--border-color)';
+        extraHeader.textContent = 'Other / Custom';
+        extraGroup.appendChild(extraHeader);
+
+        extras.forEach(function(riwayah) {
+            var row = document.createElement('div');
+            row.className = 'mapping-row';
+            row.style.paddingLeft = '12px';
+
+            var label = document.createElement('label');
+            label.textContent = riwayah;
+            row.appendChild(label);
+
+            var select = document.createElement('select');
+            select.dataset.riwayah = riwayah;
+
+            for (var key in SYSTEM_NAMES) {
+                var option = document.createElement('option');
+                option.value = key;
+                option.textContent = SYSTEM_NAMES[key];
+                if (riwayahSettings.mappings[riwayah] === key) {
+                    option.selected = true;
+                } else if (!riwayahSettings.mappings[riwayah] && key === riwayahSettings.defaultSystem) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            }
+
+            row.appendChild(select);
+            extraGroup.appendChild(row);
+        });
+
+        container.appendChild(extraGroup);
+    }
 }
 
 function saveSettingsFromModal() {
