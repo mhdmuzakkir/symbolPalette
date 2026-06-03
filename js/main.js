@@ -1275,6 +1275,18 @@ function renderRiwayahMappings() {
     }
 }
 
+function resetSettingsToDefaults() {
+    if (!confirm('Reset all riwayah settings to defaults?\n\nThis will restore the built-in Qurra data and clear any custom mappings.')) {
+        return;
+    }
+    riwayahSettings.qurra = DEFAULT_QURRA.slice();
+    riwayahSettings.mappings = buildMappingsFromQurra(DEFAULT_QURRA);
+    riwayahSettings.defaultSystem = 'al_kufi';
+    saveSettings();
+    renderRiwayahMappings();
+    document.getElementById('defaultSystemSelect').value = riwayahSettings.defaultSystem;
+}
+
 function saveSettingsFromModal() {
     riwayahSettings.defaultSystem = document.getElementById('defaultSystemSelect').value;
 
@@ -1833,6 +1845,7 @@ function setupEventListeners() {
     // Settings Modal
     document.getElementById('settingsCancelBtn').addEventListener('click', hideSettingsModal);
     document.getElementById('settingsConfirmBtn').addEventListener('click', saveSettingsFromModal);
+    document.getElementById('settingsResetBtn').addEventListener('click', resetSettingsToDefaults);
 
     // Layer Button Modal
     document.getElementById('layerButtonCancelBtn').addEventListener('click', hideLayerButtonModal);
