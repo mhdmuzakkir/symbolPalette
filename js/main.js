@@ -63,26 +63,14 @@ function getMushafTaskManagerDir() {
 }
 
 function getSymbolPaletteSettingsPath() {
-    var sharedPath = getSharedSettingsPath();
-    if (sharedPath) return sharedPath;
-    
-    if (!SYMBOLPALETTE_SETTINGS_FILE) {
-        SYMBOLPALETTE_SETTINGS_FILE = getMushafTaskManagerDir() + '/symbolPalette_settings.json';
-    }
-    return SYMBOLPALETTE_SETTINGS_FILE;
+    // Only use shared path on drive — no local fallback
+    return getSharedSettingsPath();
 }
 
 function getSharedSettingsPath() {
-    if (!rootFolder) return null;
-    var rf = rootFolder.replace(/\\/g, '/');
-    var projectRoot = null;
-    if (rf.toLowerCase().endsWith('/symbols')) {
-        projectRoot = rf.replace(/\/symbols$/i, '');
-    } else {
-        projectRoot = rf;
-    }
-    if (!projectRoot) return null;
-    return projectRoot + '/mushaftasks/symbolPalette_settings.json';
+    var settingsFolder = deriveSettingsFolder();
+    if (!settingsFolder) return null;
+    return settingsFolder.replace(/\\/g, '/') + '/counting/symbolPalette_settings.json';
 }
 
 function detectRiwayahFromFilename(filename) {
@@ -195,15 +183,31 @@ function saveSettings() {
     // Save only to shared path (drive folder) — no localStorage fallback
     try {
         var settingsPath = getSymbolPaletteSettingsPath();
-        var dir = settingsPath.replace(/\\/g, '/').replace(/\/[^\/]+$/, '');
+        if (!settingsPath) {
+            console.log('saveSettings: no settings path derived');
+            return;
+        }
+        var sp = settingsPath.replace(/\\/g, '/');
+        var countingDir = sp.replace(/\/[^\/]+$/, '');      // .../mushaftasks/counting
+        var tasksDir = countingDir.replace(/\/[^\/]+$/, ''); // .../mushaftasks
 
-        // Ensure directory exists
-        var dirStat = window.cep.fs.readdir(dir);
+        // Ensure mushaftasks/ exists
+        var tasksStat = window.cep.fs.readdir(tasksDir);
+        if (tasksStat.err !== 0) {
+            var makeTasks = window.cep.fs.makedir(tasksDir);
+            if (makeTasks.err !== 0) {
+                console.log('Could not create mushaftasks dir:', tasksDir, 'err:', makeTasks.err);
+                throw new Error('Could not create mushaftasks directory');
+            }
+        }
+
+        // Ensure counting/ exists
+        var dirStat = window.cep.fs.readdir(countingDir);
         if (dirStat.err !== 0) {
-            var makeResult = window.cep.fs.makedir(dir);
+            var makeResult = window.cep.fs.makedir(countingDir);
             if (makeResult.err !== 0) {
-                console.log('Could not create directory:', dir, 'error:', makeResult.err);
-                throw new Error('Could not create directory');
+                console.log('Could not create counting dir:', countingDir, 'err:', makeResult.err);
+                throw new Error('Could not create counting directory');
             }
         }
 
@@ -211,6 +215,18 @@ function saveSettings() {
         if (result.err === 0) {
             console.log('Settings saved to', settingsPath);
             return;
+        }
+
+        // Fallback: Node.js fs for permission issues on Google Drive
+        if (result.err === 5 && typeof require !== 'undefined') {
+            try {
+                var fs = require('fs');
+                fs.writeFileSync(settingsPath, JSON.stringify(riwayahSettings, null, 2), 'utf-8');
+                console.log('Settings saved via Node.js to', settingsPath);
+                return;
+            } catch (nodeErr) {
+                console.log('Node.js fallback failed:', nodeErr.message);
+            }
         }
     } catch (e) {
         console.log('Could not save settings to shared path:', e);
