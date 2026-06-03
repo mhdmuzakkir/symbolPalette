@@ -1176,25 +1176,12 @@ function renderRiwayahMappings() {
                     row.style.alignItems = 'center';
                     row.style.gap = '8px';
 
-                    var labelWrap = document.createElement('div');
-                    labelWrap.style.display = 'flex';
-                    labelWrap.style.alignItems = 'center';
-                    labelWrap.style.gap = '6px';
-                    labelWrap.style.flex = '1';
-
-                    if (hasFile) {
-                        var icon = document.createElement('span');
-                        icon.textContent = '📄';
-                        icon.style.fontSize = '10px';
-                        icon.title = 'Has files on disk';
-                        labelWrap.appendChild(icon);
-                    }
-
                     var label = document.createElement('label');
-                    label.textContent = rawiName;
-                    label.style.textTransform = 'capitalize';
-                    labelWrap.appendChild(label);
-                    row.appendChild(labelWrap);
+                    label.textContent = rawiName.toUpperCase();
+                    if (hasFile) {
+                        label.style.color = '#f39c12'; // accent-orange for rawis with files
+                    }
+                    row.appendChild(label);
 
                     var select = document.createElement('select');
                     select.dataset.riwayah = clean;
@@ -1253,25 +1240,12 @@ function renderRiwayahMappings() {
             row.style.alignItems = 'center';
             row.style.gap = '8px';
 
-            var labelWrap = document.createElement('div');
-            labelWrap.style.display = 'flex';
-            labelWrap.style.alignItems = 'center';
-            labelWrap.style.gap = '6px';
-            labelWrap.style.flex = '1';
-
-            if (hasFile) {
-                var icon = document.createElement('span');
-                icon.textContent = '📄';
-                icon.style.fontSize = '10px';
-                icon.title = 'Has files on disk';
-                labelWrap.appendChild(icon);
-            }
-
             var label = document.createElement('label');
-            label.textContent = riwayah;
-            label.style.textTransform = 'capitalize';
-            labelWrap.appendChild(label);
-            row.appendChild(labelWrap);
+            label.textContent = riwayah.toUpperCase();
+            if (hasFile) {
+                label.style.color = '#f39c12'; // accent-orange for rawis with files
+            }
+            row.appendChild(label);
 
             var select = document.createElement('select');
             select.dataset.riwayah = riwayah;
