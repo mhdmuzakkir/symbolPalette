@@ -176,10 +176,13 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCategorySelect();
         loadSymbolsForCurrentView();
         ensureLayerColorsFile();
-        // Scan for new riwayah folders on disk (e.g. hafs(qasr))
-        var sf = deriveSettingsFolder();
-        if (sf) {
-            scanAndAddRiwayahs(sf);
+        // Scan for new riwayah folders on disk once per session
+        if (!window._riwayahsScanned) {
+            window._riwayahsScanned = true;
+            var sf = deriveSettingsFolder();
+            if (sf) {
+                scanAndAddRiwayahs(sf);
+            }
         }
     } else {
         renderGrid();
@@ -1091,27 +1094,11 @@ function hideSettingsModal() {
 
 function getAvailableRiwayahs() {
     // Scan mushaftasks/riwayah-tasks/ for actual folder names
-    var tasksFolder = null;
-    try {
-        var stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-            var data = JSON.parse(stored);
-            // rootFolder is like mushafproject/symbols, so go up one level for mushaftasks
-            if (data.rootFolder) {
-                var rf = data.rootFolder.replace(/\\/g, '/');
-                // If rootFolder ends with /symbols, tasks is sibling
-                if (rf.toLowerCase().endsWith('/symbols')) {
-                    tasksFolder = rf.replace(/\/symbols$/i, '') + '/mushaftasks';
-                } else {
-                    tasksFolder = rf + '/mushaftasks';
-                }
-            }
-        }
-    } catch (e) {}
+    var tasksFolder = deriveSettingsFolder();
 
     var fromDisk = [];
     if (tasksFolder) {
-        var riwayahPath = tasksFolder + '/riwayah-tasks';
+        var riwayahPath = tasksFolder.replace(/\\/g, '/') + '/riwayah-tasks';
         var result = window.cep.fs.readdir(riwayahPath);
         if (result.err === 0 && result.data) {
             result.data.forEach(function(item) {
@@ -2366,20 +2353,57 @@ function renderLayerButtons() {
     if (!container) return;
     container.innerHTML = '';
 
-    // Ensure layerColors.json exists (fallback in case startup missed it)
-    ensureLayerColorsFile();
+    // Ensure layerColors.json exists once per session
+    if (!window._layerColorsEnsured) {
+        window._layerColorsEnsured = true;
+        ensureLayerColorsFile();
+    }
 
     var buttons = getLayerButtons();
     buttons.forEach(function(name) {
         var btn = document.createElement('button');
         btn.className = 'btn-layer-tool';
-        btn.textContent = name;
         btn.title = 'Move selection to "' + name + '" layer';
         btn.addEventListener('click', function() {
             moveSelectionToLayer(name);
         });
+
+        // Colored dot from layerColors.json
+        var dot = document.createElement('span');
+        dot.style.display = 'inline-block';
+        dot.style.width = '8px';
+        dot.style.height = '8px';
+        dot.style.borderRadius = '50%';
+        dot.style.marginRight = '8px';
+        dot.style.flexShrink = '0';
+        var rgb = spGetLayerColorForName(name);
+        if (rgb) {
+            dot.style.background = 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+        } else {
+            dot.style.background = '#888';
+        }
+        btn.appendChild(dot);
+
+        var text = document.createElement('span');
+        text.textContent = name;
+        btn.appendChild(text);
+
         container.appendChild(btn);
     });
+}
+
+function spGetLayerColorForName(layerName) {
+    try {
+        var colorsPath = getLayerColorsPath();
+        if (!colorsPath) return null;
+        var result = window.cep.fs.readFile(colorsPath, 'utf-8');
+        if (result.err === 0 && result.data) {
+            var config = JSON.parse(result.data);
+            if (config[layerName]) return config[layerName];
+            if (config.default) return config.default;
+        }
+    } catch (e) {}
+    return null;
 }
 
 var _hostScriptLoaded = false;
