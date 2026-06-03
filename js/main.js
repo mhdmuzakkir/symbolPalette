@@ -2395,14 +2395,26 @@ function renderLayerButtons() {
 function spGetLayerColorForName(layerName) {
     try {
         var colorsPath = getLayerColorsPath();
-        if (!colorsPath) return null;
+        if (!colorsPath) {
+            console.log('spGetLayerColorForName: no colorsPath');
+            return null;
+        }
         var result = window.cep.fs.readFile(colorsPath, 'utf-8');
         if (result.err === 0 && result.data) {
             var config = JSON.parse(result.data);
-            if (config[layerName]) return config[layerName];
-            if (config.default) return config.default;
+            if (config[layerName]) {
+                console.log('spGetLayerColorForName: found color for', layerName, config[layerName]);
+                return config[layerName];
+            }
+            if (config.default) {
+                console.log('spGetLayerColorForName: using default for', layerName);
+                return config.default;
+            }
         }
-    } catch (e) {}
+        console.log('spGetLayerColorForName: readFile failed', result.err, colorsPath);
+    } catch (e) {
+        console.log('spGetLayerColorForName: error', e);
+    }
     return null;
 }
 
