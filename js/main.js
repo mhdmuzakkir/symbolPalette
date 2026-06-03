@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
         scanCategories();
         updateCategorySelect();
         loadSymbolsForCurrentView();
+        ensureLayerColorsFile();
     } else {
         renderGrid();
     }
@@ -137,8 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize layer tools
-    // Clear old localStorage layer button cache so defaults/shared file take over
-    try { localStorage.removeItem(LAYER_BUTTONS_KEY); } catch (e) {}
     renderLayerButtons();
     scanDocumentLayers();
 });
@@ -173,7 +172,7 @@ function saveState() {
 // ==================== SETTINGS ====================
 
 function loadSettings() {
-    // Try shared path first (cross-device sync via mushaftasks)
+    // Load only from shared path (drive folder) — no localStorage fallback
     try {
         var sharedPath = getSharedSettingsPath();
         if (sharedPath) {
@@ -189,36 +188,11 @@ function loadSettings() {
     } catch (e) {
         console.log('Could not load settings from shared path:', e);
     }
-
-    // Fallback: old local file path (for migration)
-    try {
-        var localPath = getMushafTaskManagerDir() + '/symbolPalette_settings.json';
-        var result = window.cep.fs.readFile(localPath, 'utf-8');
-        if (result.err === 0 && result.data) {
-            var data = JSON.parse(result.data);
-            riwayahSettings.defaultSystem = data.defaultSystem || 'al_kufi';
-            riwayahSettings.mappings = data.mappings || {};
-            console.log('Settings loaded from local path:', localPath);
-            return;
-        }
-    } catch (e) {
-        console.log('Could not load settings from local file:', e);
-    }
-
-    // Fallback to localStorage
-    try {
-        var stored = localStorage.getItem(SETTINGS_KEY);
-        if (stored) {
-            var data = JSON.parse(stored);
-            riwayahSettings.defaultSystem = data.defaultSystem || 'al_kufi';
-            riwayahSettings.mappings = data.mappings || {};
-        }
-    } catch (e) {
-        console.log('Could not load settings from localStorage');
-    }
+    // No localStorage fallback — settings stay at defaults if shared file missing
 }
 
 function saveSettings() {
+    // Save only to shared path (drive folder) — no localStorage fallback
     try {
         var settingsPath = getSymbolPaletteSettingsPath();
         var dir = settingsPath.replace(/\\/g, '/').replace(/\/[^\/]+$/, '');
@@ -239,14 +213,7 @@ function saveSettings() {
             return;
         }
     } catch (e) {
-        console.log('Could not save settings to file, falling back to localStorage:', e);
-    }
-
-    // Fallback to localStorage
-    try {
-        localStorage.setItem(SETTINGS_KEY, JSON.stringify(riwayahSettings));
-    } catch (e) {
-        console.log('Could not save settings to localStorage');
+        console.log('Could not save settings to shared path:', e);
     }
 }
 
@@ -290,6 +257,103 @@ function deriveMushafProjectRoot(projectFolder) {
         return upOne;
     }
     return null;
+}
+
+/**
+ * Derive the settings (mushaftasks) folder from the current rootFolder.
+ * rootFolder is either: mushafproject/          (flat)
+ *                    or: mushafproject/symbols/  (nested)
+ * mushaftasks lives at the project root level in both cases.
+ */
+function deriveSettingsFolder() {
+    if (!rootFolder) return null;
+    var rf = rootFolder.replace(/\\/g, '/').replace(/\/$/, ''); // normalize, strip trailing slash
+    var projectRoot = null;
+    if (rf.toLowerCase().endsWith('/symbols')) {
+        projectRoot = rf.replace(/\/symbols$/i, '');
+    } else {
+        projectRoot = rf;
+    }
+    if (!projectRoot) return null;
+    var tasksFolder = projectRoot.replace(/\/$/, '') + '/mushaftasks';
+    return tasksFolder;
+}
+
+/**
+ * Ensure mushaftasks/layers/layerColors.json exists with default colors.
+ * Uses the same pattern as saveLayerButtons() which is known to work.
+ */
+function ensureLayerColorsFile(force) {
+    try {
+        var settingsFolder = deriveSettingsFolder();
+        if (!settingsFolder) {
+            console.log('ensureLayerColorsFile: rootFolder is empty or invalid');
+            return false;
+        }
+
+        var sf = settingsFolder.replace(/\\/g, '/');
+        var layersDir = sf + '/layers';
+        var colorsPath = layersDir + '/layerColors.json';
+
+        // Skip if already exists (unless force=true)
+        if (!force) {
+            var parentList = window.cep.fs.readdir(layersDir);
+            if (parentList.err === 0 && parentList.data && parentList.data.indexOf('layerColors.json') !== -1) {
+                return true;
+            }
+        }
+
+        // Create mushaftasks/ if needed (same pattern as saveLayerButtons)
+        var tasksStat = window.cep.fs.readdir(sf);
+        if (tasksStat.err !== 0) {
+            var makeTasks = window.cep.fs.makedir(sf);
+            if (makeTasks.err !== 0) {
+                console.log('ensureLayerColorsFile: failed to create mushaftasks dir', sf, 'err:', makeTasks.err);
+                return false;
+            }
+        }
+
+        // Create layers/ if needed
+        var dirStat = window.cep.fs.readdir(layersDir);
+        if (dirStat.err !== 0) {
+            var makeDir = window.cep.fs.makedir(layersDir);
+            if (makeDir.err !== 0) {
+                console.log('ensureLayerColorsFile: failed to create layers dir', layersDir, 'err:', makeDir.err);
+                return false;
+            }
+        }
+
+        var defaultColors = {
+            "Iskan Haa": [255, 128, 0],
+            "Meem Sila": [0, 128, 255],
+            "default": [128, 128, 128]
+        };
+
+        var result = window.cep.fs.writeFile(colorsPath, JSON.stringify(defaultColors, null, 2), 'utf-8');
+        if (result.err === 0) {
+            console.log('ensureLayerColorsFile: created', colorsPath);
+            return true;
+        }
+
+        // Fallback: Node.js fs (bypasses CEP permission issues on Google Drive)
+        if (result.err === 5 && typeof require !== 'undefined') {
+            try {
+                var fs = require('fs');
+                fs.writeFileSync(colorsPath, JSON.stringify(defaultColors, null, 2), 'utf-8');
+                console.log('ensureLayerColorsFile: created via Node.js', colorsPath);
+                return true;
+            } catch (nodeErr) {
+                console.log('ensureLayerColorsFile: Node.js fallback failed', nodeErr.message);
+                return false;
+            }
+        }
+
+        console.log('ensureLayerColorsFile: writeFile failed', result.err);
+        return false;
+    } catch (e) {
+        console.log('ensureLayerColorsFile error:', e);
+        return false;
+    }
 }
 
 function pathExists(path) {
@@ -1646,6 +1710,17 @@ function updateFolderPreview() {
 
     var html = '';
 
+    // Show detected settings (mushaftasks) folder
+    var settingsFolder = deriveSettingsFolder();
+    if (settingsFolder) {
+        var tasksExists = pathExists(settingsFolder);
+        html += '<div class="preview-header">Settings Folder:</div>';
+        html += '<div class="preview-item" style="font-size:11px;color:' + (tasksExists ? 'var(--accent-green)' : 'var(--text-muted)') + '">';
+        html += settingsFolder + (tasksExists ? ' ✓' : ' (will be created)');
+        html += '</div>';
+        html += '<div style="margin-top:8px"></div>';
+    }
+
     if (previewData.symbols.length > 0) {
         html += '<div class="preview-header">Symbols Categories:</div>';
         previewData.symbols.forEach(function(cat) {
@@ -1680,6 +1755,9 @@ function loadSymbolsFromRootFolder() {
     hideFolderModal();
 
     rootFolder = folderPath;
+
+    // Ensure mushaftasks structure exists
+    ensureLayerColorsFile();
 
     // Reset category if not valid
     scanCategories();
@@ -1930,29 +2008,15 @@ var LAYER_BUTTONS_KEY = 'symbolPalette_layerButtons_v1';
 var DEFAULT_LAYER_BUTTONS = ['Iskan Haa', 'Meem Sila'];
 
 function getSharedLayerButtonsPath() {
-    if (!rootFolder) return null;
-    var rf = rootFolder.replace(/\\/g, '/');
-    var projectRoot = null;
-    if (rf.toLowerCase().endsWith('/symbols')) {
-        projectRoot = rf.replace(/\/symbols$/i, '');
-    } else {
-        projectRoot = rf;
-    }
-    if (!projectRoot) return null;
-    return projectRoot + '/mushaftasks/symbolPalette_layerButtons.json';
+    var settingsFolder = deriveSettingsFolder();
+    if (!settingsFolder) return null;
+    return settingsFolder.replace(/\\/g, '/') + '/symbolPalette_layerButtons.json';
 }
 
 function getLayerColorsPath() {
-    if (!rootFolder) return '';
-    var rf = rootFolder.replace(/\\/g, '/');
-    var projectRoot = null;
-    if (rf.toLowerCase().endsWith('/symbols')) {
-        projectRoot = rf.replace(/\/symbols$/i, '');
-    } else {
-        projectRoot = rf;
-    }
-    if (!projectRoot) return '';
-    return projectRoot + '/mushaftasks/layers/layerColors.json';
+    var settingsFolder = deriveSettingsFolder();
+    if (!settingsFolder) return '';
+    return settingsFolder.replace(/\\/g, '/') + '/layers/layerColors.json';
 }
 
 function getLayerButtons() {
@@ -1976,19 +2040,8 @@ function getLayerButtons() {
         console.log('Could not load layer buttons from shared path:', e);
     }
 
-    // Fallback: localStorage
     if (!buttons) {
-        try {
-            var stored = localStorage.getItem(LAYER_BUTTONS_KEY);
-            if (stored) {
-                buttons = JSON.parse(stored);
-                source = 'localStorage';
-            }
-        } catch (e) {}
-    }
-
-    if (!buttons) {
-        // No saved data anywhere — create shared file with defaults
+        // No shared file yet — create it with defaults
         var defaults = DEFAULT_LAYER_BUTTONS.slice();
         saveLayerButtons(defaults);
         return defaults;
@@ -2027,38 +2080,47 @@ function getLayerButtons() {
 }
 
 function saveLayerButtons(buttons) {
-    // Try shared path first
+    // Save only to shared path (drive folder) — no localStorage fallback
     try {
         var sharedPath = getSharedLayerButtonsPath();
-        if (sharedPath) {
-            var dir = sharedPath.replace(/\\/g, '/').replace(/\/[^\/]+$/, '');
-            var dirStat = window.cep.fs.readdir(dir);
-            if (dirStat.err !== 0) {
-                var makeResult = window.cep.fs.makedir(dir);
-                if (makeResult.err !== 0) {
-                    throw new Error('Could not create directory');
-                }
+        if (!sharedPath) return;
+        var dir = sharedPath.replace(/\\/g, '/').replace(/\/[^\/]+$/, '');
+        var dirStat = window.cep.fs.readdir(dir);
+        if (dirStat.err !== 0) {
+            var makeResult = window.cep.fs.makedir(dir);
+            if (makeResult.err !== 0) {
+                throw new Error('Could not create directory');
             }
-            var result = window.cep.fs.writeFile(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
-            if (result.err === 0) {
-                console.log('Layer buttons saved to', sharedPath);
+        }
+        var result = window.cep.fs.writeFile(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
+        if (result.err === 0) {
+            console.log('Layer buttons saved to', sharedPath);
+            return;
+        }
+        // Fallback: Node.js fs for permission issues on Google Drive
+        if (result.err === 5 && typeof require !== 'undefined') {
+            try {
+                var fs = require('fs');
+                fs.writeFileSync(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
+                console.log('Layer buttons saved via Node.js to', sharedPath);
                 return;
+            } catch (nodeErr) {
+                console.log('Node.js fallback failed:', nodeErr.message);
             }
         }
     } catch (e) {
-        console.log('Could not save layer buttons to shared path, falling back to localStorage:', e);
+        console.log('Could not save layer buttons to shared path:', e);
     }
-
-    // Fallback: localStorage
-    try {
-        localStorage.setItem(LAYER_BUTTONS_KEY, JSON.stringify(buttons));
-    } catch (e) {}
 }
 
 function renderLayerButtons() {
     var container = document.getElementById('layerToolsButtons');
     if (!container) return;
     container.innerHTML = '';
+
+    // Ensure layerColors.json exists (fallback in case startup missed it)
+    ensureLayerColorsFile();
+
     var buttons = getLayerButtons();
     buttons.forEach(function(name) {
         var btn = document.createElement('button');
