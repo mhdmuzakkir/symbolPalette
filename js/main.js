@@ -2393,28 +2393,34 @@ function renderLayerButtons() {
 }
 
 function spGetLayerColorForName(layerName) {
+    var colorsPath = getLayerColorsPath();
+    if (!colorsPath) return null;
+
+    var jsonStr = null;
+
+    // Try CEP fs first
     try {
-        var colorsPath = getLayerColorsPath();
-        if (!colorsPath) {
-            console.log('spGetLayerColorForName: no colorsPath');
-            return null;
-        }
         var result = window.cep.fs.readFile(colorsPath, 'utf-8');
         if (result.err === 0 && result.data) {
-            var config = JSON.parse(result.data);
-            if (config[layerName]) {
-                console.log('spGetLayerColorForName: found color for', layerName, config[layerName]);
-                return config[layerName];
-            }
-            if (config.default) {
-                console.log('spGetLayerColorForName: using default for', layerName);
-                return config.default;
-            }
+            jsonStr = result.data;
         }
-        console.log('spGetLayerColorForName: readFile failed', result.err, colorsPath);
-    } catch (e) {
-        console.log('spGetLayerColorForName: error', e);
+    } catch (e) {}
+
+    // Fallback: Node.js fs (for Google Drive permission issues)
+    if (!jsonStr && typeof require !== 'undefined') {
+        try {
+            var fs = require('fs');
+            jsonStr = fs.readFileSync(colorsPath, 'utf-8');
+        } catch (e) {}
     }
+
+    if (!jsonStr) return null;
+
+    try {
+        var config = JSON.parse(jsonStr);
+        if (config[layerName]) return config[layerName];
+        if (config.default) return config.default;
+    } catch (e) {}
     return null;
 }
 
