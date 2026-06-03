@@ -2599,13 +2599,14 @@ function renderLayerList(layers) {
         var badgeClass = isMatched ? 'layer-badge matched' : (isPotential ? 'layer-badge potential' : 'layer-badge unmatched');
         var badgeText = isMatched ? layer.standard : (isPotential ? 'Similar' : 'Unmatched');
         var nameColor = isMatched ? 'var(--accent-green)' : (isPotential ? 'var(--accent-purple)' : 'var(--accent-orange)');
+        var deleteBtn = isMatched ? '' : '<button class="layer-delete-btn" data-layer-name="' + escapeHtml(layer.name) + '" title="Delete layer">&times;</button>';
 
         var row = document.createElement('div');
         row.className = itemClass;
         row.innerHTML = '<span class="layer-name" style="color:' + nameColor + ';">' + escapeHtml(layer.name) + '</span>' +
                         '<span style="display:flex;align-items:center;gap:6px;">' +
                         '<span class="layer-badge ' + badgeClass + '">' + badgeText + '</span>' +
-                        '<button class="layer-delete-btn" data-layer-name="' + escapeHtml(layer.name) + '" title="Delete layer">&times;</button>' +
+                        deleteBtn +
                         '</span>';
         container.appendChild(row);
 
