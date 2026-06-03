@@ -31,8 +31,50 @@ var currentPageInfo = {
 // Riwayah settings
 var riwayahSettings = {
     defaultSystem: 'al_kufi',
+    qurra: [],
     mappings: {}  // { 'hafs': 'al_kufi', 'warsh': 'al_madani_al_awwal', ... }
 };
+
+// Default qurra data (qari → counting_system → rawi)
+var DEFAULT_QURRA = [
+    { id: "1", name: "nafi", counting_system: "madani akhir", rawi: ["qalun", "warsh"] },
+    { id: "2", name: "ibn kathir", counting_system: "makki", rawi: ["bazzi", "qunbul"] },
+    { id: "3", name: "abu amr", counting_system: "basri", rawi: ["duri", "susi"] },
+    { id: "4", name: "ibn amir", counting_system: "damashqi", rawi: ["hisham", "ibn zakwan"] },
+    { id: "5", name: "asim", counting_system: "kufi", rawi: ["shuba", "hafs"] },
+    { id: "6", name: "hamza", counting_system: "kufi", rawi: ["khalaf", "khallad"] },
+    { id: "7", name: "kisai", counting_system: "kufi", rawi: ["abu al-harith", "hafs ad-duri"] },
+    { id: "8", name: "abu jafar", counting_system: "madani awwal", rawi: ["ibn wardan", "ibn jammaz"] },
+    { id: "9", name: "yaqub", counting_system: "basri", rawi: ["ruwais", "rawh"] },
+    { id: "10", name: "khalaf al-bazzar", counting_system: "kufi", rawi: ["ishaq", "idris"] }
+];
+
+function getSystemKeyFromCountingName(name) {
+    var map = {
+        'kufi': 'al_kufi',
+        'madani awwal': 'al_madani_al_awwal',
+        'madani akhir': 'al_madani_al_akhir',
+        'makki': 'al_makki',
+        'basri': 'al_basri',
+        'damashqi': 'al_dimashqi',
+        'dimashqi': 'al_dimashqi'
+    };
+    return map[(name || '').toLowerCase().trim()] || 'al_kufi';
+}
+
+function buildMappingsFromQurra(qurra) {
+    var out = {};
+    if (!Array.isArray(qurra)) return out;
+    qurra.forEach(function(q) {
+        var systemKey = getSystemKeyFromCountingName(q.counting_system);
+        if (Array.isArray(q.rawi)) {
+            q.rawi.forEach(function(r) {
+                out[r.toLowerCase().trim()] = systemKey;
+            });
+        }
+    });
+    return out;
+}
 
 var SYSTEM_NAMES = {
     'al_kufi': 'Kufi',
@@ -168,7 +210,8 @@ function loadSettings() {
             if (result.err === 0 && result.data) {
                 var data = JSON.parse(result.data);
                 riwayahSettings.defaultSystem = data.defaultSystem || 'al_kufi';
-                riwayahSettings.mappings = data.mappings || {};
+                riwayahSettings.qurra = Array.isArray(data.qurra) ? data.qurra : DEFAULT_QURRA.slice();
+                riwayahSettings.mappings = data.mappings || buildMappingsFromQurra(riwayahSettings.qurra);
                 console.log('Settings loaded from shared path:', sharedPath);
                 return;
             }
@@ -176,7 +219,11 @@ function loadSettings() {
     } catch (e) {
         console.log('Could not load settings from shared path:', e);
     }
-    // No localStorage fallback — settings stay at defaults if shared file missing
+    // File doesn't exist yet — seed with default qurra data and save
+    riwayahSettings.qurra = DEFAULT_QURRA.slice();
+    riwayahSettings.mappings = buildMappingsFromQurra(DEFAULT_QURRA);
+    saveSettings();
+    console.log('Settings seeded with default qurra data');
 }
 
 function saveSettings() {
@@ -557,10 +604,10 @@ function scanAndAddRiwayahs(tasksFolder) {
         var itemPath = riwayahPath + '/' + item;
         if (isDirectory(itemPath)) {
             var riwayahName = item.toLowerCase().trim();
-            // Only add if not already in mappings
-            if (!riwayahSettings.mappings[riwayahName]) {
-                // Leave it unset so it falls back to defaultSystem
-                // But we add it to the common list by creating a mapping to default
+            // Only add if not already known (in qurra or mappings)
+            var known = getSystemForRiwayah(riwayahName);
+            if (known === riwayahSettings.defaultSystem) {
+                // Unknown rawi — add mapping to default so it shows in settings
                 riwayahSettings.mappings[riwayahName] = riwayahSettings.defaultSystem;
                 added.push(riwayahName);
             }
@@ -611,9 +658,24 @@ function applyAutoDetectResult(result, showAlert) {
 
 function getSystemForRiwayah(riwayah) {
     var clean = riwayah.toLowerCase().trim();
+    // 1. Check explicit mappings first (user overrides)
     if (riwayahSettings.mappings[clean]) {
         return riwayahSettings.mappings[clean];
     }
+    // 2. Look up in qurra data
+    if (Array.isArray(riwayahSettings.qurra)) {
+        for (var i = 0; i < riwayahSettings.qurra.length; i++) {
+            var q = riwayahSettings.qurra[i];
+            if (Array.isArray(q.rawi)) {
+                for (var j = 0; j < q.rawi.length; j++) {
+                    if (q.rawi[j].toLowerCase().trim() === clean) {
+                        return getSystemKeyFromCountingName(q.counting_system);
+                    }
+                }
+            }
+        }
+    }
+    // 3. Fallback to default
     return riwayahSettings.defaultSystem;
 }
 
