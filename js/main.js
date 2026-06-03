@@ -176,6 +176,11 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCategorySelect();
         loadSymbolsForCurrentView();
         ensureLayerColorsFile();
+        // Scan for new riwayah folders on disk (e.g. hafs(qasr))
+        var sf = deriveSettingsFolder();
+        if (sf) {
+            scanAndAddRiwayahs(sf);
+        }
     } else {
         renderGrid();
     }
