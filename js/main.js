@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Check accessibility and auto-detect on startup
     if (rootFolder && !pathExists(rootFolder)) {
-        console.log('symbolPalette: saved rootFolder not accessible, attempting auto-detect...');
+        // saved rootFolder not accessible, attempting auto-detect
         var result = autoDetectFromDrive();
         if (result) {
             applyAutoDetectResult(result, false);
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showDriveMissingModal(rootFolder);
         }
     } else if (!rootFolder) {
-        console.log('symbolPalette: no rootFolder configured, attempting auto-detect...');
+        // no rootFolder configured, attempting auto-detect
         var result = autoDetectFromDrive();
         if (result) {
             applyAutoDetectResult(result, false);
@@ -258,7 +258,7 @@ function loadSettings() {
     riwayahSettings.qurra = DEFAULT_QURRA.slice();
     riwayahSettings.mappings = buildMappingsFromQurra(DEFAULT_QURRA);
     saveSettings();
-    console.log('Settings seeded with default qurra data');
+    // Settings seeded with default qurra data
 }
 
 function saveSettings() {
@@ -307,7 +307,7 @@ function saveSettings() {
                 console.log('Settings saved via Node.js to', settingsPath);
                 return;
             } catch (nodeErr) {
-                console.log('Node.js fallback failed:', nodeErr.message);
+    // Node.js fallback failed
             }
         }
     } catch (e) {
@@ -385,7 +385,7 @@ function ensureLayerColorsFile(force) {
     try {
         var settingsFolder = deriveSettingsFolder();
         if (!settingsFolder) {
-            console.log('ensureLayerColorsFile: rootFolder is empty or invalid');
+            // ensureLayerColorsFile: rootFolder is empty or invalid
             return false;
         }
 
@@ -406,7 +406,7 @@ function ensureLayerColorsFile(force) {
         if (tasksStat.err !== 0) {
             var makeTasks = window.cep.fs.makedir(sf);
             if (makeTasks.err !== 0) {
-                console.log('ensureLayerColorsFile: failed to create mushaftasks dir', sf, 'err:', makeTasks.err);
+    // failed to create mushaftasks dir
                 return false;
             }
         }
@@ -416,7 +416,7 @@ function ensureLayerColorsFile(force) {
         if (dirStat.err !== 0) {
             var makeDir = window.cep.fs.makedir(layersDir);
             if (makeDir.err !== 0) {
-                console.log('ensureLayerColorsFile: failed to create layers dir', layersDir, 'err:', makeDir.err);
+    // failed to create layers dir
                 return false;
             }
         }
@@ -429,7 +429,7 @@ function ensureLayerColorsFile(force) {
 
         var result = window.cep.fs.writeFile(colorsPath, JSON.stringify(defaultColors, null, 2), 'utf-8');
         if (result.err === 0) {
-            console.log('ensureLayerColorsFile: created', colorsPath);
+    // layerColors.json created
             return true;
         }
 
@@ -438,18 +438,18 @@ function ensureLayerColorsFile(force) {
             try {
                 var fs = require('fs');
                 fs.writeFileSync(colorsPath, JSON.stringify(defaultColors, null, 2), 'utf-8');
-                console.log('ensureLayerColorsFile: created via Node.js', colorsPath);
+    // layerColors.json created via Node.js
                 return true;
             } catch (nodeErr) {
-                console.log('ensureLayerColorsFile: Node.js fallback failed', nodeErr.message);
+    // Node.js fallback failed
                 return false;
             }
         }
 
-        console.log('ensureLayerColorsFile: writeFile failed', result.err);
+    // writeFile failed
         return false;
     } catch (e) {
-        console.log('ensureLayerColorsFile error:', e);
+    // ensureLayerColorsFile error
         return false;
     }
 }
@@ -472,9 +472,7 @@ function pathExists(path) {
 }
 
 function autoDetectFromDrive() {
-    console.log('symbolPalette: starting auto-detect...');
-    console.log('symbolPalette: Node.js available?', typeof require !== 'undefined');
-    console.log('symbolPalette: DriveScanner available?', typeof window.DriveScanner !== 'undefined');
+    // starting auto-detect
 
     // Helper: check if a path is valid symbolPalette root (has symbols/ + numbers/ inside)
     function checkRoot(path, source) {
@@ -496,7 +494,7 @@ function autoDetectFromDrive() {
                 }
             }
             if (hasSubfolders) {
-                console.log('symbolPalette: found FLAT root:', p, 'source:', source);
+    // found flat root
                 return { rootFolder: p, tasksFolder: p + '/mushaftasks', source: source + ' (flat)' };
             }
         }
@@ -516,7 +514,7 @@ function autoDetectFromDrive() {
     if (typeof window.DriveScanner !== 'undefined') {
         try {
             var candidates = window.DriveScanner.scanForProject();
-            console.log('symbolPalette: DriveScanner found', candidates.length, 'candidates');
+    // DriveScanner found candidates
             for (var i = 0; i < candidates.length; i++) {
                 var c = candidates[i];
                 var result = checkRoot(c.path, 'DriveScanner (' + c.type + ')');
@@ -530,10 +528,10 @@ function autoDetectFromDrive() {
     // Fast path: read MushafTaskManager settings
     var mtmSettings = readMushafTaskManagerSettings();
     if (mtmSettings) {
-        console.log('symbolPalette: MushafTaskManager settings found:', JSON.stringify(mtmSettings));
+    // MushafTaskManager settings found
         if (mtmSettings.projectFolder) {
             var rp = deriveMushafProjectRoot(mtmSettings.projectFolder);
-            console.log('symbolPalette: deriveMushafProjectRoot:', mtmSettings.projectFolder, '=>', rp);
+    // deriveMushafProjectRoot result
             if (rp) {
                 var res = checkRoot(rp, 'MushafTaskManager settings');
                 if (res) return res;
@@ -542,14 +540,14 @@ function autoDetectFromDrive() {
         if (mtmSettings.tasksFolder) {
             var tf = mtmSettings.tasksFolder.replace(/\\/g, '/');
             var upFromTasks = tf.replace(/[\\\/]mushaftasks$/i, '');
-            console.log('symbolPalette: derive from tasksFolder:', tf, '=> upOne:', upFromTasks);
+    // derive from tasksFolder
             if (upFromTasks && upFromTasks !== tf) {
                 var res2 = checkRoot(upFromTasks, 'MushafTaskManager settings');
                 if (res2) return res2;
             }
         }
     } else {
-        console.log('symbolPalette: no MushafTaskManager settings found');
+    // no MushafTaskManager settings found
     }
 
     // Fallback: direct drive scan using Node.js
@@ -561,7 +559,7 @@ function autoDetectFromDrive() {
                 var drive = String.fromCharCode(c) + ':/';
                 try { fs.readdirSync(drive); driveLetters.push(String.fromCharCode(c)); } catch (e) {}
             }
-            console.log('symbolPalette: detected drives via Node.js:', driveLetters.join(', '));
+    // detected drives
             var patterns = ['/My Drive/mushafproject', '/Google Drive/mushafproject', '/mushafproject'];
             for (var di = 0; di < driveLetters.length; di++) {
                 for (var pi = 0; pi < patterns.length; pi++) {
@@ -586,14 +584,14 @@ function autoDetectFromDrive() {
         }
     }
 
-    console.log('symbolPalette: auto-detect found no valid mushafproject folder after all methods');
+    // auto-detect found no valid mushafproject folder
     return null;
 }
 
 function testPathAndUse(rawPath) {
     var path = rawPath.replace(/\\/g, '/').trim();
     if (!path) return;
-    console.log('symbolPalette: testing path:', path);
+    // testing path
 
     // Check flat structure: path/symbols/ + path/numbers/
     var flatSym = pathExists(path + '/symbols');
@@ -623,13 +621,13 @@ function scanAndAddRiwayahs(tasksFolder) {
     if (!tasksFolder) return [];
     var riwayahPath = tasksFolder.replace(/\\/g, '/') + '/riwayah-tasks';
     if (!isDirectory(riwayahPath)) {
-        console.log('symbolPalette: riwayah-tasks folder not found:', riwayahPath);
+    // riwayah-tasks folder not found
         return [];
     }
 
     var result = window.cep.fs.readdir(riwayahPath);
     if (result.err !== 0) {
-        console.log('symbolPalette: could not read riwayah-tasks folder:', result.err);
+    // could not read riwayah-tasks folder
         return [];
     }
 
@@ -650,9 +648,9 @@ function scanAndAddRiwayahs(tasksFolder) {
 
     if (added.length > 0) {
         saveSettings();
-        console.log('symbolPalette: added riwayahs from scan:', added);
+    // added riwayahs from scan
     } else {
-        console.log('symbolPalette: no new riwayahs found in', riwayahPath);
+    // no new riwayahs found
     }
     return added;
 }
@@ -683,7 +681,7 @@ function applyAutoDetectResult(result, showAlert) {
     }
     msg += '\n(Source: ' + result.source + ')';
 
-    console.log('symbolPalette: ' + msg);
+    // auto-detect result
     if (showAlert) {
         showErrorModal(msg, 'Auto-Detected');
     }
@@ -758,12 +756,12 @@ function loadPageStatistics() {
         if (result.err === 0) {
             pageStatisticsData = JSON.parse(result.data);
             buildSurahTotalsBySystem();
-            console.log('Page statistics loaded successfully');
+            // Page statistics loaded
         } else {
-            console.log('Could not load page statistics:', result.err);
+    // Could not load page statistics
         }
     } catch (e) {
-        console.log('Error loading page statistics:', e);
+    // Error loading page statistics
     }
 }
 
@@ -791,7 +789,7 @@ function startDocumentDetection() {
 function getActiveDocumentInfo() {
     return new Promise(function(resolve) {
         var timeout = setTimeout(function() {
-            console.log('getActiveDocumentName timeout');
+    // getActiveDocumentName timeout
             resolve(null);
         }, 1000);
 
@@ -911,7 +909,7 @@ function extractAyahNumbers(pageStats, systemKey) {
             }
         }
     } catch (e) {
-        console.log('Error parsing verse range:', rangeStr, e);
+    // Error parsing verse range
     }
 
     // Sanity check: if our count doesn't match, trust ayah_count and adjust
@@ -1081,7 +1079,7 @@ function importAllNumbers() {
         if (result && result.toString().indexOf('Error:') === 0) {
             showErrorModal(result);
         } else if (result === 'success') {
-            console.log('Ayah numbers imported and aligned successfully');
+        // Ayah numbers imported successfully
         }
     });
 }
@@ -1319,7 +1317,7 @@ function saveSymbolsForCurrentView() {
         }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (e) {
-        console.log('Could not save symbols');
+    // Could not save symbols
     }
 }
 
@@ -2397,7 +2395,7 @@ function getLayerButtons() {
             }
         }
     } catch (e) {
-        console.log('Could not load layer buttons from shared path:', e);
+    // Could not load layer buttons from shared path
     }
 
     if (!buttons) {
@@ -2454,7 +2452,7 @@ function saveLayerButtons(buttons) {
         }
         var result = window.cep.fs.writeFile(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
         if (result.err === 0) {
-            console.log('Layer buttons saved to', sharedPath);
+    // Layer buttons saved
             return;
         }
         // Fallback: Node.js fs for permission issues on Google Drive
@@ -2462,14 +2460,14 @@ function saveLayerButtons(buttons) {
             try {
                 var fs = require('fs');
                 fs.writeFileSync(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
-                console.log('Layer buttons saved via Node.js to', sharedPath);
+    // Layer buttons saved via Node.js
                 return;
             } catch (nodeErr) {
                 console.log('Node.js fallback failed:', nodeErr.message);
             }
         }
     } catch (e) {
-        console.log('Could not save layer buttons to shared path:', e);
+    // Could not save layer buttons to shared path
     }
 }
 
@@ -2593,7 +2591,7 @@ function moveSelectionToLayer(layerName) {
         var systemPathType = (csInterface.SystemPath && csInterface.SystemPath.EXTENSION) ? csInterface.SystemPath.EXTENSION : "extension";
         extPath = csInterface.getSystemPath(systemPathType).replace(/\\/g, '/');
     } catch (e) {
-        console.log('Could not get extension path:', e);
+    // Could not get extension path
     }
     var extPathEscaped = extPath.replace(/"/g, '\\"');
     var layerColorsPath = getLayerColorsPath().replace(/"/g, '\\"');
@@ -2628,7 +2626,7 @@ function scanDocumentLayers() {
 
     // Step 1: verify evalScript works and a document is actually open
     csInterface.evalScript('app.documents.length > 0 ? app.activeDocument.name : "NO_DOC"', function(docResult) {
-        console.log('scanDocumentLayers doc check:', docResult);
+    // scanDocumentLayers doc check
         if (!docResult || docResult === 'NO_DOC' || docResult === 'null' || docResult === 'undefined') {
             container.innerHTML = '<div class="empty-message">No document open</div>';
             return;
@@ -2655,7 +2653,7 @@ function scanDocumentLayers() {
         '})()';
 
         csInterface.evalScript(script, function(result) {
-            console.log('scanDocumentLayers raw result:', result);
+    // scanDocumentLayers raw result
             try {
                 var data = JSON.parse(result);
                 if (data.success && data.layers) {
