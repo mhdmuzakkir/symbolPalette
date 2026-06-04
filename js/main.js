@@ -1817,6 +1817,11 @@ function setupEventListeners() {
         });
     }
 
+    var btnInstallToolShed = document.getElementById('btnInstallToolShed');
+    if (btnInstallToolShed) {
+        btnInstallToolShed.addEventListener('click', installToolShedPlugin);
+    }
+
     // Edit Modal
     document.getElementById('editCancelBtn').addEventListener('click', hideEditModal);
     document.getElementById('editConfirmBtn').addEventListener('click', saveEditSymbol);
@@ -2128,6 +2133,44 @@ function hideErrorModal() {
 
 // Custom confirm modal (replaces native confirm() with themed UI)
 var _confirmCallback = null;
+function installToolShedPlugin() {
+    try {
+        var fs = require('fs');
+        var path = require('path');
+        var home = window.cep.process.getEnv('USERPROFILE');
+        var destDir = path.join(home, 'AppData', 'Roaming', 'Adobe', 'CEP', 'plug-ins');
+        var srcFile = path.join(window.cep.process.getEnv('USERPROFILE'), 'AppData', 'Roaming', 'Adobe', 'CEP', 'extensions', 'symbolPalette', 'ToolShed.aip');
+        var destFile = path.join(destDir, 'ToolShed.aip');
+
+        // Create plug-ins directory if it doesn't exist
+        if (!fs.existsSync(destDir)) {
+            fs.mkdirSync(destDir, { recursive: true });
+        }
+
+        // Copy the file
+        fs.copyFileSync(srcFile, destFile);
+
+        // Show instructions
+        var instructions = 'ToolShed plugin installed successfully!\n\n' +
+            'Next steps to activate:\n' +
+            '1. Restart Illustrator\n' +
+            '2. Go to Edit → Preferences → Plug-ins & Scratch Disks\n' +
+            '3. Check "Additional Plug-ins Folder"\n' +
+            '4. Click "Choose" and paste this path:\n\n' +
+            '%appdata%\\Adobe\\CEP\\plug-ins\n\n' +
+            '5. Click OK and restart Illustrator again.';
+        showConfirmModal(instructions, 'ToolShed Installed', function() {
+            // Try to open the folder in Explorer
+            try {
+                var child_process = require('child_process');
+                child_process.exec('explorer "' + destDir + '"');
+            } catch (e) {}
+        });
+    } catch (e) {
+        showErrorModal('Failed to install ToolShed: ' + e.message);
+    }
+}
+
 function showConfirmModal(message, title, onOk, onCancel) {
     var modal = document.getElementById('confirmModal');
     var msgEl = document.getElementById('confirmModalMessage');
