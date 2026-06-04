@@ -2171,12 +2171,7 @@ function installToolShedPlugin() {
                 '%appdata%\\Adobe\\CEP\\plug-ins\n\n' +
                 '3. Click OK and restart Illustrator.',
                 'ToolShed Already Installed',
-                function() {
-                    try {
-                        var child_process = require('child_process');
-                        child_process.exec('explorer "' + destDir + '"');
-                    } catch (e) {}
-                }
+                function() {}
             );
             return;
         }
@@ -2193,12 +2188,7 @@ function installToolShedPlugin() {
             '%appdata%\\Adobe\\CEP\\plug-ins\n\n' +
             '3. Click OK and restart Illustrator.',
             'ToolShed Installed',
-            function() {
-                try {
-                    var child_process = require('child_process');
-                    child_process.exec('explorer "' + destDir + '"');
-                } catch (e) {}
-            }
+            function() {}
         );
     } catch (e) {
         showErrorModal('Failed to install ToolShed: ' + e.message);
