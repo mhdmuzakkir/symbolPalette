@@ -2595,17 +2595,25 @@ function renderLayerList(layers) {
     layers.forEach(function(layer) {
         var isMatched = !!layer.matched;
         var isPotential = !!layer.potential;
-        var itemClass = isMatched ? 'layer-item matched' : (isPotential ? 'layer-item potential' : 'layer-item unmatched');
-        var badgeClass = isMatched ? 'layer-badge matched' : (isPotential ? 'layer-badge potential' : 'layer-badge unmatched');
-        var badgeText = isMatched ? layer.standard : (isPotential ? 'Similar' : 'Unmatched');
-        var nameColor = isMatched ? 'var(--accent-green)' : (isPotential ? 'var(--accent-purple)' : 'var(--accent-orange)');
-        var deleteBtn = isMatched ? '' : '<button class="layer-delete-btn" data-layer-name="' + escapeHtml(layer.name) + '" title="Delete layer">&times;</button>';
+        var needsRename = isMatched && layer.name !== layer.matched;
+        var itemClass = isMatched && !needsRename ? 'layer-item matched' : (isPotential || needsRename ? 'layer-item potential' : 'layer-item unmatched');
+        var badgeClass = isMatched && !needsRename ? 'layer-badge matched' : (isPotential || needsRename ? 'layer-badge potential' : 'layer-badge unmatched');
+        var badgeText = isMatched && !needsRename ? layer.standard : (isPotential ? 'Similar' : (needsRename ? 'Similar' : 'Unmatched'));
+        var nameColor = isMatched && !needsRename ? 'var(--accent-green)' : (isPotential || needsRename ? 'var(--accent-purple)' : 'var(--accent-orange)');
+        var deleteBtn = (isMatched && !needsRename) ? '' : '<button class="layer-delete-btn" data-layer-name="' + escapeHtml(layer.name) + '" title="Delete layer">&times;</button>';
+        var renameBtn = '';
+        if (needsRename) {
+            renameBtn = '<button class="layer-rename-btn" data-layer-name="' + escapeHtml(layer.name) + '" data-target-name="' + escapeHtml(layer.matched) + '" title="Rename to ' + escapeHtml(layer.matched) + '">' +
+                        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Make Match' +
+                        '</button>';
+        }
 
         var row = document.createElement('div');
         row.className = itemClass;
         row.innerHTML = '<span class="layer-name" style="color:' + nameColor + ';">' + escapeHtml(layer.name) + '</span>' +
                         '<span style="display:flex;align-items:center;justify-content:flex-end;gap:6px;width:100%;">' +
                         '<span class="layer-badge ' + badgeClass + '">' + badgeText + '</span>' +
+                        renameBtn +
                         deleteBtn +
                         '</span>';
         container.appendChild(row);
