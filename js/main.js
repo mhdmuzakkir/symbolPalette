@@ -2161,33 +2161,18 @@ function installToolShedPlugin() {
             fs.mkdirSync(destDir, { recursive: true });
         }
 
-        // Check if already installed
-        if (fs.existsSync(destFile)) {
-            showConfirmModal(
-                'ToolShed is already installed.\n\n' +
-                'Go to Edit → Preferences → Plug-ins & Scratch Disks\n' +
-                '1. Check "Additional Plug-ins Folder"\n' +
-                '2. Click "Choose" and paste this path:\n\n' +
-                '%appdata%\\Adobe\\CEP\\plug-ins\n\n' +
-                '3. Click OK and restart Illustrator.',
-                'ToolShed Already Installed',
-                function() {}
-            );
-            return;
-        }
-
-        // Copy the file
+        // Copy the file (overwrite if exists)
         fs.copyFileSync(srcFile, destFile);
 
         // Show instructions
         showConfirmModal(
-            'ToolShed plugin installed successfully!\n\n' +
+            'ToolShed copied to plug-ins folder.\n\n' +
             'Go to Edit → Preferences → Plug-ins & Scratch Disks\n' +
             '1. Check "Additional Plug-ins Folder"\n' +
             '2. Click "Choose" and paste this path:\n\n' +
             '%appdata%\\Adobe\\CEP\\plug-ins\n\n' +
             '3. Click OK and restart Illustrator.',
-            'ToolShed Installed',
+            'ToolShed Ready',
             function() {}
         );
     } catch (e) {
