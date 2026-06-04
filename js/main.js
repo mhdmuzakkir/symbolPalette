@@ -2161,12 +2161,16 @@ function installToolShedPlugin() {
             fs.mkdirSync(destDir, { recursive: true });
         }
 
-        // Copy the file (overwrite if exists)
-        fs.copyFileSync(srcFile, destFile);
+        var alreadyThere = fs.existsSync(destFile);
+
+        // Only copy if not already there (avoids EBUSY on loaded plugin)
+        if (!alreadyThere) {
+            fs.copyFileSync(srcFile, destFile);
+        }
 
         // Show instructions
         showConfirmModal(
-            'ToolShed copied to plug-ins folder.\n\n' +
+            'ToolShed is ready.\n\n' +
             'Go to Edit → Preferences → Plug-ins & Scratch Disks\n' +
             '1. Check "Additional Plug-ins Folder"\n' +
             '2. Click "Choose" and paste this path:\n\n' +
