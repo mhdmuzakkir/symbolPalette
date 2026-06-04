@@ -2163,25 +2163,45 @@ function installToolShedPlugin() {
             fs.mkdirSync(destDir, { recursive: true });
         }
 
+        // Check if already installed
+        if (fs.existsSync(destFile)) {
+            showConfirmModal(
+                'ToolShed is already installed.\n\n' +
+                'Go to Edit → Preferences → Plug-ins & Scratch Disks\n' +
+                '1. Check "Additional Plug-ins Folder"\n' +
+                '2. Click "Choose" and paste this path:\n\n' +
+                '%appdata%\\Adobe\\CEP\\plug-ins\n\n' +
+                '3. Click OK and restart Illustrator.',
+                'ToolShed Already Installed',
+                function() {
+                    try {
+                        var child_process = require('child_process');
+                        child_process.exec('explorer "' + destDir + '"');
+                    } catch (e) {}
+                }
+            );
+            return;
+        }
+
         // Copy the file
         fs.copyFileSync(srcFile, destFile);
 
         // Show instructions
-        var instructions = 'ToolShed plugin installed successfully!\n\n' +
-            'Next steps to activate:\n' +
-            '1. Restart Illustrator\n' +
-            '2. Go to Edit → Preferences → Plug-ins & Scratch Disks\n' +
-            '3. Check "Additional Plug-ins Folder"\n' +
-            '4. Click "Choose" and paste this path:\n\n' +
+        showConfirmModal(
+            'ToolShed plugin installed successfully!\n\n' +
+            'Go to Edit → Preferences → Plug-ins & Scratch Disks\n' +
+            '1. Check "Additional Plug-ins Folder"\n' +
+            '2. Click "Choose" and paste this path:\n\n' +
             '%appdata%\\Adobe\\CEP\\plug-ins\n\n' +
-            '5. Click OK and restart Illustrator again.';
-        showConfirmModal(instructions, 'ToolShed Installed', function() {
-            // Try to open the folder in Explorer
-            try {
-                var child_process = require('child_process');
-                child_process.exec('explorer "' + destDir + '"');
-            } catch (e) {}
-        });
+            '3. Click OK and restart Illustrator.',
+            'ToolShed Installed',
+            function() {
+                try {
+                    var child_process = require('child_process');
+                    child_process.exec('explorer "' + destDir + '"');
+                } catch (e) {}
+            }
+        );
     } catch (e) {
         showErrorModal('Failed to install ToolShed: ' + e.message);
     }
@@ -2192,7 +2212,14 @@ function showConfirmModal(message, title, onOk, onCancel) {
     var msgEl = document.getElementById('confirmModalMessage');
     var titleEl = document.getElementById('confirmModalTitle');
     if (titleEl) titleEl.textContent = title || 'Confirm';
-    if (msgEl) msgEl.textContent = message || '';
+    if (msgEl) {
+        msgEl.innerHTML = '';
+        var lines = (message || '').split('\n');
+        lines.forEach(function(line, i) {
+            if (i > 0) msgEl.appendChild(document.createElement('br'));
+            msgEl.appendChild(document.createTextNode(line));
+        });
+    }
 
     var okBtn = document.getElementById('confirmModalOk');
     var cancelBtn = document.getElementById('confirmModalCancel');
