@@ -113,12 +113,18 @@ var lastDocName = '';
 var SYMBOLPALETTE_SETTINGS_FILE = '';
 
 function getHomeDir() {
-    try {
-        var home = window.cep.process.getEnv('USERPROFILE') || window.cep.process.getEnv('HOME');
+    // Try Node.js first (most reliable)
+    if (typeof process !== 'undefined' && process.env) {
+        var home = process.env.USERPROFILE || process.env.HOME;
         if (home) return home.replace(/\\/g, '/');
+    }
+    // Fallback: CEP fs
+    try {
+        var home2 = window.cep.fs.getEnv('USERPROFILE') || window.cep.fs.getEnv('HOME');
+        if (home2) return home2.replace(/\\/g, '/');
     } catch (e) {}
-    // Fallback
-    return 'C:/Users/' + window.cep.process.getEnv('USERNAME');
+    // Last resort
+    return 'C:/Users/' + (typeof process !== 'undefined' && process.env ? process.env.USERNAME : 'User');
 }
 
 function getMushafTaskManagerDir() {
@@ -2137,10 +2143,20 @@ function installToolShedPlugin() {
     try {
         var fs = require('fs');
         var path = require('path');
-        var home = window.cep.process.getEnv('USERPROFILE');
+        var home = getHomeDir();
+        if (!home) {
+            showErrorModal('Could not determine user home directory.');
+            return;
+        }
         var destDir = path.join(home, 'AppData', 'Roaming', 'Adobe', 'CEP', 'plug-ins');
-        var srcFile = path.join(window.cep.process.getEnv('USERPROFILE'), 'AppData', 'Roaming', 'Adobe', 'CEP', 'extensions', 'symbolPalette', 'ToolShed.aip');
+        var srcFile = path.join(home, 'AppData', 'Roaming', 'Adobe', 'CEP', 'extensions', 'symbolPalette', 'ToolShed.aip');
         var destFile = path.join(destDir, 'ToolShed.aip');
+
+        // Check source file exists
+        if (!fs.existsSync(srcFile)) {
+            showErrorModal('ToolShed.aip not found in extension folder.');
+            return;
+        }
 
         // Create plug-ins directory if it doesn't exist
         if (!fs.existsSync(destDir)) {
