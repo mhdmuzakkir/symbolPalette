@@ -34,7 +34,7 @@
                     <Menu>Symbol Palette</Menu>
                     <Geometry>
                         <Size>
-                            <Width>200</Width>
+                            <Width>240</Width>
                             <Height>300</Height>
                         </Size>
                         <MaxSize>
@@ -42,7 +42,7 @@
                             <Height>1200</Height>
                         </MaxSize>
                         <MinSize>
-                            <Width>160</Width>
+                            <Width>220</Width>
                             <Height>200</Height>
                         </MinSize>
                     </Geometry>
