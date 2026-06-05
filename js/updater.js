@@ -26,7 +26,7 @@
             installUpdate: function() { return Promise.reject(new Error('Node.js not available')); },
             getUpdateStatus: function() { return 'error'; },
             getLastCheckResult: function() { return null; },
-            CURRENT_VERSION: '1.4.0',
+            CURRENT_VERSION: '1.4.1',
             isUserInstall: function() { return false; },
             getExtensionPath: function() { return null; }
         };

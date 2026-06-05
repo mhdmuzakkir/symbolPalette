@@ -463,8 +463,8 @@ body {
 }
 
 .btn-layer-tool:hover {
-    background: var(--accent-purple);
-    border-color: var(--accent-purple);
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
     color: white;
 }
 
