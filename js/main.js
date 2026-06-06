@@ -423,8 +423,7 @@ function ensureLayerColorsFile(force) {
 
         var defaultColors = {
             "Iskan Haa": [255, 128, 0],
-            "Meem Sila": [0, 128, 255],
-            "default": [128, 128, 128]
+            "Meem Sila": [0, 128, 255]
         };
 
         var result = window.cep.fs.writeFile(colorsPath, JSON.stringify(defaultColors, null, 2), 'utf-8');
@@ -2341,13 +2340,10 @@ function escapePath(path) {
 
 // ==================== LAYER TOOLS ====================
 
-var LAYER_BUTTONS_KEY = 'symbolPalette_layerButtons_v1';
-var DEFAULT_LAYER_BUTTONS = ['Iskan Haa', 'Meem Sila'];
-
 function getSharedLayerButtonsPath() {
     var settingsFolder = deriveSettingsFolder();
     if (!settingsFolder) return null;
-    return settingsFolder.replace(/\\/g, '/') + '/symbolPalette_layerButtons.json';
+    return settingsFolder.replace(/\\/g, '/') + '/layers/symbolPalette_layerButtons.json';
 }
 
 function getLayerColorsPath() {
@@ -2357,115 +2353,153 @@ function getLayerColorsPath() {
 }
 
 function getLayerButtons() {
-    var buttons = null;
-    var source = 'default';
+    var sharedPath = getSharedLayerButtonsPath();
+    if (!sharedPath) {
+        console.log('getLayerButtons: no shared path (rootFolder not set)');
+        return [];
+    }
 
-    // Try shared path first (cross-device sync via mushaftasks)
+    var jsonStr = null;
+
+    // 1. Try CEP fs
     try {
-        var sharedPath = getSharedLayerButtonsPath();
-        if (sharedPath) {
-            var result = window.cep.fs.readFile(sharedPath, 'utf-8');
-            if (result.err === 0 && result.data) {
-                var data = JSON.parse(result.data);
-                if (Array.isArray(data.buttons)) {
-                    buttons = data.buttons;
-                    source = 'shared';
-                }
-            } else {
-                // Read failed — check if file actually exists before overwriting
-                var stat = window.cep.fs.stat(sharedPath);
-                if (stat.err === 0) {
-                    // File EXISTS but read failed (Google Drive sync, locked, etc.)
-                    // Return defaults for this session ONLY — do NOT overwrite
-                    console.log('getLayerButtons: file exists but read failed (err', result.err, ') — returning defaults without overwriting');
-                    return DEFAULT_LAYER_BUTTONS.slice();
-                }
-                // File doesn't exist — fall through to create defaults below
-            }
+        var result = window.cep.fs.readFile(sharedPath, 'utf-8');
+        if (result.err === 0 && result.data) {
+            jsonStr = result.data;
+        } else {
+            console.log('getLayerButtons: CEP read err', result.err);
         }
     } catch (e) {
-        console.log('getLayerButtons: exception reading file:', e);
-        return DEFAULT_LAYER_BUTTONS.slice();
+        console.log('getLayerButtons: CEP read exception:', e.message);
     }
 
-    if (!buttons) {
-        // No shared file yet — create it with defaults
-        var defaults = DEFAULT_LAYER_BUTTONS.slice();
-        saveLayerButtons(defaults);
-        return defaults;
-    }
-
-    // Correct known typos / old names
-    var corrected = [];
-    var changed = false;
-    for (var i = 0; i < buttons.length; i++) {
-        var name = buttons[i];
-        if (name === 'Iskan Ha' || name === 'Iskaan Ha' || name === 'Iskaan Haa') {
-            name = 'Iskan Haa';
-            changed = true;
-        }
-        corrected.push(name);
-    }
-
-    // Filter out deprecated buttons
-    var cleaned = [];
-    var removed = false;
-    var deprecated = ['Sukoon', 'Shadda'];
-    for (var i = 0; i < corrected.length; i++) {
-        if (deprecated.indexOf(corrected[i]) === -1) {
-            cleaned.push(corrected[i]);
-        } else {
-            removed = true;
+    // 2. Try Node.js fs (often works when CEP fails on Google Drive)
+    if (!jsonStr && typeof require !== 'undefined') {
+        try {
+            var fs = require('fs');
+            jsonStr = fs.readFileSync(sharedPath, 'utf-8');
+            console.log('getLayerButtons: read via Node.js fs');
+        } catch (e) {
+            console.log('getLayerButtons: Node.js read failed:', e.message);
         }
     }
 
-    // Save back if corrected or cleaned
-    if ((changed || removed) && cleaned.length > 0) {
-        saveLayerButtons(cleaned);
+    if (jsonStr) {
+        try {
+            var data = JSON.parse(jsonStr);
+            if (Array.isArray(data.buttons)) {
+                return data.buttons;
+            }
+        } catch (e) {
+            console.log('getLayerButtons: JSON parse failed:', e.message);
+        }
     }
 
-    return cleaned.length > 0 ? cleaned : DEFAULT_LAYER_BUTTONS.slice();
+    // 3. Both reads failed — check if file actually exists
+    var fileExists = false;
+    try {
+        var stat = window.cep.fs.stat(sharedPath);
+        if (stat.err === 0) fileExists = true;
+    } catch (e) {}
+    if (!fileExists && typeof require !== 'undefined') {
+        try {
+            var fs2 = require('fs');
+            fileExists = fs2.existsSync(sharedPath);
+        } catch (e) {}
+    }
+
+    if (fileExists) {
+        // File exists but we can't read it — DON'T return empty array
+        // because that causes data loss on the next save.
+        console.log('getLayerButtons: file exists but unreadable — returning null to prevent overwrite');
+        return null;
+    }
+
+    // 4. Migration: try old path (mushaftasks/ instead of mushaftasks/layers/)
+    var oldPath = sharedPath.replace(/\/layers\/symbolPalette_layerButtons\.json$/, '/symbolPalette_layerButtons.json');
+    if (oldPath !== sharedPath) {
+        try {
+            var oldResult = window.cep.fs.readFile(oldPath, 'utf-8');
+            if (oldResult.err === 0 && oldResult.data) {
+                var oldData = JSON.parse(oldResult.data);
+                if (Array.isArray(oldData.buttons)) {
+                    // Copy to new location
+                    try {
+                        window.cep.fs.writeFile(sharedPath, oldResult.data, 'utf-8');
+                        console.log('getLayerButtons: migrated from old path');
+                    } catch (e) {}
+                    return oldData.buttons;
+                }
+            }
+        } catch (e) {}
+        if (typeof require !== 'undefined') {
+            try {
+                var fs3 = require('fs');
+                var oldData2 = fs3.readFileSync(oldPath, 'utf-8');
+                var oldJson = JSON.parse(oldData2);
+                if (Array.isArray(oldJson.buttons)) {
+                    try {
+                        fs3.writeFileSync(sharedPath, oldData2, 'utf-8');
+                        console.log('getLayerButtons: migrated from old path via Node.js');
+                    } catch (e) {}
+                    return oldJson.buttons;
+                }
+            } catch (e) {}
+        }
+    }
+
+    // File genuinely doesn't exist
+    return [];
 }
 
 function saveLayerButtons(buttons) {
-    // Save only to shared path (drive folder) — no localStorage fallback
+    var saved = false;
+
     try {
         var sharedPath = getSharedLayerButtonsPath();
-        if (!sharedPath) {
-            console.log('saveLayerButtons: no shared path (rootFolder not set)');
-            return false;
-        }
-        var dir = sharedPath.replace(/\\/g, '/').replace(/\/[^\/]+$/, '');
-        var dirStat = window.cep.fs.readdir(dir);
-        if (dirStat.err !== 0) {
-            var makeResult = window.cep.fs.makedir(dir);
-            if (makeResult.err !== 0) {
-                console.log('saveLayerButtons: could not create directory', dir, 'err:', makeResult.err);
-                throw new Error('Could not create directory');
+        if (sharedPath) {
+            var normalized = sharedPath.replace(/\\/g, '/');
+            var layersDir = normalized.replace(/\/[^\/]+$/, '');      // .../mushaftasks/layers
+            var tasksDir = layersDir.replace(/\/layers$/, '');         // .../mushaftasks
+
+            // Create mushaftasks/ if needed
+            var tasksStat = window.cep.fs.readdir(tasksDir);
+            if (tasksStat.err !== 0) {
+                var makeTasks = window.cep.fs.makedir(tasksDir);
+                if (makeTasks.err !== 0 && makeTasks.err !== 4) {
+                    console.log('saveLayerButtons: could not create tasks dir', tasksDir, 'err:', makeTasks.err);
+                }
+            }
+
+            // Create layers/ if needed
+            var dirStat = window.cep.fs.readdir(layersDir);
+            if (dirStat.err !== 0) {
+                var makeResult = window.cep.fs.makedir(layersDir);
+                if (makeResult.err !== 0 && makeResult.err !== 4) {
+                    console.log('saveLayerButtons: could not create layers dir', layersDir, 'err:', makeResult.err);
+                }
+            }
+
+            var result = window.cep.fs.writeFile(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
+            if (result.err === 0) {
+                saved = true;
+            } else if (result.err === 5 && typeof require !== 'undefined') {
+                try {
+                    var fs = require('fs');
+                    fs.writeFileSync(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
+                    saved = true;
+                } catch (nodeErr) {
+                    console.log('saveLayerButtons: Node.js fallback failed:', nodeErr.message);
+                }
+            } else {
+                console.log('saveLayerButtons: writeFile failed with err', result.err);
             }
         }
-        var result = window.cep.fs.writeFile(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
-        if (result.err === 0) {
-    // Layer buttons saved
-            return true;
-        }
-        // Fallback: Node.js fs for permission issues on Google Drive
-        if (result.err === 5 && typeof require !== 'undefined') {
-            try {
-                var fs = require('fs');
-                fs.writeFileSync(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
-    // Layer buttons saved via Node.js
-                return true;
-            } catch (nodeErr) {
-                console.log('Node.js fallback failed:', nodeErr.message);
-            }
-        }
-        console.log('saveLayerButtons: writeFile failed with err', result.err);
-        return false;
     } catch (e) {
-        console.log('Could not save layer buttons to shared path:', e);
-        return false;
+        console.log('saveLayerButtons: drive save exception:', e.message);
     }
+
+    return saved;
 }
 
 function renderLayerButtons(buttons) {
@@ -2481,6 +2515,11 @@ function renderLayerButtons(buttons) {
 
     if (!buttons) {
         buttons = getLayerButtons();
+    }
+    if (buttons === null) {
+        // File exists but unreadable — don't wipe the UI, just log and skip
+        console.log('renderLayerButtons: buttons file unreadable, preserving current UI');
+        return;
     }
     buttons.forEach(function(name) {
         var btn = document.createElement('button');
@@ -2499,10 +2538,11 @@ function renderLayerButtons(buttons) {
         dot.style.marginRight = '8px';
         dot.style.flexShrink = '0';
         var rgb = spGetLayerColorForName(name);
-        if (rgb) {
+        if (rgb && rgb.length >= 3) {
             dot.style.background = 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
         } else {
-            dot.style.background = '#888';
+            // layerColors.json missing this name or unreadable — show red to indicate error
+            dot.style.background = '#e74c3c';
         }
         btn.appendChild(dot);
 
@@ -2514,54 +2554,102 @@ function renderLayerButtons(buttons) {
     });
 }
 
-function spGetLayerColorForName(layerName) {
+function readLayerColors() {
     var colorsPath = getLayerColorsPath();
+    if (!colorsPath) return null;
     var jsonStr = null;
-
-    if (colorsPath) {
-        // Try CEP fs first
+    try {
+        var result = window.cep.fs.readFile(colorsPath, 'utf-8');
+        if (result.err === 0 && result.data) jsonStr = result.data;
+    } catch (e) {}
+    if (!jsonStr && typeof require !== 'undefined') {
         try {
-            var result = window.cep.fs.readFile(colorsPath, 'utf-8');
-            if (result.err === 0 && result.data) {
-                jsonStr = result.data;
-            }
+            var fs = require('fs');
+            jsonStr = fs.readFileSync(colorsPath, 'utf-8');
         } catch (e) {}
+    }
+    if (!jsonStr) return null;
+    try { return JSON.parse(jsonStr); } catch (e) { return null; }
+}
 
-        // Fallback: Node.js fs (for Google Drive permission issues)
-        if (!jsonStr && typeof require !== 'undefined') {
+function writeLayerColors(config) {
+    var colorsPath = getLayerColorsPath();
+    if (!colorsPath) return false;
+    try {
+        var result = window.cep.fs.writeFile(colorsPath, JSON.stringify(config, null, 2), 'utf-8');
+        if (result.err === 0) return true;
+        if (result.err === 5 && typeof require !== 'undefined') {
             try {
                 var fs = require('fs');
-                jsonStr = fs.readFileSync(colorsPath, 'utf-8');
+                fs.writeFileSync(colorsPath, JSON.stringify(config, null, 2), 'utf-8');
+                return true;
             } catch (e) {}
+        }
+    } catch (e) {}
+    return false;
+}
+
+function spGetLayerColorForName(layerName) {
+    var config = readLayerColors();
+    if (!config) return null;
+    if (config[layerName]) return config[layerName];
+    // No default fallback — each button must have its own color in the file
+    return null;
+}
+
+function assignLayerColor(layerName) {
+    var config = readLayerColors();
+    if (!config) config = {};
+
+    var palette = [
+        [255, 128, 0], [0, 128, 255], [128, 255, 0], [255, 0, 128],
+        [128, 0, 255], [0, 255, 128], [255, 200, 0], [0, 200, 255],
+        [200, 0, 255], [100, 255, 100], [255, 100, 100], [100, 100, 255]
+    ];
+
+    // Collect colors already used by OTHER layer names
+    var used = [];
+    for (var key in config) {
+        if (!config.hasOwnProperty(key)) continue;
+        if (key === layerName) continue;
+        var c = config[key];
+        if (c && c.length >= 3) {
+            used.push(c[0] + ',' + c[1] + ',' + c[2]);
         }
     }
 
-    if (jsonStr) {
-        try {
-            var config = JSON.parse(jsonStr);
-            if (config[layerName]) return config[layerName];
-            if (config.default) return config.default;
-        } catch (e) {}
+    // If this layer already has a color, check if it's unique
+    var existing = config[layerName];
+    if (existing && existing.length >= 3) {
+        var existingKey = existing[0] + ',' + existing[1] + ',' + existing[2];
+        if (used.indexOf(existingKey) === -1) {
+            // Unique — keep it
+            return existing;
+        }
+        // Duplicate — reassign below
     }
 
-    // Fallback rotating palette (matches ExtendScript host.jsx behavior)
-    var palette = [
-        [255, 128, 0],
-        [0, 128, 255],
-        [128, 255, 0],
-        [255, 0, 128],
-        [128, 0, 255],
-        [0, 255, 128],
-        [255, 200, 0],
-        [0, 200, 255],
-        [200, 0, 255],
-        [100, 255, 100]
-    ];
-    var idx = 0;
-    for (var i = 0; i < layerName.length; i++) {
-        idx += layerName.charCodeAt(i);
+    // Pick first unused color from palette
+    var color = null;
+    for (var i = 0; i < palette.length; i++) {
+        var p = palette[i];
+        var keyStr = p[0] + ',' + p[1] + ',' + p[2];
+        if (used.indexOf(keyStr) === -1) {
+            color = p;
+            break;
+        }
     }
-    return palette[idx % palette.length];
+
+    // If all palette colors are taken, fall back to hash-based (unavoidable)
+    if (!color) {
+        var idx = 0;
+        for (var j = 0; j < layerName.length; j++) idx += layerName.charCodeAt(j);
+        color = palette[idx % palette.length];
+    }
+
+    config[layerName] = color;
+    writeLayerColors(config);
+    return color;
 }
 
 var _hostScriptLoaded = false;
@@ -2814,6 +2902,10 @@ function addLayerButton() {
         return;
     }
     var buttons = getLayerButtons();
+    if (buttons === null) {
+        showErrorModal('Cannot read layer buttons file. Drive may be temporarily unavailable. Please try again in a few seconds.');
+        return;
+    }
     if (buttons.indexOf(name) !== -1) {
         showErrorModal('Button "' + name + '" already exists.');
         return;
@@ -2824,6 +2916,8 @@ function addLayerButton() {
         showErrorModal('Could not save layer button. Make sure the Root Folder is set (click 📁 Root Folder button).');
         return;
     }
+    // Auto-assign a unique color for this new button
+    assignLayerColor(name);
     renderLayerButtons(buttons);
     hideLayerButtonModal();
 }

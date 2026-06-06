@@ -654,31 +654,13 @@ function spGetLayerColor(layerName, layerColorsPath) {
                 if (config[layerName]) {
                     return config[layerName];
                 }
-                if (config.default) {
-                    return config.default;
-                }
+                // No default fallback — each layer must have its own color in the file
             }
         }
     } catch (e) {}
 
-    // Fallback rotating palette
-    var palette = [
-        [255, 128, 0],
-        [0, 128, 255],
-        [128, 255, 0],
-        [255, 0, 128],
-        [128, 0, 255],
-        [0, 255, 128],
-        [255, 200, 0],
-        [0, 200, 255],
-        [200, 0, 255],
-        [100, 255, 100]
-    ];
-    var idx = 0;
-    for (var i = 0; i < layerName.length; i++) {
-        idx += layerName.charCodeAt(i);
-    }
-    return palette[idx % palette.length];
+    // No fallback — only drive file colors
+    return null;
 }
 
 function spApplyLayerColor(layer, layerName, layerColorsPath) {
