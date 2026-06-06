@@ -2420,19 +2420,23 @@ function saveLayerButtons(buttons) {
     // Save only to shared path (drive folder) — no localStorage fallback
     try {
         var sharedPath = getSharedLayerButtonsPath();
-        if (!sharedPath) return;
+        if (!sharedPath) {
+            console.log('saveLayerButtons: no shared path (rootFolder not set)');
+            return false;
+        }
         var dir = sharedPath.replace(/\\/g, '/').replace(/\/[^\/]+$/, '');
         var dirStat = window.cep.fs.readdir(dir);
         if (dirStat.err !== 0) {
             var makeResult = window.cep.fs.makedir(dir);
             if (makeResult.err !== 0) {
+                console.log('saveLayerButtons: could not create directory', dir, 'err:', makeResult.err);
                 throw new Error('Could not create directory');
             }
         }
         var result = window.cep.fs.writeFile(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
         if (result.err === 0) {
     // Layer buttons saved
-            return;
+            return true;
         }
         // Fallback: Node.js fs for permission issues on Google Drive
         if (result.err === 5 && typeof require !== 'undefined') {
@@ -2440,17 +2444,20 @@ function saveLayerButtons(buttons) {
                 var fs = require('fs');
                 fs.writeFileSync(sharedPath, JSON.stringify({ buttons: buttons }, null, 2), 'utf-8');
     // Layer buttons saved via Node.js
-                return;
+                return true;
             } catch (nodeErr) {
                 console.log('Node.js fallback failed:', nodeErr.message);
             }
         }
+        console.log('saveLayerButtons: writeFile failed with err', result.err);
+        return false;
     } catch (e) {
-    // Could not save layer buttons to shared path
+        console.log('Could not save layer buttons to shared path:', e);
+        return false;
     }
 }
 
-function renderLayerButtons() {
+function renderLayerButtons(buttons) {
     var container = document.getElementById('layerToolsButtons');
     if (!container) return;
     container.innerHTML = '';
@@ -2461,7 +2468,9 @@ function renderLayerButtons() {
         ensureLayerColorsFile();
     }
 
-    var buttons = getLayerButtons();
+    if (!buttons) {
+        buttons = getLayerButtons();
+    }
     buttons.forEach(function(name) {
         var btn = document.createElement('button');
         btn.className = 'btn-layer-tool';
@@ -2781,8 +2790,12 @@ function addLayerButton() {
         return;
     }
     buttons.push(name);
-    saveLayerButtons(buttons);
-    renderLayerButtons();
+    var saved = saveLayerButtons(buttons);
+    if (!saved) {
+        showErrorModal('Could not save layer button. Make sure the Root Folder is set (click 📁 Root Folder button).');
+        return;
+    }
+    renderLayerButtons(buttons);
     hideLayerButtonModal();
 }
 
