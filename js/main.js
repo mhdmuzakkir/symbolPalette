@@ -2371,10 +2371,21 @@ function getLayerButtons() {
                     buttons = data.buttons;
                     source = 'shared';
                 }
+            } else {
+                // Read failed — check if file actually exists before overwriting
+                var stat = window.cep.fs.stat(sharedPath);
+                if (stat.err === 0) {
+                    // File EXISTS but read failed (Google Drive sync, locked, etc.)
+                    // Return defaults for this session ONLY — do NOT overwrite
+                    console.log('getLayerButtons: file exists but read failed (err', result.err, ') — returning defaults without overwriting');
+                    return DEFAULT_LAYER_BUTTONS.slice();
+                }
+                // File doesn't exist — fall through to create defaults below
             }
         }
     } catch (e) {
-    // Could not load layer buttons from shared path
+        console.log('getLayerButtons: exception reading file:', e);
+        return DEFAULT_LAYER_BUTTONS.slice();
     }
 
     if (!buttons) {
@@ -2505,34 +2516,52 @@ function renderLayerButtons(buttons) {
 
 function spGetLayerColorForName(layerName) {
     var colorsPath = getLayerColorsPath();
-    if (!colorsPath) return null;
-
     var jsonStr = null;
 
-    // Try CEP fs first
-    try {
-        var result = window.cep.fs.readFile(colorsPath, 'utf-8');
-        if (result.err === 0 && result.data) {
-            jsonStr = result.data;
-        }
-    } catch (e) {}
-
-    // Fallback: Node.js fs (for Google Drive permission issues)
-    if (!jsonStr && typeof require !== 'undefined') {
+    if (colorsPath) {
+        // Try CEP fs first
         try {
-            var fs = require('fs');
-            jsonStr = fs.readFileSync(colorsPath, 'utf-8');
+            var result = window.cep.fs.readFile(colorsPath, 'utf-8');
+            if (result.err === 0 && result.data) {
+                jsonStr = result.data;
+            }
+        } catch (e) {}
+
+        // Fallback: Node.js fs (for Google Drive permission issues)
+        if (!jsonStr && typeof require !== 'undefined') {
+            try {
+                var fs = require('fs');
+                jsonStr = fs.readFileSync(colorsPath, 'utf-8');
+            } catch (e) {}
+        }
+    }
+
+    if (jsonStr) {
+        try {
+            var config = JSON.parse(jsonStr);
+            if (config[layerName]) return config[layerName];
+            if (config.default) return config.default;
         } catch (e) {}
     }
 
-    if (!jsonStr) return null;
-
-    try {
-        var config = JSON.parse(jsonStr);
-        if (config[layerName]) return config[layerName];
-        if (config.default) return config.default;
-    } catch (e) {}
-    return null;
+    // Fallback rotating palette (matches ExtendScript host.jsx behavior)
+    var palette = [
+        [255, 128, 0],
+        [0, 128, 255],
+        [128, 255, 0],
+        [255, 0, 128],
+        [128, 0, 255],
+        [0, 255, 128],
+        [255, 200, 0],
+        [0, 200, 255],
+        [200, 0, 255],
+        [100, 255, 100]
+    ];
+    var idx = 0;
+    for (var i = 0; i < layerName.length; i++) {
+        idx += layerName.charCodeAt(i);
+    }
+    return palette[idx % palette.length];
 }
 
 var _hostScriptLoaded = false;
