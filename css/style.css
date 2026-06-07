@@ -48,7 +48,7 @@ body {
     color: var(--text-primary);
     background-color: var(--bg-primary);
     overflow-x: hidden;
-    min-width: 420px;
+    min-width: 260px;
 }
 
 /* Utility Classes */
