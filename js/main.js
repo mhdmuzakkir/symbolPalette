@@ -3017,7 +3017,7 @@ function cleanUpDocumentLayers() {
                     if (data.renamed && data.renamed.length > 0) {
                         msg += '\n\nRenamed:';
                         data.renamed.forEach(function(r) {
-                            msg += '\n• ' + r.old + ' → ' + r.new;
+                            msg += '\n• ' + r.old + ' → ' + r.newName;
                         });
                     }
                     if (data.deleted && data.deleted.length > 0) {

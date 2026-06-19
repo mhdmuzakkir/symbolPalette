@@ -63,9 +63,9 @@ function spCleanUpLayers() {
                         layer.locked = false;
                         layer.visible = true;
                         layer.name = matched;
-                        result.renamed.push({ old: oldName, new: matched });
+                        result.renamed.push({ old: oldName, newName: matched });
                     } catch (e) {
-                        result.renamed.push({ old: oldName, new: matched, error: e.toString() });
+                        result.renamed.push({ old: oldName, newName: matched, error: e.toString() });
                     }
                 }
             }
