@@ -2990,7 +2990,101 @@ function deleteDocumentLayer(layerName) {
 }
 
 function cleanUpDocumentLayers() {
-    csInterface.evalScript('spCleanUpLayers()', function(result) {
+    var script = [
+        'var result = { success: false, renamed: [], deleted: [], warnings: [], error: "" };',
+        'try {',
+        '    if (app.documents.length === 0) { result.error = "No document open"; throw new Error("No document"); }',
+        '    var doc = app.activeDocument;',
+        '    var registered = ["Quran Text", "Aya No.", "Ornaments", "Header & Marks & Page No."];',
+        '',
+        '    function normalizeName(name) {',
+        '        return name.toString().replace(/^\\s+|\\s+$/g, "").toLowerCase().replace(/[_\\-\\.]/g, "").replace(/\\s+/g, "");',
+        '    }',
+        '',
+        '    function matchLayerName(name) {',
+        '        var n = normalizeName(name);',
+        '        if (!n) return null;',
+        '        var defs = {',
+        '            quranText: { standard: "Quran Text", patterns: ["qurantext", "quran"] },',
+        '            ayaNo: { standard: "Aya No.", patterns: ["ayano", "ayahno", "ayano.", "ayahno.", "aya.no", "ayah.no", "aya no", "ayah no"] },',
+        '            ornaments: { standard: "Ornaments", patterns: ["ornament", "zakhrafah", "zakhrafa", "decoration", "decorations"] },',
+        '            header: { standard: "Header & Marks & Page No.", patterns: ["header", "marks", "pageno"] }',
+        '        };',
+        '        for (var key in defs) {',
+        '            var def = defs[key];',
+        '            var stdNorm = normalizeName(def.standard);',
+        '            if (n === stdNorm) return def.standard;',
+        '            for (var p = 0; p < def.patterns.length; p++) {',
+        '                if (n.indexOf(def.patterns[p]) !== -1) return def.standard;',
+        '            }',
+        '        }',
+        '        return null;',
+        '    }',
+        '',
+        '    function isRegistered(standard) {',
+        '        for (var i = 0; i < registered.length; i++) {',
+        '            if (registered[i] === standard) return true;',
+        '        }',
+        '        return false;',
+        '    }',
+        '',
+        '    function isEmpty(layer) {',
+        '        try {',
+        '            if (layer.pageItems.length > 0) return false;',
+        '            if (layer.layers && layer.layers.length > 0) {',
+        '                for (var i = 0; i < layer.layers.length; i++) {',
+        '                    if (!isEmpty(layer.layers[i])) return false;',
+        '                }',
+        '            }',
+        '        } catch (e) {}',
+        '        return true;',
+        '    }',
+        '',
+        '    // Rename potential layers',
+        '    for (var i = 0; i < doc.layers.length; i++) {',
+        '        var layer = doc.layers[i];',
+        '        var matched = matchLayerName(layer.name);',
+        '        if (matched && layer.name !== matched) {',
+        '            var oldName = layer.name;',
+        '            try {',
+        '                layer.locked = false;',
+        '                layer.visible = true;',
+        '                layer.name = matched;',
+        '                result.renamed.push({ old: oldName, new: matched });',
+        '            } catch (e) {',
+        '                result.renamed.push({ old: oldName, new: matched, error: e.toString() });',
+        '            }',
+        '        }',
+        '    }',
+        '',
+        '    // Delete empty unregistered layers; warn on non-empty unregistered layers',
+        '    for (var j = doc.layers.length - 1; j >= 0; j--) {',
+        '        var layer = doc.layers[j];',
+        '        var standard = matchLayerName(layer.name);',
+        '        if (standard && isRegistered(standard)) continue;',
+        '        if (isEmpty(layer)) {',
+        '            try {',
+        '                layer.locked = false;',
+        '                layer.visible = true;',
+        '                var deletedName = layer.name;',
+        '                layer.remove();',
+        '                result.deleted.push(deletedName);',
+        '            } catch (e) {',
+        '                result.deleted.push(layer.name + " (error: " + e.toString() + ")");',
+        '            }',
+        '        } else {',
+        '            result.warnings.push("Check " + layer.name + " layer");',
+        '        }',
+        '    }',
+        '',
+        '    result.success = true;',
+        '} catch (e) {',
+        '    result.error = e.toString();',
+        '}',
+        'JSON.stringify(result);'
+    ].join('\\n');
+
+    csInterface.evalScript(script, function(result) {
         try {
             var data = JSON.parse(result);
             if (data.success) {
@@ -2999,24 +3093,24 @@ function cleanUpDocumentLayers() {
                 var deletedCount = data.deleted ? data.deleted.length : 0;
                 var warnings = data.warnings || [];
 
-                var msg = 'Cleanup complete.\nRenamed ' + renamedCount + ' layer(s), deleted ' + deletedCount + ' empty unregistered layer(s).';
+                var msg = 'Cleanup complete.\\nRenamed ' + renamedCount + ' layer(s), deleted ' + deletedCount + ' empty unregistered layer(s).';
 
                 if (data.renamed && data.renamed.length > 0) {
-                    msg += '\n\nRenamed:';
+                    msg += '\\n\\nRenamed:';
                     data.renamed.forEach(function(r) {
-                        msg += '\n• ' + r.old + ' → ' + r.new;
+                        msg += '\\n• ' + r.old + ' → ' + r.new;
                     });
                 }
                 if (data.deleted && data.deleted.length > 0) {
-                    msg += '\n\nDeleted:';
+                    msg += '\\n\\nDeleted:';
                     data.deleted.forEach(function(d) {
-                        msg += '\n• ' + d;
+                        msg += '\\n• ' + d;
                     });
                 }
                 if (warnings.length > 0) {
-                    msg += '\n\nNon-empty unregistered layers (check before deleting manually):';
+                    msg += '\\n\\nNon-empty unregistered layers (check before deleting manually):';
                     warnings.forEach(function(w) {
-                        msg += '\n• ' + w;
+                        msg += '\\n• ' + w;
                     });
                 }
                 showErrorModal(msg, 'Cleanup Complete');
