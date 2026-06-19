@@ -3007,16 +3007,16 @@ function cleanUpDocumentLayers() {
                         msg += '\n• ' + r.old + ' → ' + r.new;
                     });
                 }
-                if (warnings.length > 0) {
-                    msg += '\n\nWarnings:';
-                    warnings.forEach(function(w) {
-                        msg += '\n• ' + w;
-                    });
-                }
                 if (data.deleted && data.deleted.length > 0) {
                     msg += '\n\nDeleted:';
                     data.deleted.forEach(function(d) {
                         msg += '\n• ' + d;
+                    });
+                }
+                if (warnings.length > 0) {
+                    msg += '\n\nNon-empty unregistered layers (check before deleting manually):';
+                    warnings.forEach(function(w) {
+                        msg += '\n• ' + w;
                     });
                 }
                 showErrorModal(msg, 'Cleanup Complete');

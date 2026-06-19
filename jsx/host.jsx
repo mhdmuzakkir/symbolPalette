@@ -668,28 +668,27 @@ function spCleanUpLayers() {
             }
         }
 
-        // 2. Process registered layers (warn if not empty) and delete unregistered empty layers
+        // 2. Process unregistered layers: warn if not empty, delete if empty.
+        // Registered layers are completely ignored.
         for (var j = doc.layers.length - 1; j >= 0; j--) {
             var layer = doc.layers[j];
             var standard = spMatchLayerName(layer.name);
             var isRegistered = standard && spIsRegisteredLayer(standard);
 
-            if (isRegistered) {
-                if (!spLayerIsEmpty(layer)) {
-                    result.warnings.push("Check " + standard + " layer");
+            if (isRegistered) continue;
+
+            if (spLayerIsEmpty(layer)) {
+                try {
+                    layer.locked = false;
+                    layer.visible = true;
+                    var deletedName = layer.name;
+                    layer.remove();
+                    result.deleted.push(deletedName);
+                } catch (e) {
+                    result.deleted.push(layer.name + " (error: " + e.toString() + ")");
                 }
             } else {
-                if (spLayerIsEmpty(layer)) {
-                    try {
-                        layer.locked = false;
-                        layer.visible = true;
-                        var deletedName = layer.name;
-                        layer.remove();
-                        result.deleted.push(deletedName);
-                    } catch (e) {
-                        result.deleted.push(layer.name + " (error: " + e.toString() + ")");
-                    }
-                }
+                result.warnings.push("Check " + layer.name + " layer");
             }
         }
 
