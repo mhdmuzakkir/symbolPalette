@@ -2990,138 +2990,59 @@ function deleteDocumentLayer(layerName) {
 }
 
 function cleanUpDocumentLayers() {
-    var script = [
-        'var result = { success: false, renamed: [], deleted: [], warnings: [], error: "" };',
-        'var registered = ["Quran Text", "Aya No.", "Ornaments", "Header & Marks & Page No."];',
-        '',
-        'function spCuNormalizeName(name) {',
-        '    return name.toString().replace(/^\\s+|\\s+$/g, "").toLowerCase().replace(/[_\\-\\.]/g, "").replace(/\\s+/g, "");',
-        '}',
-        '',
-        'function spCuMatchLayerName(name) {',
-        '    var n = spCuNormalizeName(name);',
-        '    if (!n) return null;',
-        '    var defs = [',
-        '        { standard: "Quran Text", patterns: ["qurantext", "quran"] },',
-        '        { standard: "Aya No.", patterns: ["ayano", "ayahno", "ayano.", "ayahno.", "aya.no", "ayah.no", "aya no", "ayah no"] },',
-        '        { standard: "Ornaments", patterns: ["ornament", "zakhrafah", "zakhrafa", "decoration", "decorations"] },',
-        '        { standard: "Header & Marks & Page No.", patterns: ["header", "marks", "pageno"] }',
-        '    ];',
-        '    for (var i = 0; i < defs.length; i++) {',
-        '        var def = defs[i];',
-        '        if (n === spCuNormalizeName(def.standard)) return def.standard;',
-        '        for (var p = 0; p < def.patterns.length; p++) {',
-        '            if (n.indexOf(def.patterns[p]) !== -1) return def.standard;',
-        '        }',
-        '    }',
-        '    return null;',
-        '}',
-        '',
-        'function spCuIsRegistered(standard) {',
-        '    for (var i = 0; i < registered.length; i++) {',
-        '        if (registered[i] === standard) return true;',
-        '    }',
-        '    return false;',
-        '}',
-        '',
-        'function spCuIsEmpty(layer) {',
-        '    try {',
-        '        if (layer.pageItems.length > 0) return false;',
-        '        if (layer.layers && layer.layers.length > 0) {',
-        '            for (var i = 0; i < layer.layers.length; i++) {',
-        '                if (!spCuIsEmpty(layer.layers[i])) return false;',
-        '            }',
-        '        }',
-        '    } catch (e) {}',
-        '    return true;',
-        '}',
-        '',
-        'try {',
-        '    if (app.documents.length === 0) { result.error = "No document open"; } else {',
-        '        var doc = app.activeDocument;',
-        '',
-        '        // Rename potential layers',
-        '        for (var i = 0; i < doc.layers.length; i++) {',
-        '            var layer = doc.layers[i];',
-        '            var matched = spCuMatchLayerName(layer.name);',
-        '            if (matched && layer.name !== matched) {',
-        '                var oldName = layer.name;',
-        '                try {',
-        '                    layer.locked = false;',
-        '                    layer.visible = true;',
-        '                    layer.name = matched;',
-        '                    result.renamed.push({ old: oldName, new: matched });',
-        '                } catch (e) {',
-        '                    result.renamed.push({ old: oldName, new: matched, error: e.toString() });',
-        '                }',
-        '            }',
-        '        }',
-        '',
-        '        // Delete empty unregistered layers; warn on non-empty unregistered layers',
-        '        for (var j = doc.layers.length - 1; j >= 0; j--) {',
-        '            var layer = doc.layers[j];',
-        '            var standard = spCuMatchLayerName(layer.name);',
-        '            if (standard && spCuIsRegistered(standard)) continue;',
-        '            if (spCuIsEmpty(layer)) {',
-        '                try {',
-        '                    layer.locked = false;',
-        '                    layer.visible = true;',
-        '                    var deletedName = layer.name;',
-        '                    layer.remove();',
-        '                    result.deleted.push(deletedName);',
-        '                } catch (e) {',
-        '                    result.deleted.push(layer.name + " (error: " + e.toString() + ")");',
-        '                }',
-        '            } else {',
-        '                result.warnings.push("Check " + layer.name + " layer");',
-        '            }',
-        '        }',
-        '',
-        '        result.success = true;',
-        '    }',
-        '} catch (e) {',
-        '    result.error = e.toString();',
-        '}',
-        'JSON.stringify(result);'
-    ].join('\\n');
+    try {
+        var fs = require('fs');
+        var path = require('path');
+        var extRoot = window.location.href.replace('file:///', '').replace(/\/[^\/]*$/, '');
+        var cleanupPath = path.join(extRoot, 'jsx', 'cleanup.jsx');
 
-    csInterface.evalScript(script, function(result) {
-        try {
-            var data = JSON.parse(result);
-            if (data.success) {
-                scanDocumentLayers();
-                var renamedCount = data.renamed ? data.renamed.length : 0;
-                var deletedCount = data.deleted ? data.deleted.length : 0;
-                var warnings = data.warnings || [];
-
-                var msg = 'Cleanup complete.\\nRenamed ' + renamedCount + ' layer(s), deleted ' + deletedCount + ' empty unregistered layer(s).';
-
-                if (data.renamed && data.renamed.length > 0) {
-                    msg += '\\n\\nRenamed:';
-                    data.renamed.forEach(function(r) {
-                        msg += '\\n• ' + r.old + ' → ' + r.new;
-                    });
-                }
-                if (data.deleted && data.deleted.length > 0) {
-                    msg += '\\n\\nDeleted:';
-                    data.deleted.forEach(function(d) {
-                        msg += '\\n• ' + d;
-                    });
-                }
-                if (warnings.length > 0) {
-                    msg += '\\n\\nNon-empty unregistered layers (check before deleting manually):';
-                    warnings.forEach(function(w) {
-                        msg += '\\n• ' + w;
-                    });
-                }
-                showErrorModal(msg, 'Cleanup Complete');
-            } else {
-                showErrorModal(data.error || 'Cleanup failed');
-            }
-        } catch (e) {
-            showErrorModal('Cleanup error: ' + (result || e.message));
+        if (!fs.existsSync(cleanupPath)) {
+            showErrorModal('cleanup.jsx not found at ' + cleanupPath);
+            return;
         }
-    });
+
+        var script = fs.readFileSync(cleanupPath, 'utf8') + '\nspCleanUpLayers();';
+
+        csInterface.evalScript(script, function(result) {
+            try {
+                var data = JSON.parse(result);
+                if (data.success) {
+                    scanDocumentLayers();
+                    var renamedCount = data.renamed ? data.renamed.length : 0;
+                    var deletedCount = data.deleted ? data.deleted.length : 0;
+                    var warnings = data.warnings || [];
+
+                    var msg = 'Cleanup complete.\nRenamed ' + renamedCount + ' layer(s), deleted ' + deletedCount + ' empty unregistered layer(s).';
+
+                    if (data.renamed && data.renamed.length > 0) {
+                        msg += '\n\nRenamed:';
+                        data.renamed.forEach(function(r) {
+                            msg += '\n• ' + r.old + ' → ' + r.new;
+                        });
+                    }
+                    if (data.deleted && data.deleted.length > 0) {
+                        msg += '\n\nDeleted:';
+                        data.deleted.forEach(function(d) {
+                            msg += '\n• ' + d;
+                        });
+                    }
+                    if (warnings.length > 0) {
+                        msg += '\n\nNon-empty unregistered layers (check before deleting manually):';
+                        warnings.forEach(function(w) {
+                            msg += '\n• ' + w;
+                        });
+                    }
+                    showErrorModal(msg, 'Cleanup Complete');
+                } else {
+                    showErrorModal(data.error || 'Cleanup failed');
+                }
+            } catch (e) {
+                showErrorModal('Cleanup error: ' + (result || e.message));
+            }
+        });
+    } catch (e) {
+        showErrorModal('Failed to load cleanup script: ' + e.message);
+    }
 }
 
 function showLayerButtonModal() {
