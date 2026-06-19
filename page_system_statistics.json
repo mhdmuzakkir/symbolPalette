@@ -24,7 +24,7 @@
   },
   "mushaf_totals": {
     "al_kufi": 6236,
-    "al_madani_al_awwal": 6214,
+    "al_madani_al_awwal": 6217,
     "al_madani_al_akhir": 6214,
     "al_makki": 6220,
     "al_basri": 6204,
@@ -542,7 +542,7 @@
       "end_page": 452,
       "system_ayah_counts": {
         "al_kufi": 182,
-        "al_madani_al_awwal": 181,
+        "al_madani_al_awwal": 182,
         "al_madani_al_akhir": 182,
         "al_makki": 182,
         "al_basri": 181,
@@ -1144,7 +1144,7 @@
       "end_page": 585,
       "system_ayah_counts": {
         "al_kufi": 42,
-        "al_madani_al_awwal": 41,
+        "al_madani_al_awwal": 42,
         "al_madani_al_akhir": 42,
         "al_makki": 42,
         "al_basri": 41,
@@ -1158,7 +1158,7 @@
       "end_page": 586,
       "system_ayah_counts": {
         "al_kufi": 29,
-        "al_madani_al_awwal": 28,
+        "al_madani_al_awwal": 29,
         "al_madani_al_akhir": 29,
         "al_makki": 29,
         "al_basri": 29,
@@ -1634,8 +1634,6 @@
       "surahs": [
         1
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "1:1-1:7",
@@ -1668,8 +1666,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:1-2:5",
@@ -1702,8 +1698,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:6-2:16",
@@ -1736,8 +1730,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:17-2:24",
@@ -1770,8 +1762,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:25-2:29",
@@ -1804,8 +1794,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:30-2:37",
@@ -1838,8 +1826,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:38-2:48",
@@ -1872,8 +1858,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:49-2:57",
@@ -1906,8 +1890,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:58-2:61",
@@ -1940,8 +1922,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:62-2:69",
@@ -1974,8 +1954,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:70-2:76",
@@ -2008,8 +1986,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:77-2:83",
@@ -2042,8 +2018,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:84-2:88",
@@ -2076,8 +2050,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:89-2:93",
@@ -2110,8 +2082,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:94-2:101",
@@ -2144,8 +2114,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:102-2:105",
@@ -2178,8 +2146,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:106-2:112",
@@ -2212,8 +2178,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:113-2:119",
@@ -2246,8 +2210,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:120-2:126",
@@ -2280,8 +2242,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:127-2:134",
@@ -2314,8 +2274,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:135-2:141",
@@ -2348,8 +2306,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:142-2:145",
@@ -2382,8 +2338,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:146-2:153",
@@ -2416,8 +2370,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:154-2:163",
@@ -2450,8 +2402,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:164-2:169",
@@ -2484,8 +2434,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:170-2:176",
@@ -2518,8 +2466,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:177-2:181",
@@ -2552,8 +2498,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:182-2:186",
@@ -2586,8 +2530,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:187-2:190",
@@ -2620,8 +2562,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:191-2:196",
@@ -2654,8 +2594,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:197-2:202",
@@ -2688,8 +2626,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:203-2:210",
@@ -2722,8 +2658,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:211-2:215",
@@ -2756,8 +2690,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:216-2:219",
@@ -2790,8 +2722,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:220-2:224",
@@ -2824,8 +2754,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:225-2:230",
@@ -2858,8 +2786,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:231-2:233",
@@ -2892,8 +2818,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:234-2:237",
@@ -2926,8 +2850,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:238-2:245",
@@ -2960,8 +2882,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:246-2:248",
@@ -2994,8 +2914,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:249-2:252",
@@ -3028,8 +2946,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:253-2:256",
@@ -3062,8 +2978,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:257-2:259",
@@ -3096,8 +3010,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:260-2:264",
@@ -3130,8 +3042,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:265-2:269",
@@ -3164,8 +3074,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:270-2:274",
@@ -3198,8 +3106,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:275-2:281",
@@ -3232,8 +3138,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:282-2:282",
@@ -3266,8 +3170,6 @@
       "surahs": [
         2
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "2:283-2:286",
@@ -3300,8 +3202,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:1-3:9",
@@ -3334,8 +3234,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:10-3:15",
@@ -3368,8 +3266,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:16-3:22",
@@ -3402,8 +3298,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:23-3:29",
@@ -3436,8 +3330,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:30-3:37",
@@ -3470,8 +3362,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:38-3:45",
@@ -3504,8 +3394,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:46-3:52",
@@ -3538,8 +3426,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:53-3:61",
@@ -3572,8 +3458,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:62-3:70",
@@ -3606,8 +3490,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:71-3:77",
@@ -3640,8 +3522,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:78-3:83",
@@ -3674,8 +3554,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:84-3:91",
@@ -3708,8 +3586,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:92-3:100",
@@ -3742,8 +3618,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:101-3:108",
@@ -3776,8 +3650,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:109-3:115",
@@ -3810,8 +3682,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:116-3:121",
@@ -3844,8 +3714,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:122-3:132",
@@ -3878,8 +3746,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:133-3:140",
@@ -3912,8 +3778,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:141-3:148",
@@ -3946,8 +3810,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:149-3:153",
@@ -3980,8 +3842,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:154-3:157",
@@ -4014,8 +3874,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:158-3:165",
@@ -4048,8 +3906,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:166-3:173",
@@ -4082,8 +3938,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:174-3:180",
@@ -4116,8 +3970,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:181-3:186",
@@ -4150,8 +4002,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:187-3:194",
@@ -4184,8 +4034,6 @@
       "surahs": [
         3
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "3:195-3:200",
@@ -4218,8 +4066,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:1-4:6",
@@ -4252,8 +4098,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:7-4:11",
@@ -4286,8 +4130,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:12-4:14",
@@ -4320,8 +4162,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:15-4:19",
@@ -4354,8 +4194,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:20-4:23",
@@ -4388,8 +4226,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:24-4:26",
@@ -4422,8 +4258,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:27-4:33",
@@ -4456,8 +4290,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:34-4:37",
@@ -4490,8 +4322,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:38-4:44",
@@ -4524,8 +4354,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:45-4:51",
@@ -4558,8 +4386,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:52-4:59",
@@ -4592,8 +4418,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:60-4:65",
@@ -4626,8 +4450,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:66-4:74",
@@ -4660,8 +4482,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:75-4:79",
@@ -4694,8 +4514,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:80-4:86",
@@ -4728,8 +4546,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:87-4:91",
@@ -4762,8 +4578,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:92-4:94",
@@ -4796,8 +4610,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:95-4:101",
@@ -4830,8 +4642,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:102-4:105",
@@ -4864,8 +4674,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:106-4:113",
@@ -4898,8 +4706,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:114-4:121",
@@ -4932,8 +4738,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:122-4:127",
@@ -4966,8 +4770,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:128-4:134",
@@ -5000,8 +4802,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:135-4:140",
@@ -5034,8 +4834,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:141-4:147",
@@ -5068,8 +4866,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:148-4:154",
@@ -5102,8 +4898,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:155-4:162",
@@ -5136,8 +4930,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:163-4:170",
@@ -5170,8 +4962,6 @@
       "surahs": [
         4
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:171-4:175",
@@ -5205,8 +4995,6 @@
         4,
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "4:176-5:2",
@@ -5239,8 +5027,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:3-5:5",
@@ -5273,8 +5059,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:6-5:9",
@@ -5307,8 +5091,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:10-5:13",
@@ -5341,8 +5123,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:14-5:17",
@@ -5375,8 +5155,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:18-5:23",
@@ -5409,8 +5187,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:24-5:31",
@@ -5443,8 +5219,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:32-5:36",
@@ -5477,8 +5251,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:37-5:41",
@@ -5511,8 +5283,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:42-5:45",
@@ -5545,8 +5315,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:46-5:50",
@@ -5579,8 +5347,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:51-5:57",
@@ -5613,8 +5379,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:58-5:64",
@@ -5647,8 +5411,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:65-5:70",
@@ -5681,8 +5443,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:71-5:77",
@@ -5715,8 +5475,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:78-5:83",
@@ -5749,8 +5507,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:84-5:90",
@@ -5783,8 +5539,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:91-5:95",
@@ -5817,8 +5571,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:96-5:103",
@@ -5851,8 +5603,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:104-5:108",
@@ -5885,8 +5635,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:109-5:113",
@@ -5919,8 +5667,6 @@
       "surahs": [
         5
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "5:114-5:120",
@@ -5953,8 +5699,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:1-6:8",
@@ -5987,8 +5731,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:9-6:18",
@@ -6021,8 +5763,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:19-6:27",
@@ -6055,8 +5795,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:28-6:35",
@@ -6089,8 +5827,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:36-6:44",
@@ -6123,8 +5859,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:45-6:52",
@@ -6157,8 +5891,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:53-6:59",
@@ -6191,8 +5923,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:60-6:68",
@@ -6225,8 +5955,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:69-6:73",
@@ -6259,8 +5987,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:74-6:81",
@@ -6293,8 +6019,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:82-6:90",
@@ -6327,8 +6051,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:91-6:94",
@@ -6361,8 +6083,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:95-6:101",
@@ -6395,8 +6115,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:102-6:110",
@@ -6429,8 +6147,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:111-6:118",
@@ -6463,8 +6179,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:119-6:124",
@@ -6497,8 +6211,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:125-6:130",
@@ -6531,8 +6243,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:131-6:137",
@@ -6565,8 +6275,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:138-6:142",
@@ -6599,8 +6307,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:143-6:146",
@@ -6633,8 +6339,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:147-6:151",
@@ -6667,8 +6371,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:152-6:157",
@@ -6701,8 +6403,6 @@
       "surahs": [
         6
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "6:158-6:165",
@@ -6735,8 +6435,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:1-7:11",
@@ -6769,8 +6467,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:12-7:22",
@@ -6803,8 +6499,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:23-7:30",
@@ -6837,8 +6531,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:31-7:37",
@@ -6871,8 +6563,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:38-7:43",
@@ -6905,8 +6595,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:44-7:51",
@@ -6939,8 +6627,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:52-7:57",
@@ -6973,8 +6659,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:58-7:67",
@@ -7007,8 +6691,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:68-7:73",
@@ -7041,8 +6723,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:74-7:81",
@@ -7075,8 +6755,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:82-7:87",
@@ -7109,8 +6787,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:88-7:95",
@@ -7143,8 +6819,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:96-7:104",
@@ -7177,8 +6851,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:105-7:120",
@@ -7211,8 +6883,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:121-7:130",
@@ -7245,8 +6915,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:131-7:137",
@@ -7279,8 +6947,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:138-7:143",
@@ -7313,8 +6979,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:144-7:149",
@@ -7347,8 +7011,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:150-7:155",
@@ -7381,8 +7043,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:156-7:159",
@@ -7415,8 +7075,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:160-7:163",
@@ -7449,8 +7107,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:164-7:170",
@@ -7483,8 +7139,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:171-7:178",
@@ -7517,8 +7171,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:179-7:187",
@@ -7551,8 +7203,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:188-7:195",
@@ -7585,8 +7235,6 @@
       "surahs": [
         7
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "7:196-7:206",
@@ -7619,8 +7267,6 @@
       "surahs": [
         8
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "8:1-8:8",
@@ -7653,8 +7299,6 @@
       "surahs": [
         8
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "8:9-8:16",
@@ -7687,8 +7331,6 @@
       "surahs": [
         8
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "8:17-8:25",
@@ -7721,8 +7363,6 @@
       "surahs": [
         8
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "8:26-8:33",
@@ -7755,8 +7395,6 @@
       "surahs": [
         8
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "8:34-8:40",
@@ -7789,8 +7427,6 @@
       "surahs": [
         8
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "8:41-8:45",
@@ -7823,8 +7459,6 @@
       "surahs": [
         8
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "8:46-8:52",
@@ -7857,8 +7491,6 @@
       "surahs": [
         8
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "8:53-8:61",
@@ -7891,8 +7523,6 @@
       "surahs": [
         8
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "8:62-8:69",
@@ -7925,8 +7555,6 @@
       "surahs": [
         8
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "8:70-8:75",
@@ -7959,8 +7587,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:1-9:6",
@@ -7993,8 +7619,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:7-9:13",
@@ -8027,8 +7651,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:14-9:20",
@@ -8061,8 +7683,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:21-9:26",
@@ -8095,8 +7715,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:27-9:31",
@@ -8129,8 +7747,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:32-9:36",
@@ -8163,8 +7779,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:37-9:40",
@@ -8197,8 +7811,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:41-9:47",
@@ -8231,8 +7843,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:48-9:54",
@@ -8265,8 +7875,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:55-9:61",
@@ -8299,8 +7907,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:62-9:68",
@@ -8333,8 +7939,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:69-9:72",
@@ -8367,8 +7971,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:73-9:79",
@@ -8401,8 +8003,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:80-9:86",
@@ -8435,8 +8035,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:87-9:93",
@@ -8469,8 +8067,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:94-9:99",
@@ -8503,8 +8099,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:100-9:106",
@@ -8537,8 +8131,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:107-9:111",
@@ -8571,8 +8163,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:112-9:117",
@@ -8605,8 +8195,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:118-9:122",
@@ -8639,8 +8227,6 @@
       "surahs": [
         9
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "9:123-9:129",
@@ -8673,8 +8259,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:1-10:6",
@@ -8707,8 +8291,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:7-10:14",
@@ -8741,8 +8323,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:15-10:20",
@@ -8775,8 +8355,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:21-10:25",
@@ -8809,8 +8387,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:26-10:33",
@@ -8843,8 +8419,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:34-10:42",
@@ -8877,8 +8451,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:43-10:53",
@@ -8911,8 +8483,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:54-10:61",
@@ -8945,8 +8515,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:62-10:70",
@@ -8979,8 +8547,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:71-10:78",
@@ -9013,8 +8579,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:79-10:88",
@@ -9047,8 +8611,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:89-10:97",
@@ -9081,8 +8643,6 @@
       "surahs": [
         10
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:98-10:106",
@@ -9116,8 +8676,6 @@
         10,
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "10:107-11:5",
@@ -9150,8 +8708,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:6-11:12",
@@ -9184,8 +8740,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:13-11:19",
@@ -9218,8 +8772,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:20-11:28",
@@ -9252,8 +8804,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:29-11:37",
@@ -9286,8 +8836,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:38-11:45",
@@ -9320,8 +8868,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:46-11:53",
@@ -9354,8 +8900,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:54-11:62",
@@ -9388,8 +8932,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:63-11:71",
@@ -9422,8 +8964,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:72-11:81",
@@ -9456,8 +8996,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:82-11:88",
@@ -9490,8 +9028,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:89-11:97",
@@ -9524,8 +9060,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:98-11:108",
@@ -9558,8 +9092,6 @@
       "surahs": [
         11
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:109-11:117",
@@ -9593,8 +9125,6 @@
         11,
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "11:118-12:4",
@@ -9627,8 +9157,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:5-12:14",
@@ -9661,8 +9189,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:15-12:22",
@@ -9695,8 +9221,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:23-12:30",
@@ -9729,8 +9253,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:31-12:37",
@@ -9763,8 +9285,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:38-12:43",
@@ -9797,8 +9317,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:44-12:52",
@@ -9831,8 +9349,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:53-12:63",
@@ -9865,8 +9381,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:64-12:69",
@@ -9899,8 +9413,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:70-12:78",
@@ -9933,8 +9445,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:79-12:86",
@@ -9967,8 +9477,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:87-12:95",
@@ -10001,8 +9509,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:96-12:103",
@@ -10035,8 +9541,6 @@
       "surahs": [
         12
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "12:104-12:111",
@@ -10069,8 +9573,6 @@
       "surahs": [
         13
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "13:1-13:5",
@@ -10103,8 +9605,6 @@
       "surahs": [
         13
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "13:6-13:13",
@@ -10137,8 +9637,6 @@
       "surahs": [
         13
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "13:14-13:18",
@@ -10171,8 +9669,6 @@
       "surahs": [
         13
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "13:19-13:28",
@@ -10205,8 +9701,6 @@
       "surahs": [
         13
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "13:29-13:34",
@@ -10239,8 +9733,6 @@
       "surahs": [
         13
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "13:35-13:42",
@@ -10274,8 +9766,6 @@
         13,
         14
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "13:43-14:5",
@@ -10308,8 +9798,6 @@
       "surahs": [
         14
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "14:6-14:10",
@@ -10342,8 +9830,6 @@
       "surahs": [
         14
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "14:11-14:18",
@@ -10376,8 +9862,6 @@
       "surahs": [
         14
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "14:19-14:24",
@@ -10410,8 +9894,6 @@
       "surahs": [
         14
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "14:25-14:33",
@@ -10444,8 +9926,6 @@
       "surahs": [
         14
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "14:34-14:42",
@@ -10478,8 +9958,6 @@
       "surahs": [
         14
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "14:43-14:52",
@@ -10512,8 +9990,6 @@
       "surahs": [
         15
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "15:1-15:15",
@@ -10546,8 +10022,6 @@
       "surahs": [
         15
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "15:16-15:31",
@@ -10580,8 +10054,6 @@
       "surahs": [
         15
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "15:32-15:51",
@@ -10614,8 +10086,6 @@
       "surahs": [
         15
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "15:52-15:70",
@@ -10648,8 +10118,6 @@
       "surahs": [
         15
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "15:71-15:90",
@@ -10683,8 +10151,6 @@
         15,
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "15:91-16:6",
@@ -10717,8 +10183,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:7-16:14",
@@ -10751,8 +10215,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:15-16:26",
@@ -10785,8 +10247,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:27-16:34",
@@ -10819,8 +10279,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:35-16:42",
@@ -10853,8 +10311,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:43-16:54",
@@ -10887,8 +10343,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:55-16:64",
@@ -10921,8 +10375,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:65-16:72",
@@ -10955,8 +10407,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:73-16:79",
@@ -10989,8 +10439,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:80-16:87",
@@ -11023,8 +10471,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:88-16:93",
@@ -11057,8 +10503,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:94-16:102",
@@ -11091,8 +10535,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:103-16:110",
@@ -11125,8 +10567,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:111-16:118",
@@ -11159,8 +10599,6 @@
       "surahs": [
         16
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "16:119-16:128",
@@ -11193,8 +10631,6 @@
       "surahs": [
         17
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:1-17:7",
@@ -11227,8 +10663,6 @@
       "surahs": [
         17
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:8-17:17",
@@ -11261,8 +10695,6 @@
       "surahs": [
         17
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:18-17:27",
@@ -11295,8 +10727,6 @@
       "surahs": [
         17
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:28-17:38",
@@ -11329,8 +10759,6 @@
       "surahs": [
         17
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:39-17:49",
@@ -11363,8 +10791,6 @@
       "surahs": [
         17
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:50-17:58",
@@ -11397,8 +10823,6 @@
       "surahs": [
         17
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:59-17:66",
@@ -11431,8 +10855,6 @@
       "surahs": [
         17
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:67-17:75",
@@ -11465,8 +10887,6 @@
       "surahs": [
         17
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:76-17:86",
@@ -11499,8 +10919,6 @@
       "surahs": [
         17
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:87-17:96",
@@ -11533,8 +10951,6 @@
       "surahs": [
         17
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:97-17:104",
@@ -11568,8 +10984,6 @@
         17,
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "17:105-18:4",
@@ -11602,8 +11016,6 @@
       "surahs": [
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "18:5-18:15",
@@ -11636,8 +11048,6 @@
       "surahs": [
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "18:16-18:20",
@@ -11670,8 +11080,6 @@
       "surahs": [
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "18:21-18:27",
@@ -11704,8 +11112,6 @@
       "surahs": [
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "18:28-18:34",
@@ -11738,8 +11144,6 @@
       "surahs": [
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "18:35-18:45",
@@ -11772,8 +11176,6 @@
       "surahs": [
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "18:46-18:53",
@@ -11806,8 +11208,6 @@
       "surahs": [
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "18:54-18:61",
@@ -11840,8 +11240,6 @@
       "surahs": [
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "18:62-18:74",
@@ -11874,8 +11272,6 @@
       "surahs": [
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "18:75-18:83",
@@ -11908,8 +11304,6 @@
       "surahs": [
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "18:84-18:97",
@@ -11942,8 +11336,6 @@
       "surahs": [
         18
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "18:98-18:110",
@@ -11976,8 +11368,6 @@
       "surahs": [
         19
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "19:1-19:11",
@@ -12010,8 +11400,6 @@
       "surahs": [
         19
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "19:12-19:25",
@@ -12044,8 +11432,6 @@
       "surahs": [
         19
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "19:26-19:38",
@@ -12078,8 +11464,6 @@
       "surahs": [
         19
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "19:39-19:51",
@@ -12112,8 +11496,6 @@
       "surahs": [
         19
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "19:52-19:64",
@@ -12146,8 +11528,6 @@
       "surahs": [
         19
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "19:65-19:76",
@@ -12180,8 +11560,6 @@
       "surahs": [
         19
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "19:77-19:95",
@@ -12215,8 +11593,6 @@
         19,
         20
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "19:96-20:12",
@@ -12249,8 +11625,6 @@
       "surahs": [
         20
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "20:13-20:37",
@@ -12283,8 +11657,6 @@
       "surahs": [
         20
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "20:38-20:51",
@@ -12317,8 +11689,6 @@
       "surahs": [
         20
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "20:52-20:64",
@@ -12351,8 +11721,6 @@
       "surahs": [
         20
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "20:65-20:76",
@@ -12385,8 +11753,6 @@
       "surahs": [
         20
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "20:77-20:87",
@@ -12419,8 +11785,6 @@
       "surahs": [
         20
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "20:88-20:98",
@@ -12453,8 +11817,6 @@
       "surahs": [
         20
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "20:99-20:113",
@@ -12487,8 +11849,6 @@
       "surahs": [
         20
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "20:114-20:125",
@@ -12521,8 +11881,6 @@
       "surahs": [
         20
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "20:126-20:135",
@@ -12555,8 +11913,6 @@
       "surahs": [
         21
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "21:1-21:10",
@@ -12589,8 +11945,6 @@
       "surahs": [
         21
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "21:11-21:24",
@@ -12623,8 +11977,6 @@
       "surahs": [
         21
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "21:25-21:35",
@@ -12657,8 +12009,6 @@
       "surahs": [
         21
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "21:36-21:44",
@@ -12691,8 +12041,6 @@
       "surahs": [
         21
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "21:45-21:57",
@@ -12725,8 +12073,6 @@
       "surahs": [
         21
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "21:58-21:72",
@@ -12759,8 +12105,6 @@
       "surahs": [
         21
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "21:73-21:81",
@@ -12793,8 +12137,6 @@
       "surahs": [
         21
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "21:82-21:90",
@@ -12827,8 +12169,6 @@
       "surahs": [
         21
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "21:91-21:101",
@@ -12861,8 +12201,6 @@
       "surahs": [
         21
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "21:102-21:112",
@@ -12895,8 +12233,6 @@
       "surahs": [
         22
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "22:1-22:5",
@@ -12929,8 +12265,6 @@
       "surahs": [
         22
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "22:6-22:15",
@@ -12963,8 +12297,6 @@
       "surahs": [
         22
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "22:16-22:23",
@@ -12997,8 +12329,6 @@
       "surahs": [
         22
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "22:24-22:30",
@@ -13031,8 +12361,6 @@
       "surahs": [
         22
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "22:31-22:38",
@@ -13065,8 +12393,6 @@
       "surahs": [
         22
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "22:39-22:46",
@@ -13099,8 +12425,6 @@
       "surahs": [
         22
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "22:47-22:55",
@@ -13133,8 +12457,6 @@
       "surahs": [
         22
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "22:56-22:64",
@@ -13167,8 +12489,6 @@
       "surahs": [
         22
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "22:65-22:72",
@@ -13201,8 +12521,6 @@
       "surahs": [
         22
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "22:73-22:78",
@@ -13235,8 +12553,6 @@
       "surahs": [
         23
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "23:1-23:17",
@@ -13269,8 +12585,6 @@
       "surahs": [
         23
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "23:18-23:27",
@@ -13303,8 +12617,6 @@
       "surahs": [
         23
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "23:28-23:42",
@@ -13337,8 +12649,6 @@
       "surahs": [
         23
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "23:43-23:59",
@@ -13371,8 +12681,6 @@
       "surahs": [
         23
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "23:60-23:74",
@@ -13405,8 +12713,6 @@
       "surahs": [
         23
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "23:75-23:89",
@@ -13439,8 +12745,6 @@
       "surahs": [
         23
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "23:90-23:104",
@@ -13473,8 +12777,6 @@
       "surahs": [
         23
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "23:105-23:118",
@@ -13507,8 +12809,6 @@
       "surahs": [
         24
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "24:1-24:10",
@@ -13541,8 +12841,6 @@
       "surahs": [
         24
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "24:11-24:20",
@@ -13575,8 +12873,6 @@
       "surahs": [
         24
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "24:21-24:27",
@@ -13609,8 +12905,6 @@
       "surahs": [
         24
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "24:28-24:31",
@@ -13643,8 +12937,6 @@
       "surahs": [
         24
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "24:32-24:36",
@@ -13677,8 +12969,6 @@
       "surahs": [
         24
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "24:37-24:43",
@@ -13711,8 +13001,6 @@
       "surahs": [
         24
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "24:44-24:53",
@@ -13745,8 +13033,6 @@
       "surahs": [
         24
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "24:54-24:58",
@@ -13779,8 +13065,6 @@
       "surahs": [
         24
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "24:59-24:61",
@@ -13814,8 +13098,6 @@
         24,
         25
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "24:62-25:2",
@@ -13848,8 +13130,6 @@
       "surahs": [
         25
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "25:3-25:11",
@@ -13882,8 +13162,6 @@
       "surahs": [
         25
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "25:12-25:20",
@@ -13916,8 +13194,6 @@
       "surahs": [
         25
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "25:21-25:32",
@@ -13950,8 +13226,6 @@
       "surahs": [
         25
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "25:33-25:43",
@@ -13984,8 +13258,6 @@
       "surahs": [
         25
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "25:44-25:55",
@@ -14018,8 +13290,6 @@
       "surahs": [
         25
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "25:56-25:67",
@@ -14052,8 +13322,6 @@
       "surahs": [
         25
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "25:68-25:77",
@@ -14086,8 +13354,6 @@
       "surahs": [
         26
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "26:1-26:19",
@@ -14120,8 +13386,6 @@
       "surahs": [
         26
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "26:20-26:39",
@@ -14154,8 +13418,6 @@
       "surahs": [
         26
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "26:40-26:60",
@@ -14188,8 +13450,6 @@
       "surahs": [
         26
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "26:61-26:83",
@@ -14222,8 +13482,6 @@
       "surahs": [
         26
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "26:84-26:111",
@@ -14256,8 +13514,6 @@
       "surahs": [
         26
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "26:112-26:136",
@@ -14290,8 +13546,6 @@
       "surahs": [
         26
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "26:137-26:159",
@@ -14324,8 +13578,6 @@
       "surahs": [
         26
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "26:160-26:183",
@@ -14358,8 +13610,6 @@
       "surahs": [
         26
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "26:184-26:206",
@@ -14392,8 +13642,6 @@
       "surahs": [
         26
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "26:207-26:227",
@@ -14426,8 +13674,6 @@
       "surahs": [
         27
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "27:1-27:13",
@@ -14460,8 +13706,6 @@
       "surahs": [
         27
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "27:14-27:22",
@@ -14494,8 +13738,6 @@
       "surahs": [
         27
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "27:23-27:35",
@@ -14528,8 +13770,6 @@
       "surahs": [
         27
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "27:36-27:44",
@@ -14562,8 +13802,6 @@
       "surahs": [
         27
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "27:45-27:55",
@@ -14596,8 +13834,6 @@
       "surahs": [
         27
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "27:56-27:63",
@@ -14630,8 +13866,6 @@
       "surahs": [
         27
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "27:64-27:76",
@@ -14664,8 +13898,6 @@
       "surahs": [
         27
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "27:77-27:88",
@@ -14699,8 +13931,6 @@
         27,
         28
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "27:89-28:5",
@@ -14733,8 +13963,6 @@
       "surahs": [
         28
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "28:6-28:13",
@@ -14767,8 +13995,6 @@
       "surahs": [
         28
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "28:14-28:21",
@@ -14801,8 +14027,6 @@
       "surahs": [
         28
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "28:22-28:28",
@@ -14835,8 +14059,6 @@
       "surahs": [
         28
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "28:29-28:35",
@@ -14869,8 +14091,6 @@
       "surahs": [
         28
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "28:36-28:43",
@@ -14903,8 +14123,6 @@
       "surahs": [
         28
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "28:44-28:50",
@@ -14937,8 +14155,6 @@
       "surahs": [
         28
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "28:51-28:59",
@@ -14971,8 +14187,6 @@
       "surahs": [
         28
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "28:60-28:70",
@@ -15005,8 +14219,6 @@
       "surahs": [
         28
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "28:71-28:77",
@@ -15039,8 +14251,6 @@
       "surahs": [
         28
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "28:78-28:84",
@@ -15074,8 +14284,6 @@
         28,
         29
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "28:85-29:6",
@@ -15108,8 +14316,6 @@
       "surahs": [
         29
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "29:7-29:14",
@@ -15142,8 +14348,6 @@
       "surahs": [
         29
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "29:15-29:23",
@@ -15176,8 +14380,6 @@
       "surahs": [
         29
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "29:24-29:30",
@@ -15210,8 +14412,6 @@
       "surahs": [
         29
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "29:31-29:38",
@@ -15244,8 +14444,6 @@
       "surahs": [
         29
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "29:39-29:45",
@@ -15278,8 +14476,6 @@
       "surahs": [
         29
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "29:46-29:52",
@@ -15312,8 +14508,6 @@
       "surahs": [
         29
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "29:53-29:63",
@@ -15347,8 +14541,6 @@
         29,
         30
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "29:64-30:5",
@@ -15381,8 +14573,6 @@
       "surahs": [
         30
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "30:6-30:15",
@@ -15415,8 +14605,6 @@
       "surahs": [
         30
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "30:16-30:24",
@@ -15449,8 +14637,6 @@
       "surahs": [
         30
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "30:25-30:32",
@@ -15483,8 +14669,6 @@
       "surahs": [
         30
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "30:33-30:41",
@@ -15517,8 +14701,6 @@
       "surahs": [
         30
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "30:42-30:50",
@@ -15551,8 +14733,6 @@
       "surahs": [
         30
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "30:51-30:60",
@@ -15585,8 +14765,6 @@
       "surahs": [
         31
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "31:1-31:11",
@@ -15619,8 +14797,6 @@
       "surahs": [
         31
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "31:12-31:19",
@@ -15653,8 +14829,6 @@
       "surahs": [
         31
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "31:20-31:28",
@@ -15687,8 +14861,6 @@
       "surahs": [
         31
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "31:29-31:34",
@@ -15721,8 +14893,6 @@
       "surahs": [
         32
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "32:1-32:11",
@@ -15755,8 +14925,6 @@
       "surahs": [
         32
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "32:12-32:20",
@@ -15789,8 +14957,6 @@
       "surahs": [
         32
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "32:21-32:30",
@@ -15823,8 +14989,6 @@
       "surahs": [
         33
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "33:1-33:6",
@@ -15857,8 +15021,6 @@
       "surahs": [
         33
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "33:7-33:15",
@@ -15891,8 +15053,6 @@
       "surahs": [
         33
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "33:16-33:22",
@@ -15925,8 +15085,6 @@
       "surahs": [
         33
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "33:23-33:30",
@@ -15959,8 +15117,6 @@
       "surahs": [
         33
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "33:31-33:35",
@@ -15993,8 +15149,6 @@
       "surahs": [
         33
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "33:36-33:43",
@@ -16027,8 +15181,6 @@
       "surahs": [
         33
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "33:44-33:50",
@@ -16061,8 +15213,6 @@
       "surahs": [
         33
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "33:51-33:54",
@@ -16095,8 +15245,6 @@
       "surahs": [
         33
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "33:55-33:62",
@@ -16129,8 +15277,6 @@
       "surahs": [
         33
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "33:63-33:73",
@@ -16163,8 +15309,6 @@
       "surahs": [
         34
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "34:1-34:7",
@@ -16197,8 +15341,6 @@
       "surahs": [
         34
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "34:8-34:14",
@@ -16231,8 +15373,6 @@
       "surahs": [
         34
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "34:15-34:22",
@@ -16265,8 +15405,6 @@
       "surahs": [
         34
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "34:23-34:31",
@@ -16299,8 +15437,6 @@
       "surahs": [
         34
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "34:32-34:39",
@@ -16333,8 +15469,6 @@
       "surahs": [
         34
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "34:40-34:48",
@@ -16368,8 +15502,6 @@
         34,
         35
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "34:49-35:3",
@@ -16402,8 +15534,6 @@
       "surahs": [
         35
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "35:4-35:11",
@@ -16436,8 +15566,6 @@
       "surahs": [
         35
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "35:12-35:18",
@@ -16470,8 +15598,6 @@
       "surahs": [
         35
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "35:19-35:30",
@@ -16504,8 +15630,6 @@
       "surahs": [
         35
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "35:31-35:38",
@@ -16538,8 +15662,6 @@
       "surahs": [
         35
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "35:39-35:44",
@@ -16573,8 +15695,6 @@
         35,
         36
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "35:45-36:12",
@@ -16607,8 +15727,6 @@
       "surahs": [
         36
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "36:13-36:27",
@@ -16641,8 +15759,6 @@
       "surahs": [
         36
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "36:28-36:40",
@@ -16675,8 +15791,6 @@
       "surahs": [
         36
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "36:41-36:54",
@@ -16709,8 +15823,6 @@
       "surahs": [
         36
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "36:55-36:70",
@@ -16743,8 +15855,6 @@
       "surahs": [
         36
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "36:71-36:83",
@@ -16777,8 +15887,6 @@
       "surahs": [
         37
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "37:1-37:24",
@@ -16811,8 +15919,6 @@
       "surahs": [
         37
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "37:25-37:51",
@@ -16845,8 +15951,6 @@
       "surahs": [
         37
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "37:52-37:76",
@@ -16879,8 +15983,6 @@
       "surahs": [
         37
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "37:77-37:102",
@@ -16913,8 +16015,6 @@
       "surahs": [
         37
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "37:103-37:126",
@@ -16947,8 +16047,6 @@
       "surahs": [
         37
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "37:127-37:153",
@@ -16981,16 +16079,14 @@
       "surahs": [
         37
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "37:154-37:182",
           "ayah_count": 29
         },
         "al_madani_al_awwal": {
-          "verse_range": "37:154-181",
-          "ayah_count": 28
+          "verse_range": "37:154-182",
+          "ayah_count": 29
         },
         "al_madani_al_akhir": {
           "verse_range": "37:154-182",
@@ -17015,8 +16111,6 @@
       "surahs": [
         38
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "38:1-38:16",
@@ -17049,8 +16143,6 @@
       "surahs": [
         38
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "38:17-38:26",
@@ -17083,8 +16175,6 @@
       "surahs": [
         38
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "38:27-38:42",
@@ -17117,8 +16207,6 @@
       "surahs": [
         38
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "38:43-38:61",
@@ -17151,8 +16239,6 @@
       "surahs": [
         38
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "38:62-38:83",
@@ -17186,8 +16272,6 @@
         38,
         39
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "38:84-39:5",
@@ -17220,8 +16304,6 @@
       "surahs": [
         39
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "39:6-39:10",
@@ -17254,8 +16336,6 @@
       "surahs": [
         39
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "39:11-39:21",
@@ -17288,8 +16368,6 @@
       "surahs": [
         39
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "39:22-39:31",
@@ -17322,8 +16400,6 @@
       "surahs": [
         39
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "39:32-39:40",
@@ -17356,8 +16432,6 @@
       "surahs": [
         39
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "39:41-39:47",
@@ -17390,8 +16464,6 @@
       "surahs": [
         39
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "39:48-39:56",
@@ -17424,8 +16496,6 @@
       "surahs": [
         39
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "39:57-39:67",
@@ -17458,8 +16528,6 @@
       "surahs": [
         39
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "39:68-39:74",
@@ -17493,8 +16561,6 @@
         39,
         40
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "39:75-40:7",
@@ -17527,8 +16593,6 @@
       "surahs": [
         40
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "40:8-40:16",
@@ -17561,8 +16625,6 @@
       "surahs": [
         40
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "40:17-40:25",
@@ -17595,8 +16657,6 @@
       "surahs": [
         40
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "40:26-40:33",
@@ -17629,8 +16689,6 @@
       "surahs": [
         40
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "40:34-40:40",
@@ -17663,8 +16721,6 @@
       "surahs": [
         40
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "40:41-40:49",
@@ -17697,8 +16753,6 @@
       "surahs": [
         40
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "40:50-40:58",
@@ -17731,8 +16785,6 @@
       "surahs": [
         40
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "40:59-40:66",
@@ -17765,8 +16817,6 @@
       "surahs": [
         40
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "40:67-40:77",
@@ -17799,8 +16849,6 @@
       "surahs": [
         40
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "40:78-40:85",
@@ -17833,8 +16881,6 @@
       "surahs": [
         41
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "41:1-41:11",
@@ -17867,8 +16913,6 @@
       "surahs": [
         41
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "41:12-41:20",
@@ -17901,8 +16945,6 @@
       "surahs": [
         41
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "41:21-41:29",
@@ -17935,8 +16977,6 @@
       "surahs": [
         41
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "41:30-41:38",
@@ -17969,8 +17009,6 @@
       "surahs": [
         41
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "41:39-41:46",
@@ -18003,8 +17041,6 @@
       "surahs": [
         41
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "41:47-41:54",
@@ -18037,8 +17073,6 @@
       "surahs": [
         42
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "42:1-42:10",
@@ -18071,8 +17105,6 @@
       "surahs": [
         42
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "42:11-42:15",
@@ -18105,8 +17137,6 @@
       "surahs": [
         42
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "42:16-42:22",
@@ -18139,8 +17169,6 @@
       "surahs": [
         42
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "42:23-42:31",
@@ -18173,8 +17201,6 @@
       "surahs": [
         42
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "42:32-42:44",
@@ -18207,8 +17233,6 @@
       "surahs": [
         42
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "42:45-42:51",
@@ -18242,8 +17266,6 @@
         42,
         43
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "42:52-43:10",
@@ -18276,8 +17298,6 @@
       "surahs": [
         43
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "43:11-43:22",
@@ -18310,8 +17330,6 @@
       "surahs": [
         43
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "43:23-43:33",
@@ -18344,8 +17362,6 @@
       "surahs": [
         43
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "43:34-43:47",
@@ -18378,8 +17394,6 @@
       "surahs": [
         43
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "43:48-43:60",
@@ -18412,8 +17426,6 @@
       "surahs": [
         43
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "43:61-43:73",
@@ -18446,8 +17458,6 @@
       "surahs": [
         43
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "43:74-43:89",
@@ -18480,8 +17490,6 @@
       "surahs": [
         44
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "44:1-44:18",
@@ -18514,8 +17522,6 @@
       "surahs": [
         44
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "44:19-44:39",
@@ -18548,8 +17554,6 @@
       "surahs": [
         44
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "44:40-44:59",
@@ -18582,8 +17586,6 @@
       "surahs": [
         45
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "45:1-45:13",
@@ -18616,8 +17618,6 @@
       "surahs": [
         45
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "45:14-45:22",
@@ -18650,8 +17650,6 @@
       "surahs": [
         45
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "45:23-45:32",
@@ -18685,8 +17683,6 @@
         45,
         46
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "45:33-46:5",
@@ -18719,8 +17715,6 @@
       "surahs": [
         46
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "46:6-46:14",
@@ -18753,8 +17747,6 @@
       "surahs": [
         46
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "46:15-46:20",
@@ -18787,8 +17779,6 @@
       "surahs": [
         46
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "46:21-46:28",
@@ -18821,8 +17811,6 @@
       "surahs": [
         46
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "46:29-46:35",
@@ -18855,8 +17843,6 @@
       "surahs": [
         47
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "47:1-47:11",
@@ -18889,8 +17875,6 @@
       "surahs": [
         47
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "47:12-47:19",
@@ -18923,8 +17907,6 @@
       "surahs": [
         47
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "47:20-47:29",
@@ -18957,8 +17939,6 @@
       "surahs": [
         47
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "47:30-47:38",
@@ -18991,8 +17971,6 @@
       "surahs": [
         48
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "48:1-48:9",
@@ -19025,8 +18003,6 @@
       "surahs": [
         48
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "48:10-48:15",
@@ -19059,8 +18035,6 @@
       "surahs": [
         48
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "48:16-48:23",
@@ -19093,8 +18067,6 @@
       "surahs": [
         48
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "48:24-48:28",
@@ -19128,8 +18100,6 @@
         48,
         49
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "48:29-49:4",
@@ -19162,8 +18132,6 @@
       "surahs": [
         49
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "49:5-49:11",
@@ -19196,8 +18164,6 @@
       "surahs": [
         49
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "49:12-49:18",
@@ -19230,8 +18196,6 @@
       "surahs": [
         50
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "50:1-50:15",
@@ -19264,8 +18228,6 @@
       "surahs": [
         50
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "50:16-50:35",
@@ -19299,8 +18261,6 @@
         50,
         51
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "50:36-51:6",
@@ -19333,8 +18293,6 @@
       "surahs": [
         51
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "51:7-51:30",
@@ -19367,8 +18325,6 @@
       "surahs": [
         51
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "51:31-51:51",
@@ -19402,8 +18358,6 @@
         51,
         52
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "51:52-52:14",
@@ -19436,8 +18390,6 @@
       "surahs": [
         52
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "52:15-52:31",
@@ -19470,8 +18422,6 @@
       "surahs": [
         52
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "52:32-52:49",
@@ -19504,8 +18454,6 @@
       "surahs": [
         53
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "53:1-53:26",
@@ -19538,8 +18486,6 @@
       "surahs": [
         53
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "53:27-53:44",
@@ -19573,8 +18519,6 @@
         53,
         54
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "53:45-54:6",
@@ -19607,8 +18551,6 @@
       "surahs": [
         54
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "54:7-54:27",
@@ -19641,8 +18583,6 @@
       "surahs": [
         54
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "54:28-54:49",
@@ -19676,8 +18616,6 @@
         54,
         55
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "54:50-55:18",
@@ -19710,8 +18648,6 @@
       "surahs": [
         55
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "55:19-55:41",
@@ -19744,8 +18680,6 @@
       "surahs": [
         55
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "55:42-55:69",
@@ -19779,8 +18713,6 @@
         55,
         56
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "55:70-56:16",
@@ -19813,8 +18745,6 @@
       "surahs": [
         56
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "56:17-56:50",
@@ -19847,8 +18777,6 @@
       "surahs": [
         56
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "56:51-56:76",
@@ -19882,8 +18810,6 @@
         56,
         57
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "56:77-57:3",
@@ -19916,8 +18842,6 @@
       "surahs": [
         57
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "57:4-57:11",
@@ -19950,8 +18874,6 @@
       "surahs": [
         57
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "57:12-57:18",
@@ -19984,8 +18906,6 @@
       "surahs": [
         57
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "57:19-57:24",
@@ -20018,8 +18938,6 @@
       "surahs": [
         57
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "57:25-57:29",
@@ -20052,8 +18970,6 @@
       "surahs": [
         58
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "58:1-58:6",
@@ -20086,8 +19002,6 @@
       "surahs": [
         58
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "58:7-58:11",
@@ -20120,8 +19034,6 @@
       "surahs": [
         58
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "58:12-58:21",
@@ -20155,8 +19067,6 @@
         58,
         59
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "58:22-59:3",
@@ -20189,8 +19099,6 @@
       "surahs": [
         59
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "59:4-59:9",
@@ -20223,8 +19131,6 @@
       "surahs": [
         59
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "59:10-59:16",
@@ -20257,8 +19163,6 @@
       "surahs": [
         59
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "59:17-59:24",
@@ -20291,8 +19195,6 @@
       "surahs": [
         60
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "60:1-60:5",
@@ -20325,8 +19227,6 @@
       "surahs": [
         60
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "60:6-60:11",
@@ -20360,8 +19260,6 @@
         60,
         61
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "60:12-61:5",
@@ -20394,8 +19292,6 @@
       "surahs": [
         61
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "61:6-61:14",
@@ -20428,8 +19324,6 @@
       "surahs": [
         62
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "62:1-62:8",
@@ -20463,8 +19357,6 @@
         62,
         63
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "62:9-63:4",
@@ -20497,8 +19389,6 @@
       "surahs": [
         63
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "63:5-63:11",
@@ -20531,8 +19421,6 @@
       "surahs": [
         64
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "64:1-64:9",
@@ -20565,8 +19453,6 @@
       "surahs": [
         64
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "64:10-64:18",
@@ -20599,8 +19485,6 @@
       "surahs": [
         65
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "65:1-65:5",
@@ -20633,8 +19517,6 @@
       "surahs": [
         65
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "65:6-65:12",
@@ -20667,8 +19549,6 @@
       "surahs": [
         66
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "66:1-66:7",
@@ -20701,8 +19581,6 @@
       "surahs": [
         66
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "66:8-66:12",
@@ -20735,8 +19613,6 @@
       "surahs": [
         67
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "67:1-67:12",
@@ -20769,8 +19645,6 @@
       "surahs": [
         67
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "67:13-67:26",
@@ -20804,8 +19678,6 @@
         67,
         68
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "67:27-68:16",
@@ -20838,8 +19710,6 @@
       "surahs": [
         68
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "68:17-68:42",
@@ -20873,8 +19743,6 @@
         68,
         69
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "68:43-69:8",
@@ -20907,8 +19775,6 @@
       "surahs": [
         69
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "69:9-69:35",
@@ -20942,8 +19808,6 @@
         69,
         70
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "69:36-70:10",
@@ -20976,8 +19840,6 @@
       "surahs": [
         70
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "70:11-70:40",
@@ -21011,8 +19873,6 @@
         70,
         71
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "70:41-71:10",
@@ -21045,8 +19905,6 @@
       "surahs": [
         71
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "71:11-71:28",
@@ -21079,8 +19937,6 @@
       "surahs": [
         72
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "72:1-72:13",
@@ -21113,8 +19969,6 @@
       "surahs": [
         72
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "72:14-72:28",
@@ -21147,8 +20001,6 @@
       "surahs": [
         73
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "73:1-73:19",
@@ -21182,8 +20034,6 @@
         73,
         74
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "73:20-74:18",
@@ -21216,8 +20066,6 @@
       "surahs": [
         74
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "74:19-74:47",
@@ -21251,8 +20099,6 @@
         74,
         75
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "74:48-75:19",
@@ -21286,8 +20132,6 @@
         75,
         76
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "75:20-76:5",
@@ -21320,8 +20164,6 @@
       "surahs": [
         76
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "76:6-76:25",
@@ -21355,8 +20197,6 @@
         76,
         77
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "76:26-77:19",
@@ -21389,8 +20229,6 @@
       "surahs": [
         77
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "77:20-77:50",
@@ -21423,8 +20261,6 @@
       "surahs": [
         78
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "78:1-78:30",
@@ -21458,8 +20294,6 @@
         78,
         79
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "78:31-79:16",
@@ -21492,8 +20326,6 @@
       "surahs": [
         79
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "79:17-79:46",
@@ -21526,16 +20358,14 @@
       "surahs": [
         80
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "80:1-80:40",
           "ayah_count": 40
         },
         "al_madani_al_awwal": {
-          "verse_range": "80:1-39",
-          "ayah_count": 39
+          "verse_range": "80:1-40",
+          "ayah_count": 40
         },
         "al_madani_al_akhir": {
           "verse_range": "80:1-40",
@@ -21561,16 +20391,14 @@
         80,
         81
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "80:41-81:29",
           "ayah_count": 31
         },
         "al_madani_al_awwal": {
-          "verse_range": "80:40-81:28",
-          "ayah_count": 30
+          "verse_range": "80:41-81:29",
+          "ayah_count": 31
         },
         "al_madani_al_akhir": {
           "verse_range": "80:41-81:29",
@@ -21596,8 +20424,6 @@
         82,
         83
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "82:1-83:4",
@@ -21630,8 +20456,6 @@
       "surahs": [
         83
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "83:5-83:33",
@@ -21665,8 +20489,6 @@
         83,
         84
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "83:34-84:24",
@@ -21700,8 +20522,6 @@
         84,
         85
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "84:25-85:22",
@@ -21735,8 +20555,6 @@
         86,
         87
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "86:1-87:10",
@@ -21770,8 +20588,6 @@
         87,
         88
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "87:11-88:22",
@@ -21805,8 +20621,6 @@
         88,
         89
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "88:23-89:22",
@@ -21840,8 +20654,6 @@
         89,
         90
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "89:23-90:18",
@@ -21876,8 +20688,6 @@
         91,
         92
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "90:19-92:9",
@@ -21912,8 +20722,6 @@
         93,
         94
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "92:10-94:2",
@@ -21948,8 +20756,6 @@
         95,
         96
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "94:3-96:12",
@@ -21984,8 +20790,6 @@
         97,
         98
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "96:13-98:5",
@@ -22020,8 +20824,6 @@
         99,
         100
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "98:6-100:5",
@@ -22056,8 +20858,6 @@
         101,
         102
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "100:6-102:8",
@@ -22092,8 +20892,6 @@
         104,
         105
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "103:1-105:5",
@@ -22128,8 +20926,6 @@
         107,
         108
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "106:1-108:3",
@@ -22164,8 +20960,6 @@
         110,
         111
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "109:1-111:5",
@@ -22200,8 +20994,6 @@
         113,
         114
       ],
-      "first_line": "",
-      "last_line": "",
       "systems": {
         "al_kufi": {
           "verse_range": "112:1-114:6",

@@ -112,7 +112,7 @@ There is **no automated test suite**. Testing is entirely manual. Verify:
 - `csInterface` — CEP bridge instance.
 - `rootFolder` — Selected project root containing `symbols/` and `numbers/`.
 - `symbols` — Array of symbol objects `{name, path, category}`.
-- `currentPageInfo` — Detected page info `{detected, pageNumber, riwayah, systemKey, ayahNumbers}`.
+- `currentPageInfo` — Detected page info `{detected, pageNumber, riwayah, systemKey, ayahNumbers, ayahNumbersBySurah}`. The ayah numbers are grouped by surah for the UI grid while the flat `ayahNumbers` array is preserved for bulk import.
 - `riwayahSettings` — Qurra data and counting system mappings.
 
 ### Script Loading Order

@@ -56,6 +56,23 @@ body {
     display: none !important;
 }
 
+/* ==================== FONTS ==================== */
+@font-face {
+    font-family: 'Surah';
+    src: url('surah_names.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.surah-name {
+    font-family: 'Surah', 'DIN Next Arabic', serif;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--text-primary);
+    direction: rtl;
+    display: inline-block;
+}
+
 /* ==================== MAIN CONTAINER ==================== */
 .container {
     display: flex;
@@ -406,11 +423,34 @@ body {
     flex-wrap: wrap;
     gap: 8px;
     padding: 4px;
-    max-height: 200px;
+    max-height: 260px;
     overflow-y: auto;
     background: var(--bg-secondary);
     border: 1px solid var(--card-border);
     border-radius: var(--radius-lg);
+    justify-content: center;
+}
+
+.surah-group {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.surah-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+}
+
+.surah-ayahs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     justify-content: center;
 }
 

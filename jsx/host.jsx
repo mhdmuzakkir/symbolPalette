@@ -295,11 +295,11 @@ function pasteAllNumbersAligned(filePaths) {
         // --- 4. Validate count BEFORE clearing Aya No. layer ---
         if (ornaments.length < filePaths.length) {
             var needed = filePaths.length - ornaments.length;
-            return needed + " Ayah Missing — Add " + needed + " Ayah";
+            return "Error: " + needed + " Ayah Missing — Add " + needed + " Ayah";
         }
         if (ornaments.length > filePaths.length) {
             var excess = ornaments.length - filePaths.length;
-            return excess + " Ayah Extra — Remove " + excess + " Ayah";
+            return "Error: " + excess + " Ayah Extra — Remove " + excess + " Ayah";
         }
 
         // --- 5. Clear existing items in Aya No. layer (only after validation passes) ---

@@ -25,7 +25,8 @@ var currentPageInfo = {
     pageNumber: 0,
     riwayah: '',
     systemKey: 'al_kufi',
-    ayahNumbers: []
+    ayahNumbers: [],
+    ayahNumbersBySurah: {}
 };
 
 // Riwayah settings
@@ -844,16 +845,18 @@ function parseDocumentInfo(docInfo) {
     }
 
     var ayahNumbers = extractAyahNumbers(pageStats, systemKey);
+    var ayahNumbersBySurah = extractAyahNumbersBySurah(pageStats, systemKey);
 
     currentPageInfo = {
         detected: true,
         pageNumber: pageNum,
         riwayah: riwayah,
         systemKey: systemKey,
-        ayahNumbers: ayahNumbers
+        ayahNumbers: ayahNumbers,
+        ayahNumbersBySurah: ayahNumbersBySurah
     };
 
-    showPageInfo(pageNum, riwayah, systemKey, ayahNumbers.length);
+    showPageInfo(pageNum, riwayah, systemKey, ayahNumbers.length, Object.keys(ayahNumbersBySurah).length);
     renderNumberGrid();
 }
 
@@ -920,21 +923,84 @@ function extractAyahNumbers(pageStats, systemKey) {
     return numbers;
 }
 
+function extractAyahNumbersBySurah(pageStats, systemKey) {
+    var grouped = {};
+    var rangeStr = pageStats.systems[systemKey].verse_range;
+
+    if (!rangeStr) return grouped;
+
+    try {
+        // Multi-surah range: "100:6-102:8"
+        if (rangeStr.split(':').length - 1 === 2) {
+            var parts = rangeStr.split('-');
+            var left = parts[0];
+            var right = parts[1];
+            var startS = parseInt(left.split(':')[0], 10);
+            var startA = parseInt(left.split(':')[1], 10);
+            var endS = parseInt(right.split(':')[0], 10);
+            var endA = parseInt(right.split(':')[1], 10);
+
+            if (startS === endS) {
+                grouped[startS] = [];
+                for (var a = startA; a <= endA; a++) {
+                    grouped[startS].push(a);
+                }
+            } else {
+                // Start surah
+                grouped[startS] = [];
+                var startTotal = (surahTotalsBySystem[startS] && surahTotalsBySystem[startS][systemKey]) || 0;
+                for (var a1 = startA; a1 <= startTotal; a1++) {
+                    grouped[startS].push(a1);
+                }
+                // Middle surahs
+                for (var s = startS + 1; s < endS; s++) {
+                    grouped[s] = [];
+                    var midTotal = (surahTotalsBySystem[s] && surahTotalsBySystem[s][systemKey]) || 0;
+                    for (var a2 = 1; a2 <= midTotal; a2++) {
+                        grouped[s].push(a2);
+                    }
+                }
+                // End surah
+                grouped[endS] = [];
+                for (var a3 = 1; a3 <= endA; a3++) {
+                    grouped[endS].push(a3);
+                }
+            }
+        } else {
+            // Single surah: "2:16-23"
+            var surahPart = rangeStr.split(':')[0];
+            var ayahPart = rangeStr.split(':')[1];
+            var sNum = parseInt(surahPart, 10);
+            var start = parseInt(ayahPart.split('-')[0], 10);
+            var end = parseInt(ayahPart.split('-')[1], 10);
+            grouped[sNum] = [];
+            for (var a4 = start; a4 <= end; a4++) {
+                grouped[sNum].push(a4);
+            }
+        }
+    } catch (e) {
+        // Error parsing verse range
+    }
+
+    return grouped;
+}
+
 function hidePageInfo() {
-    currentPageInfo = { detected: false, pageNumber: 0, riwayah: '', systemKey: 'al_kufi', ayahNumbers: [] };
+    currentPageInfo = { detected: false, pageNumber: 0, riwayah: '', systemKey: 'al_kufi', ayahNumbers: [], ayahNumbersBySurah: {} };
     document.getElementById('pageInfoBar').classList.add('hidden');
     document.getElementById('importAllBar').classList.add('hidden');
     document.getElementById('numberSection').classList.add('hidden');
 }
 
-function showPageInfo(pageNum, riwayah, systemKey, count) {
+function showPageInfo(pageNum, riwayah, systemKey, count, surahCount) {
     document.getElementById('pageBadge').textContent = 'Page ' + String(pageNum).padStart(3, '0');
     document.getElementById('riwayahBadge').textContent = riwayah;
     document.getElementById('systemBadge').textContent = SYSTEM_NAMES[systemKey] || systemKey;
 
     var titleEl = document.getElementById('numberSectionTitle');
     if (titleEl) {
-        titleEl.textContent = count + ' AYAHS ON THIS PAGE';
+        var surahText = (surahCount || 1) + ' SURAH' + ((surahCount || 1) > 1 ? 'S' : '') + ' · ';
+        titleEl.textContent = surahText + count + ' AYAHS ON THIS PAGE';
     }
 
     document.getElementById('pageInfoBar').classList.remove('hidden');
@@ -956,43 +1022,79 @@ function renderNumberGrid() {
         return;
     }
 
-    currentPageInfo.ayahNumbers.forEach(function(num, index) {
-        var cell = document.createElement('div');
-        cell.className = 'number-cell';
-        cell.dataset.index = index;
-        cell.dataset.number = num;
-        cell.title = 'Ayah ' + num;
+    var grouped = currentPageInfo.ayahNumbersBySurah || {};
+    var surahKeys = Object.keys(grouped).sort(function(a, b) { return parseInt(a, 10) - parseInt(b, 10); });
 
-        cell.addEventListener('click', function() {
-            pasteNumber(num, cell);
+    if (surahKeys.length === 0) {
+        // Fallback: render flat list if grouping is unavailable
+        currentPageInfo.ayahNumbers.forEach(function(num, index) {
+            container.appendChild(createNumberCell(num, index));
+        });
+        return;
+    }
+
+    surahKeys.forEach(function(surahNum) {
+        var group = document.createElement('div');
+        group.className = 'surah-group';
+
+        var header = document.createElement('div');
+        header.className = 'surah-header';
+
+        var surahLabel = document.createElement('span');
+        surahLabel.className = 'surah-name';
+        surahLabel.textContent = 'surah' + String(surahNum).padStart(3, '0');
+        surahLabel.title = 'Surah ' + surahNum;
+        header.appendChild(surahLabel);
+        group.appendChild(header);
+
+        var ayahsContainer = document.createElement('div');
+        ayahsContainer.className = 'surah-ayahs';
+
+        grouped[surahNum].forEach(function(num, index) {
+            ayahsContainer.appendChild(createNumberCell(num, index));
         });
 
-        var imgContainer = document.createElement('div');
-        imgContainer.className = 'symbol-image-container';
+        group.appendChild(ayahsContainer);
+        container.appendChild(group);
+    });
+}
 
-        if (rootFolder) {
-            var filePath = rootFolder + '/numbers/' + num + '.svg';
-            var stat = window.cep.fs.stat(filePath);
-            if (stat.err === 0) {
-                var img = document.createElement('img');
-                img.className = 'number-image';
-                img.src = 'file:///' + filePath;
-                img.alt = num;
-                img.onerror = function() {
-                    this.style.display = 'none';
-                    showNumberPlaceholder(imgContainer, num);
-                };
-                imgContainer.appendChild(img);
-            } else {
+function createNumberCell(num, index) {
+    var cell = document.createElement('div');
+    cell.className = 'number-cell';
+    cell.dataset.index = index;
+    cell.dataset.number = num;
+    cell.title = 'Ayah ' + num;
+
+    cell.addEventListener('click', function() {
+        pasteNumber(num, cell);
+    });
+
+    var imgContainer = document.createElement('div');
+    imgContainer.className = 'symbol-image-container';
+
+    if (rootFolder) {
+        var filePath = rootFolder + '/numbers/' + num + '.svg';
+        var stat = window.cep.fs.stat(filePath);
+        if (stat.err === 0) {
+            var img = document.createElement('img');
+            img.className = 'number-image';
+            img.src = 'file:///' + filePath;
+            img.alt = num;
+            img.onerror = function() {
+                this.style.display = 'none';
                 showNumberPlaceholder(imgContainer, num);
-            }
+            };
+            imgContainer.appendChild(img);
         } else {
             showNumberPlaceholder(imgContainer, num);
         }
+    } else {
+        showNumberPlaceholder(imgContainer, num);
+    }
 
-        cell.appendChild(imgContainer);
-        container.appendChild(cell);
-    });
+    cell.appendChild(imgContainer);
+    return cell;
 }
 
 // ==================== PANEL WIDTH SNAPPING ====================
