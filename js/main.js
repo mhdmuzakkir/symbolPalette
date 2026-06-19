@@ -1960,6 +1960,9 @@ function setupEventListeners() {
     // Refresh Layers button
     document.getElementById('refreshLayersBtn').addEventListener('click', scanDocumentLayers);
 
+    // Clean Up Layers button
+    document.getElementById('cleanUpLayersBtn').addEventListener('click', cleanUpDocumentLayers);
+
     // Close modals on background click
     document.querySelectorAll('.modal').forEach(function(modal) {
         modal.addEventListener('click', function(e) {
@@ -2982,6 +2985,46 @@ function deleteDocumentLayer(layerName) {
             }
         } catch (e) {
             showErrorModal('Error deleting layer');
+        }
+    });
+}
+
+function cleanUpDocumentLayers() {
+    csInterface.evalScript('spCleanUpLayers()', function(result) {
+        try {
+            var data = JSON.parse(result);
+            if (data.success) {
+                scanDocumentLayers();
+                var renamedCount = data.renamed ? data.renamed.length : 0;
+                var deletedCount = data.deleted ? data.deleted.length : 0;
+                var warnings = data.warnings || [];
+
+                var msg = 'Cleanup complete.\nRenamed ' + renamedCount + ' layer(s), deleted ' + deletedCount + ' empty unregistered layer(s).';
+
+                if (data.renamed && data.renamed.length > 0) {
+                    msg += '\n\nRenamed:';
+                    data.renamed.forEach(function(r) {
+                        msg += '\n• ' + r.old + ' → ' + r.new;
+                    });
+                }
+                if (warnings.length > 0) {
+                    msg += '\n\nWarnings:';
+                    warnings.forEach(function(w) {
+                        msg += '\n• ' + w;
+                    });
+                }
+                if (data.deleted && data.deleted.length > 0) {
+                    msg += '\n\nDeleted:';
+                    data.deleted.forEach(function(d) {
+                        msg += '\n• ' + d;
+                    });
+                }
+                showErrorModal(msg, 'Cleanup Complete');
+            } else {
+                showErrorModal(data.error || 'Cleanup failed');
+            }
+        } catch (e) {
+            showErrorModal('Error parsing cleanup result');
         }
     });
 }

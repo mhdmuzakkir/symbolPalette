@@ -452,6 +452,7 @@ body {
     flex-wrap: wrap;
     gap: 8px;
     justify-content: center;
+    direction: rtl;
 }
 
 .symbol-grid {
@@ -1200,6 +1201,11 @@ body {
 .btn-success:hover {
     background-color: #27ae60;
     transform: translateY(-1px);
+}
+
+.btn-full {
+    width: 100%;
+    display: flex;
 }
 
 .btn-auto-detect {
